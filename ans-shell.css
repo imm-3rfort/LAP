@@ -1,0 +1,51 @@
+/* ANS shell: barra inferior (móvil), barra lateral derecha (PC), vistas sin recargar */
+.site-nav{display:none}                 /* se oculta la barra superior vieja */
+.wrap>.orn,.wrap>footer{display:none}   /* separadores viejos */
+.tab{display:none;padding-top:1rem}
+.tab.view-active{display:block;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+
+.app{display:grid;grid-template-columns:1fr 280px;gap:1.2rem;max-width:1200px;margin:0 auto;padding:0 1rem 6rem}
+.app .wrap{max-width:none;padding:0;min-width:0}
+
+/* Barra lateral derecha (PC) */
+.side{position:sticky;top:1rem;align-self:start;margin-top:1rem;border:3px double var(--gold2);border-radius:8px;
+background:var(--leather);box-shadow:0 10px 30px #000a,inset 0 0 30px #000;padding:1rem;max-height:calc(100vh - 2rem);overflow:auto}
+.side h3{font:700 1.6rem var(--blk);color:var(--gold);margin:.2rem 0 .8rem;text-align:center}
+.side a,.bottom a{display:flex;align-items:center;gap:.6rem;color:var(--bone);text-decoration:none;cursor:pointer;
+font:700 .85rem var(--cin);letter-spacing:.06em;text-transform:uppercase}
+.side a{padding:.7rem .8rem;border:1px solid transparent;border-radius:6px;margin-bottom:.3rem}
+.side a:hover,.side a.on{border-color:var(--gold2);background:#2e2217;color:var(--gold)}
+.lock::after{content:"🔒";margin-left:auto;font-size:.8rem}
+.unlocked .lock::after{content:""}
+
+/* Barra inferior */
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:space-around;
+background:rgba(18,13,9,.96);backdrop-filter:blur(10px);border-top:1px solid var(--gold2);
+padding:.4rem 0 calc(.4rem + env(safe-area-inset-bottom,0px))}
+.bottom a{flex-direction:column;gap:.15rem;padding:.3rem 1rem;font-size:.7rem;border-radius:6px}
+.bottom a .i{font-size:1.4rem}
+.bottom a.on{color:var(--gold)}
+
+/* Tarjetas genéricas (perfil, ajustes, constitución, login) */
+.card-box{border:3px double var(--gold2);border-radius:8px;background:var(--leather);padding:1.2rem;margin:1rem auto;
+max-width:760px;box-shadow:0 10px 30px #000a,inset 0 0 30px #000}
+.card-box h3{font:700 1.2rem var(--cin);color:var(--gold);margin:0 0 .6rem}
+.card-box input,.card-box textarea{width:100%;background:#17100b;border:1px solid #6f542d;border-radius:6px;color:var(--bone);
+padding:.7rem;font:1.1rem var(--fell);margin:.3rem 0 .7rem}
+.btn{display:inline-block;padding:.65rem 1.1rem;border:1px solid var(--gold);border-radius:6px;background:var(--gold);
+color:#1a120b;font:700 .85rem var(--cin);letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--gold)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.6rem 0;border-bottom:1px dashed #4a3620}
+.post{border-left:3px solid var(--blood);padding:.4rem .8rem;margin:.6rem 0;background:rgba(18,13,9,.5)}
+.post small{color:var(--muted)}
+.msg{color:var(--muted);font-size:.95rem}
+
+/* Móvil */
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{display:none}
+}
+@media(min-width:901px){
+  .bottom{left:0;right:300px;max-width:none}   /* en PC la barra inferior queda bajo el contenido */
+}
