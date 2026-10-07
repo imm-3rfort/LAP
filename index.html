@@ -208,6 +208,12 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
         <button class="account-btn" type="button" id="logout-button">Leave the Asylum</button>
       </div>
       <p id="account-logged-message" class="account-message ok" aria-live="polite"></p>
+
+      <div class="account-notifications" style="margin:1.25rem auto 0;padding-top:1rem;border-top:1px solid rgba(201,155,60,.25);">
+        <h4 class="account-title" style="font-size:1.15rem;margin:.2rem 0 .45rem;">Last Asylum Notifications</h4>
+        <p id="account-notification-status" class="account-sub" data-ans-notification-status aria-live="polite">Link this device to receive alerts from ANS.</p>
+        <button class="account-btn primary" type="button" data-ans-enable-notifications>🔔 Activate notifications</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1670,6 +1676,9 @@ onAuthStateChanged(auth, user=>{
   }
 });
 </script>
+
+<!-- ANS Web Push / Firebase Cloud Messaging -->
+<script type="module" src="./notifications-client.js"></script>
 
 </body>
 </html>
