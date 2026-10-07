@@ -1,83 +1,113 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { initializeApp } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { getMessaging } = require('firebase-admin/messaging');
 
 initializeApp();
+
 const db = getFirestore();
 
-async function requireAdmin(request) {
+async function getCallerRank(request) {
   if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Debes iniciar sesión.');
+    throw new HttpsError('unauthenticated', 'You must be signed in.');
   }
 
-  const userSnap = await db.collection('users').doc(request.auth.uid).get();
-  const userData = userSnap.exists ? userSnap.data() : {};
-
-  if (userData.role !== 'admin') {
-    throw new HttpsError('permission-denied', 'No tienes permisos para enviar notificaciones.');
+  const snap = await db.collection('users').doc(request.auth.uid).get();
+  if (!snap.exists) {
+    throw new HttpsError('permission-denied', 'Your ANS profile does not exist.');
   }
+
+  const rank = snap.data().rank;
+  if (!['R4', 'R5'].includes(rank)) {
+    throw new HttpsError('permission-denied', 'Only R4 and R5 can send notifications.');
+  }
+
+  return { rank, profile: snap.data() };
 }
 
-exports.sendAnsNotification = onCall({ region: 'us-central1' }, async (request) => {
-  await requireAdmin(request);
+exports.listNotificationMembers = onCall(async (request) => {
+  const caller = await getCallerRank(request);
+  const snap = await db.collection('users').get();
 
-  const { uid, title, body, url } = request.data || {};
-
-  if (!title || !body) {
-    throw new HttpsError('invalid-argument', 'El título y el mensaje son obligatorios.');
-  }
-
-  let query = db.collection('fcmTokens');
-  if (uid && uid !== 'all') query = query.where('uid', '==', uid);
-
-  const snapshot = await query.get();
-  const docs = snapshot.docs;
-
-  if (!docs.length) {
-    return { sent: 0, message: 'No hay dispositivos registrados para ese destinatario.' };
-  }
-
-  const messages = docs.map((doc) => {
-    const data = doc.data();
+  const members = snap.docs.map(doc => {
+    const data = doc.data() || {};
     return {
-      token: data.token,
-      notification: { title, body },
-      data: {
-        title: String(title),
-        body: String(body),
-        url: String(url || './'),
-        icon: './icons/icon-192.png',
-        badge: './icons/icon-192.png',
-        tag: 'ans-notification'
-      },
-      webpush: {
-        fcmOptions: { link: String(url || './') }
-      }
+      uid: doc.id,
+      email: data.email || '',
+      rank: data.rank || ''
     };
+  }).filter(member => member.email);
+
+  members.sort((a, b) => a.email.localeCompare(b.email));
+
+  return { members, callerRank: caller.rank };
+});
+
+exports.sendAnsNotification = onCall(async (request) => {
+  const caller = await getCallerRank(request);
+
+  const title = String(request.data?.title || '').trim();
+  const body = String(request.data?.body || '').trim();
+  const recipientUid = String(request.data?.recipientUid || '').trim();
+
+  if (!title || !body || !recipientUid) {
+    throw new HttpsError('invalid-argument', 'Recipient, title and message are required.');
+  }
+
+  if (title.length > 100 || body.length > 1000) {
+    throw new HttpsError('invalid-argument', 'The title or message is too long.');
+  }
+
+  const recipientSnap = await db.collection('users').doc(recipientUid).get();
+  if (!recipientSnap.exists) {
+    throw new HttpsError('not-found', 'The selected member does not exist.');
+  }
+
+  const recipient = recipientSnap.data() || {};
+  const tokenSnap = await db.collection('fcmTokens')
+    .where('uid', '==', recipientUid)
+    .get();
+
+  const tokens = tokenSnap.docs
+    .map(doc => doc.data()?.token)
+    .filter(Boolean);
+
+  if (!tokens.length) {
+    throw new HttpsError('failed-precondition', 'That member has no device with notifications activated.');
+  }
+
+  const messages = tokens.map(token => ({
+    token,
+    notification: { title, body },
+    data: {
+      title,
+      body,
+      url: './',
+      tag: 'ans-notification'
+    },
+    webpush: {
+      fcmOptions: { link: './' }
+    }
+  }));
+
+  const result = await getMessaging().sendEach(messages);
+
+  await db.collection('announcements').add({
+    title,
+    body,
+    recipientUid,
+    recipientEmail: recipient.email || '',
+    senderUid: request.auth.uid,
+    senderEmail: request.auth.token.email || caller.profile.email || '',
+    senderRank: caller.rank,
+    sentDevices: result.successCount,
+    failedDevices: result.failureCount,
+    createdAt: FieldValue.serverTimestamp()
   });
 
-  let sent = 0;
-  let failed = 0;
-  const invalidTokenDocs = [];
-
-  for (let start = 0; start < messages.length; start += 500) {
-    const chunk = messages.slice(start, start + 500);
-    const response = await getMessaging().sendEach(chunk);
-    sent += response.successCount;
-    failed += response.failureCount;
-
-    response.responses.forEach((result, offset) => {
-      if (!result.success) {
-        const code = result.error?.code || '';
-        if (code.includes('registration-token-not-registered') || code.includes('invalid-registration-token')) {
-          invalidTokenDocs.push(docs[start + offset].ref);
-        }
-      }
-    });
-  }
-
-  await Promise.all(invalidTokenDocs.map((ref) => ref.delete()));
-
-  return { sent, failed, cleaned: invalidTokenDocs.length };
+  return {
+    ok: result.successCount > 0,
+    sentDevices: result.successCount,
+    failedDevices: result.failureCount
+  };
 });
