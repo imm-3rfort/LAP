@@ -134,22 +134,47 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 .ans-notification-box{margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(201,155,60,.25);text-align:center}
 @media(max-width:620px){.ans-command-panel{padding:1rem}.ans-edic-head{flex-direction:column;gap:.25rem}}
 @media(max-width:620px){.account-panel{padding:1rem}.account-actions{flex-direction:column}.account-btn{width:100%}}
+
+/* ANS access control + responsive navigation */
+.mobile-nav-toggle,.nav-scrim{display:none}
+[data-auth-section][data-auth-hidden="true"]{display:none !important}
+
+@media(max-width:820px){
+  body{padding-left:0}
+  .site-nav{position:fixed;inset:0 auto 0 0;width:270px;height:100dvh;transform:translateX(-105%);transition:transform .25s ease;box-shadow:10px 0 35px rgba(0,0,0,.55);border-right:1px solid var(--gold2);border-bottom:0}
+  .site-nav.open{transform:translateX(0)}
+  .nav-inner{height:100%;padding:1rem .75rem;display:flex;flex-direction:column;align-items:stretch;overflow-y:auto}
+  .nav-links{display:flex;flex-direction:column;gap:.35rem;overflow:visible}
+  .nav-links a{white-space:normal;min-height:44px;font-size:.76rem}
+  .mobile-nav-toggle{display:flex;position:fixed;top:.75rem;left:.75rem;z-index:70;width:44px;height:44px;align-items:center;justify-content:center;border:1px solid var(--gold2);border-radius:6px;background:rgba(18,13,9,.96);color:var(--gold);font-size:1.35rem;cursor:pointer;box-shadow:0 6px 18px #0008}
+  .mobile-nav-toggle:hover{border-color:var(--gold);background:#2b1d13}
+  .nav-scrim{position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.62);backdrop-filter:blur(2px)}
+  .nav-scrim.show{display:block}
+  .wrap{padding-inline:1rem;padding-top:3.2rem}
+  header{padding-top:.8rem}
+  .tab{scroll-margin-top:20px}
+}
+@media(min-width:821px){
+  .wrap{min-height:100vh}
+}
 </style>
 </head>
 <body id="top">
+<button class="mobile-nav-toggle" id="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">☰</button>
+<div class="nav-scrim" id="nav-scrim" aria-hidden="true"></div>
 
-<nav class="site-nav" aria-label="Main navigation">
+<nav class="site-nav" id="site-navigation" aria-label="Main navigation"> aria-label="Main navigation">
   <div class="nav-inner">
     <a class="nav-logo" href="#top">⁠Made it with love: ur dear Ann♡</a>
     <ul class="nav-links">
       <li><a href="#about-ans" data-tab="about-ans">About ANS</a></li>
       <li><a href="#const-serv" data-tab="const-serv">Constitution of the server</a></li>
-      <li><a href="#sanctuary" data-tab="sanctuary">Sanctuary</a></li>
-      <li><a href="#alliance-duel" data-tab="alliance-duel">Alliance Duel</a></li>
-      <li><a href="#weapons" data-tab="weapons">Weapons</a></li>
-      <li><a href="#ans-command" data-tab="ans-command">ANS Command</a></li>
+      <li data-auth-nav="true"><a href="#sanctuary" data-tab="sanctuary">Sanctuary</a></li>
+      <li data-auth-nav="true"><a href="#alliance-duel" data-tab="alliance-duel">Alliance Duel</a></li>
+      <li data-auth-nav="true"><a href="#weapons" data-tab="weapons">Weapons</a></li>
+      <li data-auth-nav="true"><a href="#ans-command" data-tab="ans-command">ANS Command</a></li>
       <li><a href="#account" data-tab="account">Account</a></li>
-      <li><a class="nav-btn" id="ideas-btn" href="https://forms.cloud.microsoft/r/nCfEWWHfsM" target="_blank" rel="noopener">Any ideas?</a></li>
+      <li data-auth-nav="true"><a class="nav-btn" id="ideas-btn" href="https://forms.cloud.microsoft/r/nCfEWWHfsM" target="_blank" rel="noopener">Any ideas?</a></li>
     </ul>
   </div>
 </nav>
@@ -184,7 +209,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 <!-- ACCOUNT / LOGIN -->
 <section id="account" class="tab">
   <h2>Account</h2>
-  <p class="intro">Create your ANS account or enter your existing account. Your account will later be used to link your device to Last Asylum notifications.</p>
+  <p class="intro">Sign in with the account provided by ANS Command. Your account is used to link this device to Last Asylum notifications.</p>
 
   <div class="account-panel">
     <div id="account-forms" class="account-forms">
@@ -204,24 +229,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
         </div>
       </form>
 
-      <form id="register-form" class="account-form hidden">
-        <label class="account-label" for="register-email">Email</label>
-        <input id="register-email" class="account-input" type="email" autocomplete="email" required>
-
-        <label class="account-label" for="register-password">Password</label>
-        <input id="register-password" class="account-input" type="password" autocomplete="new-password" minlength="6" required>
-
-        <label class="account-label" for="register-password-2">Repeat password</label>
-        <input id="register-password-2" class="account-input" type="password" autocomplete="new-password" minlength="6" required>
-
-        <div class="account-actions">
-          <button class="account-btn primary" type="submit">Create account</button>
-          <button class="account-btn" type="button" id="show-login">I already have an account</button>
-        </div>
-      </form>
-
       <p id="account-message" class="account-message" aria-live="polite"></p>
-      <p id="show-register-row" class="account-switch">No account yet? <button class="account-link" id="show-register" type="button">Create one</button></p>
     </div>
 
     <div id="account-logged" class="account-logged">
@@ -246,7 +254,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 <div class="orn"><span>⚜</span></div>
 
 <!-- ANS COMMAND / EDICTS -->
-<section id="ans-command" class="tab">
+<section id="ans-command" class="tab" data-auth-section="true">
   <h2>ANS Command</h2>
   <p class="intro">Official alliance edicts and announcements. Notifications are delivered to every device that has activated ANS notifications.</p>
 
@@ -1338,7 +1346,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 </script>
 
 <!-- SANCTUARY -->
-<section id="sanctuary" class="tab">
+<section id="sanctuary" class="tab" data-auth-section="true">
   <h2>Sanctuary</h2>
   <section class="intro">
     <p>The <b>Sanctuary</b> is the main building in Last Asylum Plague. Upgrading it helps you progress in the game and unlock new features, including upgrades for other buildings. It also increases your Might, Hero Level Cap, Hero HP, Hero ATK, and Hero DEF.</p>
@@ -1354,7 +1362,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 <div class="orn"><span>⚜</span></div>
 
 <!-- ALLIANCE DUEL -->
-<section id="alliance-duel" class="tab">
+<section id="alliance-duel" class="tab" data-auth-section="true">
   <h2>Alliance Duel</h2>
   <section class="intro">
     <p>The <b>Alliance Duel</b> is a six-day event in Last Asylum Plague where two alliances compete to earn the most points by performing different daily tasks. The event starts on Monday and ends on Saturday. To take part in the event, your alliance must be ranked in the top 32 alliances on the server before matchmaking begins.</p>
@@ -1368,7 +1376,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 
 <!-- WEAPONS -->
 <div class="orn"><span>⚜</span></div>
-<section id="weapons" class="tab">
+<section id="weapons" class="tab" data-auth-section="true">
   <h2>Weapons</h2>
   <p class="intro">Pending to add more info.</p>
 </section>
@@ -1464,6 +1472,12 @@ function setActiveNav(id){
 function showTab(id, updateHash=true, animate=true){
   const next=document.getElementById(id);
   if(!next || !next.classList.contains('tab')) return;
+  if(next.matches('[data-auth-section="true"]') && window.ansLoggedIn !== true){
+    id='about-ans';
+  }
+  const safeNext=document.getElementById(id);
+  if(!safeNext) return;
+  if(safeNext!==next) return showTab(id, updateHash, animate);
   if(currentTab===next && !switching) return;
 
   const current=currentTab;
@@ -1500,10 +1514,14 @@ function showTab(id, updateHash=true, animate=true){
   window.scrollTo({top:0,behavior:animate?'smooth':'auto'});
 }
 
+window.showANSTab=showTab;
+
 navLinks.forEach(link=>{
   link.addEventListener('click',e=>{
     e.preventDefault();
+    if(link.closest('[data-auth-nav]') && window.ansLoggedIn !== true) return showTab('about-ans');
     showTab(link.dataset.tab);
+    window.closeANSMobileNav?.();
   });
 });
 
@@ -1579,14 +1597,32 @@ document.getElementById('duel').addEventListener('click',e=>{
 </script>
 
 
+<script>
+(()=>{
+  const toggle=document.getElementById('mobile-nav-toggle');
+  const nav=document.getElementById('site-navigation');
+  const scrim=document.getElementById('nav-scrim');
+  const setOpen=open=>{
+    nav.classList.toggle('open',open);
+    scrim.classList.toggle('show',open);
+    toggle.setAttribute('aria-expanded',String(open));
+    toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');
+    toggle.textContent=open?'×':'☰';
+  };
+  toggle.addEventListener('click',()=>setOpen(!nav.classList.contains('open')));
+  scrim.addEventListener('click',()=>setOpen(false));
+  nav.addEventListener('click',e=>{if(e.target.closest('a')) setOpen(false);});
+  window.closeANSMobileNav=()=>setOpen(false);
+})();
+</script>
+
 <!-- FIREBASE AUTHENTICATION -->
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
 import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
@@ -1601,11 +1637,9 @@ const firebaseConfig = {
   measurementId: 'G-4XCBZMJ6YQ'
 };
 
-const authApp = initializeApp(firebaseConfig);
+const authApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(authApp);
-
 const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
 const forms = document.getElementById('account-forms');
 const logged = document.getElementById('account-logged');
 const title = document.getElementById('account-form-title');
@@ -1613,33 +1647,28 @@ const subtitle = document.getElementById('account-form-sub');
 const message = document.getElementById('account-message');
 const userEmail = document.getElementById('account-user-email');
 const loggedMessage = document.getElementById('account-logged-message');
-const registerRow = document.getElementById('show-register-row');
 
 function showMessage(text, type=''){
   message.textContent = text;
   message.className = 'account-message' + (type ? ' ' + type : '');
 }
 
-function showLogin(){
-  loginForm.classList.remove('hidden');
-  registerForm.classList.add('hidden');
-  registerRow.style.display = '';
-  title.textContent = 'Enter the Asylum';
-  subtitle.textContent = 'Sign in with the email and password you use for ANS.';
-  showMessage('');
-}
+function setAuthVisibility(isLoggedIn){
+  document.querySelectorAll('[data-auth-nav]').forEach(el=>{
+    el.style.display = isLoggedIn ? '' : 'none';
+  });
+  document.querySelectorAll('[data-auth-section]').forEach(el=>{
+    el.dataset.authHidden = isLoggedIn ? 'false' : 'true';
+    if(!isLoggedIn) el.classList.remove('active','leaving');
+  });
 
-function showRegister(){
-  loginForm.classList.add('hidden');
-  registerForm.classList.remove('hidden');
-  registerRow.style.display = 'none';
-  title.textContent = 'Join the Asylum';
-  subtitle.textContent = 'Create your ANS account with email and password.';
-  showMessage('');
-}
+  window.ansLoggedIn = isLoggedIn;
 
-document.getElementById('show-register').addEventListener('click', showRegister);
-document.getElementById('show-login').addEventListener('click', showLogin);
+  const current = document.querySelector('.tab.active');
+  if(!isLoggedIn && current && current.matches('[data-auth-section="true"]')){
+    window.showANSTab?.('about-ans', false, false);
+  }
+}
 
 loginForm.addEventListener('submit', async event=>{
   event.preventDefault();
@@ -1662,47 +1691,12 @@ loginForm.addEventListener('submit', async event=>{
   }
 });
 
-registerForm.addEventListener('submit', async event=>{
-  event.preventDefault();
-  const email = document.getElementById('register-email').value.trim();
-  const password = document.getElementById('register-password').value;
-  const password2 = document.getElementById('register-password-2').value;
-
-  if(password !== password2){
-    showMessage('The passwords do not match.','error');
-    return;
-  }
-
-  if(password.length < 6){
-    showMessage('Password must contain at least 6 characters.','error');
-    return;
-  }
-
-  showMessage('Creating your account...');
-
-  try{
-    await createUserWithEmailAndPassword(auth, email, password);
-    showMessage('✓ Account created. Welcome to ANS.', 'ok');
-  }catch(error){
-    console.error('[ANS Auth]', error);
-    const errors = {
-      'auth/email-already-in-use':'An account with this email already exists.',
-      'auth/invalid-email':'Enter a valid email address.',
-      'auth/weak-password':'Choose a stronger password.',
-      'auth/operation-not-allowed':'Email/password sign-in is not enabled in Firebase.'
-    };
-    showMessage(errors[error.code] || 'The account could not be created. Try again.','error');
-  }
-});
-
 document.getElementById('reset-password').addEventListener('click', async ()=>{
   const email = document.getElementById('login-email').value.trim();
-
   if(!email){
     showMessage('Enter your email first, then choose Forgot password.','error');
     return;
   }
-
   try{
     await sendPasswordResetEmail(auth, email);
     showMessage('✓ Password reset email sent. Check your inbox.','ok');
@@ -1716,13 +1710,18 @@ document.getElementById('logout-button').addEventListener('click', async ()=>{
   try{
     await signOut(auth);
     loggedMessage.textContent = '';
-    showLogin();
+    title.textContent = 'Enter the Asylum';
+    subtitle.textContent = 'Sign in with the account provided by ANS Command.';
+    showMessage('');
+    window.showANSTab?.('about-ans', true, false);
   }catch(error){
     console.error('[ANS Auth]', error);
   }
 });
 
 onAuthStateChanged(auth, user=>{
+  const isLoggedIn = !!user;
+  setAuthVisibility(isLoggedIn);
   if(user){
     forms.style.display = 'none';
     logged.classList.add('show');
@@ -1734,6 +1733,8 @@ onAuthStateChanged(auth, user=>{
     userEmail.textContent = '';
   }
 });
+
+window.ansAuth = auth;
 </script>
 
 <!-- ANS Web Push / Firebase Cloud Messaging -->

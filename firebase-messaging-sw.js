@@ -11,36 +11,30 @@ firebase.initializeApp({
   measurementId: 'G-4XCBZMJ6YQ'
 });
 
-const messaging = firebase.messaging();
+const messaging=firebase.messaging();
 
-messaging.onBackgroundMessage(payload => {
-  const title = payload?.data?.title || payload?.notification?.title || 'ANS Edict';
-  const body = payload?.data?.body || payload?.notification?.body || '';
-  const url = payload?.data?.url || 'https://imm-3rfort.github.io/LAP/';
-
-  self.registration.showNotification(title, {
+messaging.onBackgroundMessage(payload=>{
+  const data=payload.data || {};
+  const title=data.title || 'ANS';
+  const body=data.body || 'You have a new alliance edict.';
+  self.registration.showNotification(title,{
     body,
-    icon: './icons/icon-192.png',
-    badge: './icons/icon-192.png',
-    tag: 'ans-edict',
-    renotify: true,
-    data: { url }
+    icon:'./icons/icon-192.png',
+    badge:'./icons/icon-192.png',
+    data:{url:data.url || './',type:data.type || 'ANS'}
   });
 });
 
-self.addEventListener('notificationclick', event => {
+self.addEventListener('notificationclick',event=>{
   event.notification.close();
-  const url = event.notification?.data?.url || 'https://imm-3rfort.github.io/LAP/';
-
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-      for (const client of clientList) {
-        if ('focus' in client) {
-          client.navigate(url);
-          return client.focus();
-        }
+  const target=event.notification.data?.url || './';
+  event.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(list=>{
+    for(const client of list){
+      if('focus' in client){
+        client.navigate(target);
+        return client.focus();
       }
-      if (clients.openWindow) return clients.openWindow(url);
-    })
-  );
+    }
+    return clients.openWindow(target);
+  }));
 });
