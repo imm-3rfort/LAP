@@ -1,10 +1,19 @@
-/* ANS — Last Asylum | Web Push client
-   Replace VAPID_PUBLIC_KEY with the public Web Push key from Firebase Console.
-*/
+/* ANS — Last Asylum | Web Push client */
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+import {
+  isSupported,
+  getMessaging,
+  getToken,
+  onMessage
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCdsBBd8-TtX8T8zDFiSr5xumDwD51H0Mc',
@@ -16,92 +25,245 @@ const firebaseConfig = {
   measurementId: 'G-4XCBZMJ6YQ'
 };
 
-const VAPID_PUBLIC_KEY = 'BIg4XxQZ3F42lXMkPyYgMvHhbcZnfoneClhuXZXVsTWRYifU9-RQ_fsXcUTSPL5jpxmfZbp6_XjL9mgMgDjNbkI';
+const VAPID_PUBLIC_KEY =
+  'BIg4XxQZ3F42lXMkPyYgMvHhbcZnfoneClhuXZXVsTWRYifU9-RQ_fsXcUTSPL5jpxmfZbp6_XjL9mgMgDjNbkI';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const messaging = getMessaging(app);
 
+let messaging = null;
 let currentUser = null;
-let notificationsReady = false;
-
-async function registerPushForCurrentUser() {
-  if (!currentUser) throw new Error('Debes iniciar sesión primero.');
-  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-    throw new Error('Este navegador no soporta notificaciones push para ANS.');
-  }
-  if (VAPID_PUBLIC_KEY.startsWith('BIg4XxQZ3F42lXMkPyYgMvHhbcZnfoneClhuXZXVsTWRYifU9-RQ_fsXcUTSPL5jpxmfZbp6_XjL9mgMgDjNbkI')) {
-    throw new Error('Falta configurar la VAPID public key de Firebase.');
-  }
-
-  const permission = await Notification.requestPermission();
-  if (permission !== 'granted') {
-    throw new Error('El permiso de notificaciones fue rechazado.');
-  }
-
-  const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
-    scope: './'
-  });
-  await navigator.serviceWorker.ready;
-
-  const token = await getToken(messaging, {
-    vapidKey: VAPID_PUBLIC_KEY,
-    serviceWorkerRegistration: registration
-  });
-
-  if (!token) throw new Error('Firebase no devolvió un token de notificación.');
-
-  // Se guarda un registro por instalación/dispositivo.
-  await addDoc(collection(db, 'fcmTokens'), {
-    uid: currentUser.uid,
-    email: currentUser.email || '',
-    token,
-    platform: /iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'iOS' : 'Web',
-    userAgent: navigator.userAgent,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
-  });
-
-  notificationsReady = true;
-  return token;
-}
 
 function initNotificationUI() {
-  const button = document.querySelector('[data-ans-enable-notifications]');
-  const status = document.querySelector('[data-ans-notification-status]');
-  if (!button) return;
+
+  const button = document.querySelector(
+    '[data-ans-enable-notifications]'
+  );
+
+  const status = document.querySelector(
+    '[data-ans-notification-status]'
+  );
+
+  if (!button) {
+    console.error('[ANS Push] No encontré el botón de notificaciones.');
+    return;
+  }
+
+  console.log('[ANS Push] Script cargado correctamente.');
 
   const setStatus = (message, ok = false) => {
     if (!status) return;
+
     status.textContent = message;
-    status.dataset.ok = ok ? 'true' : 'false';
+    status.style.color = ok ? '#d8b35a' : '';
   };
 
+  /*
+   * Primero comprobamos la sesión de Firebase.
+   */
   onAuthStateChanged(auth, (user) => {
+
     currentUser = user;
-    button.disabled = !user;
-    setStatus(user ? 'Sesión detectada. Puedes activar las notificaciones.' : 'Inicia sesión para activar las notificaciones.');
+
+    if (user) {
+      console.log('[ANS Push] Usuario autenticado:', user.email);
+
+      button.disabled = false;
+
+      setStatus(
+        'Sesión detectada. Puedes activar las notificaciones.'
+      );
+
+    } else {
+
+      console.log('[ANS Push] No hay usuario autenticado.');
+
+      button.disabled = false;
+
+      setStatus(
+        'Debes iniciar sesión en ANS antes de activar las notificaciones.'
+      );
+    }
   });
 
+  /*
+   * Botón de activar notificaciones.
+   */
   button.addEventListener('click', async () => {
+
+    console.log('[ANS Push] Botón presionado.');
+
     button.disabled = true;
-    setStatus('Solicitando permiso…');
+
+    setStatus('Iniciando notificaciones...');
+
     try {
-      await registerPushForCurrentUser();
-      setStatus('Notificaciones activadas en este dispositivo.', true);
-      button.textContent = '✓ Notificaciones activadas';
+
+      if (!currentUser) {
+        throw new Error(
+          'No hay una sesión de Firebase activa. Cierra sesión, vuelve a iniciar sesión y prueba nuevamente.'
+        );
+      }
+
+      setStatus('Comprobando compatibilidad...');
+
+      const supported = await isSupported();
+
+      if (!supported) {
+        throw new Error(
+          'Este navegador no es compatible con Firebase Cloud Messaging.'
+        );
+      }
+
+      setStatus('Preparando Firebase Messaging...');
+
+      if (!messaging) {
+        messaging = getMessaging(app);
+      }
+
+      if (!('Notification' in window)) {
+        throw new Error(
+          'Este navegador no permite notificaciones.'
+        );
+      }
+
+      if (!('serviceWorker' in navigator)) {
+        throw new Error(
+          'Este navegador no permite Service Workers.'
+        );
+      }
+
+      setStatus('Solicitando permiso de notificaciones...');
+
+      const permission = await Notification.requestPermission();
+
+      console.log(
+        '[ANS Push] Permiso:',
+        permission
+      );
+
+      if (permission !== 'granted') {
+        throw new Error(
+          'El permiso de notificaciones no fue concedido.'
+        );
+      }
+
+      setStatus('Registrando dispositivo...');
+
+      const registration =
+        await navigator.serviceWorker.register(
+          './firebase-messaging-sw.js',
+          {
+            scope: './'
+          }
+        );
+
+      console.log(
+        '[ANS Push] Service Worker registrado:',
+        registration.scope
+      );
+
+      await navigator.serviceWorker.ready;
+
+      setStatus('Generando token del dispositivo...');
+
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_PUBLIC_KEY,
+        serviceWorkerRegistration: registration
+      });
+
+      if (!token) {
+        throw new Error(
+          'Firebase no devolvió el token del dispositivo.'
+        );
+      }
+
+      console.log(
+        '[ANS Push] Token obtenido correctamente.'
+      );
+
+      setStatus('Guardando dispositivo en Firebase...');
+
+      await addDoc(
+        collection(db, 'fcmTokens'),
+        {
+          uid: currentUser.uid,
+          email: currentUser.email || '',
+          token: token,
+          platform: /iPhone|iPad|iPod/i.test(
+            navigator.userAgent
+          )
+            ? 'iOS'
+            : 'Web',
+          userAgent: navigator.userAgent,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        }
+      );
+
+      console.log(
+        '[ANS Push] Dispositivo guardado en Firestore.'
+      );
+
+      setStatus(
+        '✓ Notificaciones activadas correctamente en este dispositivo.',
+        true
+      );
+
+      button.textContent =
+        '✓ Notificaciones activadas';
+
     } catch (error) {
-      console.error('[ANS Push]', error);
-      setStatus(error.message || 'No se pudieron activar las notificaciones.');
+
+      console.error(
+        '[ANS Push] ERROR:',
+        error
+      );
+
+      setStatus(
+        'Error: ' +
+        (error.message || 'No se pudieron activar las notificaciones.')
+      );
+
       button.disabled = false;
     }
   });
 
-  onMessage(messaging, (payload) => {
-    console.log('[ANS Push] Mensaje recibido con ANS abierta:', payload);
-    // Cuando ANS está abierta, no mostramos otra notificación del navegador automáticamente.
-    // Aquí puedes conectar un aviso visual propio si quieres.
+  /*
+   * Mensajes recibidos mientras ANS está abierta.
+   */
+  onAuthStateChanged(auth, async () => {
+
+    try {
+
+      if (!messaging) {
+
+        const supported = await isSupported();
+
+        if (!supported) return;
+
+        messaging = getMessaging(app);
+      }
+
+      onMessage(messaging, (payload) => {
+
+        console.log(
+          '[ANS Push] Notificación recibida:',
+          payload
+        );
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        '[ANS Push] Error inicializando mensajes:',
+        error
+      );
+
+    }
+
   });
 }
 
