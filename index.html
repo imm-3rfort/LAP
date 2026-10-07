@@ -25,7 +25,6 @@ body{
              radial-gradient(circle at 80% 80%,rgba(91,27,21,.13),transparent 35%),
              linear-gradient(145deg,#080605,var(--ink),#120c08);
 }
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;box-shadow:inset 0 0 130px 30px #000}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.028;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:4px 4px}
 .wrap{position:relative;width:min(1200px,100%);margin:0 auto;padding:0 1.5rem 4rem}
 header{text-align:center;padding:1.5rem 0 1rem}
@@ -111,29 +110,31 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 .account-forms.hidden{display:none}
 .account-email{color:var(--gold3);overflow-wrap:anywhere}
 
-.ans-command-panel{width:min(900px,100%);margin:1.5rem auto;padding:1.4rem;border:1px solid var(--gold2);border-radius:9px;background:linear-gradient(145deg,rgba(43,29,19,.94),rgba(16,11,8,.97));box-shadow:0 14px 32px rgba(0,0,0,.4),inset 0 0 30px rgba(0,0,0,.35)}
-.ans-command-kicker{margin:0 0 .45rem;color:var(--gold3);font:700 .78rem var(--cin);letter-spacing:.12em;text-transform:uppercase;text-align:center}
-.ans-command-note{margin:0 auto 1.2rem;color:var(--muted);text-align:center;max-width:700px}
-.ans-command-form{display:flex;flex-direction:column;gap:.8rem}
-.ans-command-label{color:var(--gold);font:700 .78rem var(--cin);letter-spacing:.07em;text-transform:uppercase}
-.ans-command-input{width:100%;padding:.78rem .9rem;border:1px solid rgba(168,120,42,.55);border-radius:5px;background:#100b07;color:var(--bone);font:1rem var(--fell);outline:none;box-sizing:border-box}
-.ans-command-input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(216,163,58,.08)}
-.ans-command-textarea{min-height:150px;resize:vertical}
-.ans-recipient{padding:.78rem .9rem;border:1px solid rgba(168,120,42,.35);border-radius:5px;background:rgba(16,11,7,.75);color:var(--gold3);font:700 .95rem var(--cin)}
-.ans-command-status{min-height:1.5em;margin:.8rem 0 0;color:var(--muted);text-align:center}
-.ans-command-status.ok{color:var(--gold3)}
-.ans-command-status.error{color:#d67a6d}
-.ans-history{margin-top:2rem;padding-top:1.2rem;border-top:1px solid rgba(201,155,60,.25)}
-.ans-history-title{margin:0 0 .8rem;color:var(--gold);font:700 1.25rem var(--cin);letter-spacing:.04em;text-align:center}
-.ans-history-empty{margin:0;color:var(--muted);text-align:center}
-.ans-edic-card{margin:.8rem 0;padding:1rem;border:1px solid rgba(168,120,42,.35);border-radius:6px;background:rgba(16,11,7,.72)}
-.ans-edic-head{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;flex-wrap:wrap}
-.ans-edic-title{margin:0;color:var(--gold3);font:700 1.05rem var(--cin)}
-.ans-edic-meta{color:var(--muted);font-size:.82rem}
-.ans-edic-body{margin:.65rem 0 0;color:var(--bone);white-space:pre-wrap;line-height:1.55}
-.ans-notification-box{margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(201,155,60,.25);text-align:center}
-@media(max-width:620px){.ans-command-panel{padding:1rem}.ans-edic-head{flex-direction:column;gap:.25rem}}
-@media(max-width:620px){.account-panel{padding:1rem}.account-actions{flex-direction:column}.account-btn{width:100%}}
+/* =========================================================
+   SHARE A TIP
+   ========================================================= */
+.share-tip-panel{width:min(900px,100%);margin:1.5rem auto;padding:1.4rem;border:1px solid var(--gold2);border-radius:9px;background:linear-gradient(145deg,rgba(43,29,19,.94),rgba(16,11,8,.97));box-shadow:0 14px 32px rgba(0,0,0,.4),inset 0 0 30px rgba(0,0,0,.35)}
+.share-tip-form{display:flex;flex-direction:column;gap:.8rem}
+.share-tip-form.hidden{display:none}
+.share-tip-kicker{margin:0 0 .1rem;color:var(--gold3);font:700 .78rem var(--cin);letter-spacing:.12em;text-transform:uppercase;text-align:center}
+.share-tip-label{color:var(--gold);font:700 .78rem var(--cin);letter-spacing:.07em;text-transform:uppercase}
+.share-tip-input{width:100%;padding:.78rem .9rem;border:1px solid rgba(168,120,42,.55);border-radius:5px;background:#100b07;color:var(--bone);font:1rem var(--fell);outline:none}
+.share-tip-input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(216,163,58,.08)}
+.share-tip-textarea{min-height:145px;resize:vertical}
+.share-tip-status{min-height:1.5em;margin:.2rem 0 0;color:var(--muted);text-align:center}
+.share-tip-status.ok{color:var(--gold3)}
+.share-tip-status.error{color:#d67a6d}
+.share-tips{margin-top:.1rem}
+.share-tips-title{margin:0 0 1rem;color:var(--gold);font:700 1.25rem var(--cin);letter-spacing:.04em;text-align:center}
+.share-tips-empty{margin:0;color:var(--muted);text-align:center}
+.share-tips-empty.error{color:#d67a6d}
+.tip-card{margin:.85rem 0;padding:1.1rem 1.15rem;border:1px solid rgba(168,120,42,.45);border-radius:8px;background:linear-gradient(145deg,rgba(43,29,19,.72),rgba(16,11,8,.88));box-shadow:inset 0 0 22px rgba(0,0,0,.22)}
+.tip-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;border-bottom:1px solid rgba(168,120,42,.22);padding-bottom:.55rem}
+.tip-card-title{margin:0;color:var(--gold3);font:700 1.12rem var(--cin);letter-spacing:.025em}
+.tip-card-date{color:var(--muted);font:.86rem var(--cin);white-space:nowrap}
+.tip-card-body{margin:.8rem 0;color:var(--bone);white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere}
+.tip-card-author{padding-top:.6rem;color:var(--muted);font-size:.86rem;border-top:1px dashed rgba(168,120,42,.18)}
+.tip-card-author strong{color:var(--gold)}
 
 /* ANS access control + responsive navigation */
 .mobile-nav-toggle,.nav-scrim{display:none}
@@ -163,7 +164,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 <button class="mobile-nav-toggle" id="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">☰</button>
 <div class="nav-scrim" id="nav-scrim" aria-hidden="true"></div>
 
-<nav class="site-nav" id="site-navigation" aria-label="Main navigation"> aria-label="Main navigation">
+<nav class="site-nav" id="site-navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a class="nav-logo" href="#top">⁠Made it with love: ur dear Ann♡</a>
     <ul class="nav-links">
@@ -172,7 +173,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
       <li data-auth-nav="true"><a href="#sanctuary" data-tab="sanctuary">Sanctuary</a></li>
       <li data-auth-nav="true"><a href="#alliance-duel" data-tab="alliance-duel">Alliance Duel</a></li>
       <li data-auth-nav="true"><a href="#weapons" data-tab="weapons">Weapons</a></li>
-      <li data-auth-nav="true"><a href="#ans-command" data-tab="ans-command">ANS Command</a></li>
+      <li data-auth-nav="true"><a href="#share-tip" data-tab="share-tip">Share a tip</a></li>
       <li><a href="#account" data-tab="account">Account</a></li>
       <li data-auth-nav="true"><a class="nav-btn" id="ideas-btn" href="https://forms.cloud.microsoft/r/nCfEWWHfsM" target="_blank" rel="noopener">Any ideas?</a></li>
     </ul>
@@ -209,7 +210,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 <!-- ACCOUNT / LOGIN -->
 <section id="account" class="tab">
   <h2>Account</h2>
-  <p class="intro">Sign in with the account provided by ANS Command. Your account is used to link this device to Last Asylum notifications.</p>
+  <p class="intro">Sign in with the account provided by ANS. Your account gives you access to the private alliance sections.</p>
 
   <div class="account-panel">
     <div id="account-forms" class="account-forms">
@@ -241,48 +242,37 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
       </div>
       <p id="account-logged-message" class="account-message ok" aria-live="polite"></p>
 
-      <div class="ans-notification-box">
-        <h4 class="account-title" style="font-size:1.15rem;margin:.2rem 0 .45rem;">Last Asylum Notifications</h4>
-        <p id="account-notification-status" class="account-sub" data-ans-notification-status aria-live="polite">Link this device to receive alerts from ANS.</p>
-        <button class="account-btn primary" type="button" data-ans-enable-notifications>🔔 Activate notifications</button>
-      </div>
-
     </div>
   </div>
 </section>
 
 <div class="orn"><span>⚜</span></div>
 
-<!-- ANS COMMAND / EDICTS -->
-<section id="ans-command" class="tab" data-auth-section="true">
-  <h2>ANS Command</h2>
-  <p class="intro">Official alliance edicts and announcements. Notifications are delivered to every device that has activated ANS notifications.</p>
+<!-- SHARE A TIP -->
+<section id="share-tip" class="tab" data-auth-section="true">
+  <h2>Share a tip</h2>
+  <p class="intro">Share a useful game tip with the alliance. New tips appear here live for every logged-in member.</p>
 
-  <div id="ans-command-panel" class="ans-command-panel" style="display:none;">
-    <p class="ans-command-kicker">R4 / R5 Command</p>
-    <p class="ans-command-note">Issue an official edict to the entire alliance. No individual recipient is selected.</p>
+  <div class="share-tip-panel">
+    <form id="share-tip-form" class="share-tip-form hidden">
+      <p class="share-tip-kicker">Alliance knowledge</p>
+      <label class="share-tip-label" for="share-tip-title">Tip title</label>
+      <input id="share-tip-title" class="share-tip-input" type="text" maxlength="120" placeholder="Example: Best way to prepare for Raid" required>
 
-    <form id="ans-command-form" class="ans-command-form">
-      <label class="ans-command-label" for="ans-command-title">Edict title</label>
-      <input id="ans-command-title" class="ans-command-input" type="text" maxlength="120" placeholder="Title of the edict" required>
-
-      <label class="ans-command-label" for="ans-command-body">Message</label>
-      <textarea id="ans-command-body" class="ans-command-input ans-command-textarea" maxlength="2000" placeholder="Write the message for the alliance..." required></textarea>
-
-      <label class="ans-command-label">Recipient</label>
-      <div class="ans-recipient">Entire alliance</div>
+      <label class="share-tip-label" for="share-tip-body">Your tip</label>
+      <textarea id="share-tip-body" class="share-tip-input share-tip-textarea" maxlength="2000" placeholder="Write the tip you want to share with the alliance..." required></textarea>
 
       <div class="account-actions">
-        <button id="ans-command-send" class="account-btn primary" type="submit">⚔ SEND EDICT</button>
+        <button id="share-tip-submit" class="account-btn primary" type="submit">✦ PUBLISH TIP</button>
       </div>
-      <p id="ans-command-status" class="ans-command-status" aria-live="polite"></p>
+      <p id="share-tip-status" class="share-tip-status" aria-live="polite"></p>
     </form>
   </div>
 
-  <div class="ans-command-panel">
-    <div class="ans-history">
-      <h3 class="ans-history-title">Edict Archive</h3>
-      <div id="ans-command-history" aria-live="polite"><p class="ans-history-empty">Sign in to view the alliance edict archive.</p></div>
+  <div class="share-tip-panel">
+    <div class="share-tips">
+      <h3 class="share-tips-title">Alliance tips</h3>
+      <div id="share-tips-list" aria-live="polite"><p class="share-tips-empty">Sign in to view the alliance tips.</p></div>
     </div>
   </div>
 </section>
@@ -1711,7 +1701,7 @@ document.getElementById('logout-button').addEventListener('click', async ()=>{
     await signOut(auth);
     loggedMessage.textContent = '';
     title.textContent = 'Enter the Asylum';
-    subtitle.textContent = 'Sign in with the account provided by ANS Command.';
+    subtitle.textContent = 'Sign in with the account provided by ANS.';
     showMessage('');
     window.showANSTab?.('about-ans', true, false);
   }catch(error){
@@ -1726,7 +1716,7 @@ onAuthStateChanged(auth, user=>{
     forms.style.display = 'none';
     logged.classList.add('show');
     userEmail.textContent = user.email || 'Signed-in user';
-    loggedMessage.textContent = 'Your device can now be linked to ANS notifications.';
+    loggedMessage.textContent = 'You are signed in. You can now access the alliance sections and share tips.';
   }else{
     forms.style.display = '';
     logged.classList.remove('show');
@@ -1737,11 +1727,8 @@ onAuthStateChanged(auth, user=>{
 window.ansAuth = auth;
 </script>
 
-<!-- ANS Web Push / Firebase Cloud Messaging -->
-<script type="module" src="./notifications-client.js"></script>
-
-<!-- ANS Command / Alliance Edicts -->
-<script type="module" src="./ans-command.js"></script>
+<!-- Share a Tip / live Firestore feed -->
+<script type="module" src="./share-tips.js"></script>
 
 </body>
 </html>
