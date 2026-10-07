@@ -214,6 +214,28 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
         <p id="account-notification-status" class="account-sub" data-ans-notification-status aria-live="polite">Link this device to receive alerts from ANS.</p>
         <button class="account-btn primary" type="button" data-ans-enable-notifications>🔔 Activate notifications</button>
       </div>
+
+      <div id="ans-command" class="account-notifications" style="display:none;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(201,155,60,.25);text-align:left;">
+        <h4 class="account-title" style="font-size:1.15rem;margin:.2rem 0 .45rem;">⚔ ANS COMMAND</h4>
+        <p class="account-sub" style="margin-bottom:.9rem;">R4/R5 — Send a push notification to an ANS member.</p>
+        <form id="ans-notification-form">
+          <label for="ans-recipient" style="display:block;margin:.65rem 0 .3rem;">Recipient</label>
+          <select id="ans-recipient" required style="width:100%;padding:.7rem;border-radius:5px;background:#17110d;color:inherit;border:1px solid rgba(201,155,60,.45);">
+            <option value="">Loading members...</option>
+          </select>
+          <label for="ans-notification-title" style="display:block;margin:.65rem 0 .3rem;">Title</label>
+          <input id="ans-notification-title" maxlength="100" required placeholder="Example: WAR COUNCIL" style="width:100%;padding:.7rem;border-radius:5px;background:#17110d;color:inherit;border:1px solid rgba(201,155,60,.45);box-sizing:border-box;">
+          <label for="ans-notification-body" style="display:block;margin:.65rem 0 .3rem;">Message</label>
+          <textarea id="ans-notification-body" maxlength="1000" rows="5" required placeholder="Write the message for the member..." style="width:100%;padding:.7rem;border-radius:5px;background:#17110d;color:inherit;border:1px solid rgba(201,155,60,.45);box-sizing:border-box;resize:vertical;"></textarea>
+          <button class="account-btn primary" id="ans-send-notification" type="submit" style="margin-top:.8rem;">📯 SEND EDICT</button>
+          <p id="ans-command-status" class="account-message" aria-live="polite" style="margin-top:.6rem;"></p>
+        </form>
+
+        <div style="margin-top:1.2rem;">
+          <h5 class="account-title" style="font-size:1rem;margin:.2rem 0 .5rem;">Notification history</h5>
+          <div id="ans-notification-history"><p class="account-sub">No notifications yet.</p></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1679,6 +1701,7 @@ onAuthStateChanged(auth, user=>{
 
 <!-- ANS Web Push / Firebase Cloud Messaging -->
 <script type="module" src="./notifications-client.js"></script>
+<script type="module" src="./ans-admin.js"></script>
 
 </body>
 </html>
