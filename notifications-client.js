@@ -1,19 +1,7 @@
-/* ANS — Last Asylum | Web Push client */
-
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-import {
-  isSupported,
-  getMessaging,
-  getToken,
-  onMessage
-} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js';
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+import { getMessaging, getToken, isSupported, onMessage } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCdsBBd8-TtX8T8zDFiSr5xumDwD51H0Mc',
@@ -25,246 +13,110 @@ const firebaseConfig = {
   measurementId: 'G-4XCBZMJ6YQ'
 };
 
-const VAPID_PUBLIC_KEY =
-  'BIg4XxQZ3F42lXMkPyYgMvHhbcZnfoneClhuXZXVsTWRYifU9-RQ_fsXcUTSPL5jpxmfZbp6_XjL9mgMgDjNbkI';
-
-const app = initializeApp(firebaseConfig);
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const vapidKey = 'BIg4XxQZ3F42lXMkPyYgMvHhbcZnfoneClhuXZXVsTWRYifU9-RQ_fsXcUTSPL5jpxmfZbp6_XjL9mgMgDjNbkI';
 
-let messaging = null;
-let currentUser = null;
+const button = document.querySelector('[data-ans-enable-notifications]');
+const status = document.querySelector('[data-ans-notification-status]');
 
-function initNotificationUI() {
+function setStatus(text, type = '') {
+  if (!status) return;
+  status.textContent = text;
+  status.className = 'account-sub' + (type ? ` ${type}` : '');
+}
 
-  const button = document.querySelector(
-    '[data-ans-enable-notifications]'
-  );
+async function activateNotifications(user) {
+  if (!button) return;
 
-  const status = document.querySelector(
-    '[data-ans-notification-status]'
-  );
+  button.disabled = true;
+  setStatus('Opening the gates for notifications...');
 
-  if (!button) {
-    console.error('[ANS Push] No encontré el botón de notificaciones.');
-    return;
+  try {
+    if (!('Notification' in window)) throw new Error('NOTIFICATIONS_UNSUPPORTED');
+    if (!('serviceWorker' in navigator)) throw new Error('SERVICE_WORKER_UNSUPPORTED');
+    if (!(await isSupported())) throw new Error('FCM_UNSUPPORTED');
+
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') throw new Error('PERMISSION_DENIED');
+
+    const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+    await navigator.serviceWorker.ready;
+
+    const messaging = getMessaging(app);
+    const token = await getToken(messaging, {
+      vapidKey,
+      serviceWorkerRegistration: registration
+    });
+
+    if (!token) throw new Error('TOKEN_EMPTY');
+
+    const tokenId = encodeURIComponent(token).replace(/%/g, '_');
+    await setDoc(doc(db, 'fcmTokens', tokenId), {
+      uid: user.uid,
+      email: user.email || '',
+      token,
+      platform: /iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'iOS' : /Android/i.test(navigator.userAgent) ? 'Android' : 'Web',
+      userAgent: navigator.userAgent,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+
+    setStatus('✓ Notifications activated on this device.', 'ok');
+    button.textContent = '✓ Notifications activated';
+  } catch (error) {
+    console.error('[ANS Notifications]', error);
+    const messages = {
+      NOTIFICATIONS_UNSUPPORTED: 'This browser does not support notifications.',
+      SERVICE_WORKER_UNSUPPORTED: 'This browser does not support service workers.',
+      FCM_UNSUPPORTED: 'Push notifications are not supported on this browser/device.',
+      PERMISSION_DENIED: 'Notification permission was denied. Allow notifications for this site and try again.',
+      TOKEN_EMPTY: 'Firebase did not return a notification token.'
+    };
+    setStatus(messages[error.message] || 'The device could not be linked to ANS notifications.', 'error');
+    button.disabled = false;
   }
+}
 
-  console.log('[ANS Push] Script cargado correctamente.');
-
-  const setStatus = (message, ok = false) => {
-    if (!status) return;
-
-    status.textContent = message;
-    status.style.color = ok ? '#d8b35a' : '';
-  };
-
-  /*
-   * Primero comprobamos la sesión de Firebase.
-   */
-  onAuthStateChanged(auth, (user) => {
-
-    currentUser = user;
-
-    if (user) {
-      console.log('[ANS Push] Usuario autenticado:', user.email);
-
-      button.disabled = false;
-
-      setStatus(
-        'Sesión detectada. Puedes activar las notificaciones.'
-      );
-
-    } else {
-
-      console.log('[ANS Push] No hay usuario autenticado.');
-
-      button.disabled = false;
-
-      setStatus(
-        'Debes iniciar sesión en ANS antes de activar las notificaciones.'
-      );
+if (button) {
+  onAuthStateChanged(auth, async user => {
+    if (!user) {
+      button.disabled = true;
+      button.style.display = 'none';
+      setStatus('Sign in to link this device to ANS notifications.');
+      return;
     }
-  });
 
-  /*
-   * Botón de activar notificaciones.
-   */
-  button.addEventListener('click', async () => {
-
-    console.log('[ANS Push] Botón presionado.');
-
-    button.disabled = true;
-
-    setStatus('Iniciando notificaciones...');
+    button.style.display = '';
+    button.disabled = false;
+    button.textContent = '🔔 Activate notifications';
+    setStatus('Link this device to receive alerts from ANS.');
 
     try {
-
-      if (!currentUser) {
-        throw new Error(
-          'No hay una sesión de Firebase activa. Cierra sesión, vuelve a iniciar sesión y prueba nuevamente.'
-        );
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      if (snap.exists() && snap.data().notificationsActivated === true) {
+        setStatus('This account has notifications enabled. You can activate this device below.', 'ok');
       }
-
-      setStatus('Comprobando compatibilidad...');
-
-      const supported = await isSupported();
-
-      if (!supported) {
-        throw new Error(
-          'Este navegador no es compatible con Firebase Cloud Messaging.'
-        );
-      }
-
-      setStatus('Preparando Firebase Messaging...');
-
-      if (!messaging) {
-        messaging = getMessaging(app);
-      }
-
-      if (!('Notification' in window)) {
-        throw new Error(
-          'Este navegador no permite notificaciones.'
-        );
-      }
-
-      if (!('serviceWorker' in navigator)) {
-        throw new Error(
-          'Este navegador no permite Service Workers.'
-        );
-      }
-
-      setStatus('Solicitando permiso de notificaciones...');
-
-      const permission = await Notification.requestPermission();
-
-      console.log(
-        '[ANS Push] Permiso:',
-        permission
-      );
-
-      if (permission !== 'granted') {
-        throw new Error(
-          'El permiso de notificaciones no fue concedido.'
-        );
-      }
-
-      setStatus('Registrando dispositivo...');
-
-      const registration =
-        await navigator.serviceWorker.register(
-          './firebase-messaging-sw.js',
-          {
-            scope: './'
-          }
-        );
-
-      console.log(
-        '[ANS Push] Service Worker registrado:',
-        registration.scope
-      );
-
-      await navigator.serviceWorker.ready;
-
-      setStatus('Generando token del dispositivo...');
-
-      const token = await getToken(messaging, {
-        vapidKey: VAPID_PUBLIC_KEY,
-        serviceWorkerRegistration: registration
-      });
-
-      if (!token) {
-        throw new Error(
-          'Firebase no devolvió el token del dispositivo.'
-        );
-      }
-
-      console.log(
-        '[ANS Push] Token obtenido correctamente.'
-      );
-
-      setStatus('Guardando dispositivo en Firebase...');
-
-      await addDoc(
-        collection(db, 'fcmTokens'),
-        {
-          uid: currentUser.uid,
-          email: currentUser.email || '',
-          token: token,
-          platform: /iPhone|iPad|iPod/i.test(
-            navigator.userAgent
-          )
-            ? 'iOS'
-            : 'Web',
-          userAgent: navigator.userAgent,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        }
-      );
-
-      console.log(
-        '[ANS Push] Dispositivo guardado en Firestore.'
-      );
-
-      setStatus(
-        '✓ Notificaciones activadas correctamente en este dispositivo.',
-        true
-      );
-
-      button.textContent =
-        '✓ Notificaciones activadas';
-
     } catch (error) {
-
-      console.error(
-        '[ANS Push] ERROR:',
-        error
-      );
-
-      setStatus(
-        'Error: ' +
-        (error.message || 'No se pudieron activar las notificaciones.')
-      );
-
-      button.disabled = false;
-    }
-  });
-
-  /*
-   * Mensajes recibidos mientras ANS está abierta.
-   */
-  onAuthStateChanged(auth, async () => {
-
-    try {
-
-      if (!messaging) {
-
-        const supported = await isSupported();
-
-        if (!supported) return;
-
-        messaging = getMessaging(app);
-      }
-
-      onMessage(messaging, (payload) => {
-
-        console.log(
-          '[ANS Push] Notificación recibida:',
-          payload
-        );
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        '[ANS Push] Error inicializando mensajes:',
-        error
-      );
-
+      console.warn('[ANS Notifications] Could not read user profile:', error);
     }
 
+    button.onclick = () => activateNotifications(user);
   });
 }
 
-initNotificationUI();
+// Foreground notifications: show the same alert while the site is open.
+if (await isSupported().catch(() => false)) {
+  const messaging = getMessaging(app);
+  onMessage(messaging, payload => {
+    const title = payload?.data?.title || payload?.notification?.title || 'ANS Edict';
+    const body = payload?.data?.body || payload?.notification?.body || '';
+    if (Notification.permission === 'granted') {
+      try {
+        new Notification(title, { body, icon: './icons/icon-192.png' });
+      } catch (error) {
+        console.warn('[ANS Notifications] Foreground notification failed:', error);
+      }
+    }
+  });
+}

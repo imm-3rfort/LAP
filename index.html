@@ -110,6 +110,29 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
 .account-logged.show{display:block}
 .account-forms.hidden{display:none}
 .account-email{color:var(--gold3);overflow-wrap:anywhere}
+
+.ans-command-panel{width:min(900px,100%);margin:1.5rem auto;padding:1.4rem;border:1px solid var(--gold2);border-radius:9px;background:linear-gradient(145deg,rgba(43,29,19,.94),rgba(16,11,8,.97));box-shadow:0 14px 32px rgba(0,0,0,.4),inset 0 0 30px rgba(0,0,0,.35)}
+.ans-command-kicker{margin:0 0 .45rem;color:var(--gold3);font:700 .78rem var(--cin);letter-spacing:.12em;text-transform:uppercase;text-align:center}
+.ans-command-note{margin:0 auto 1.2rem;color:var(--muted);text-align:center;max-width:700px}
+.ans-command-form{display:flex;flex-direction:column;gap:.8rem}
+.ans-command-label{color:var(--gold);font:700 .78rem var(--cin);letter-spacing:.07em;text-transform:uppercase}
+.ans-command-input{width:100%;padding:.78rem .9rem;border:1px solid rgba(168,120,42,.55);border-radius:5px;background:#100b07;color:var(--bone);font:1rem var(--fell);outline:none;box-sizing:border-box}
+.ans-command-input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(216,163,58,.08)}
+.ans-command-textarea{min-height:150px;resize:vertical}
+.ans-recipient{padding:.78rem .9rem;border:1px solid rgba(168,120,42,.35);border-radius:5px;background:rgba(16,11,7,.75);color:var(--gold3);font:700 .95rem var(--cin)}
+.ans-command-status{min-height:1.5em;margin:.8rem 0 0;color:var(--muted);text-align:center}
+.ans-command-status.ok{color:var(--gold3)}
+.ans-command-status.error{color:#d67a6d}
+.ans-history{margin-top:2rem;padding-top:1.2rem;border-top:1px solid rgba(201,155,60,.25)}
+.ans-history-title{margin:0 0 .8rem;color:var(--gold);font:700 1.25rem var(--cin);letter-spacing:.04em;text-align:center}
+.ans-history-empty{margin:0;color:var(--muted);text-align:center}
+.ans-edic-card{margin:.8rem 0;padding:1rem;border:1px solid rgba(168,120,42,.35);border-radius:6px;background:rgba(16,11,7,.72)}
+.ans-edic-head{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;flex-wrap:wrap}
+.ans-edic-title{margin:0;color:var(--gold3);font:700 1.05rem var(--cin)}
+.ans-edic-meta{color:var(--muted);font-size:.82rem}
+.ans-edic-body{margin:.65rem 0 0;color:var(--bone);white-space:pre-wrap;line-height:1.55}
+.ans-notification-box{margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(201,155,60,.25);text-align:center}
+@media(max-width:620px){.ans-command-panel{padding:1rem}.ans-edic-head{flex-direction:column;gap:.25rem}}
 @media(max-width:620px){.account-panel{padding:1rem}.account-actions{flex-direction:column}.account-btn{width:100%}}
 </style>
 </head>
@@ -124,6 +147,7 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
       <li><a href="#sanctuary" data-tab="sanctuary">Sanctuary</a></li>
       <li><a href="#alliance-duel" data-tab="alliance-duel">Alliance Duel</a></li>
       <li><a href="#weapons" data-tab="weapons">Weapons</a></li>
+      <li><a href="#ans-command" data-tab="ans-command">ANS Command</a></li>
       <li><a href="#account" data-tab="account">Account</a></li>
       <li><a class="nav-btn" id="ideas-btn" href="https://forms.cloud.microsoft/r/nCfEWWHfsM" target="_blank" rel="noopener">Any ideas?</a></li>
     </ul>
@@ -209,38 +233,51 @@ h2{margin:1.8rem 0 .8rem;color:var(--gold);font:700 clamp(2.1rem,5vw,3.4rem)/1.1
       </div>
       <p id="account-logged-message" class="account-message ok" aria-live="polite"></p>
 
-      <div class="account-notifications" style="margin:1.25rem auto 0;padding-top:1rem;border-top:1px solid rgba(201,155,60,.25);">
+      <div class="ans-notification-box">
         <h4 class="account-title" style="font-size:1.15rem;margin:.2rem 0 .45rem;">Last Asylum Notifications</h4>
         <p id="account-notification-status" class="account-sub" data-ans-notification-status aria-live="polite">Link this device to receive alerts from ANS.</p>
         <button class="account-btn primary" type="button" data-ans-enable-notifications>🔔 Activate notifications</button>
       </div>
 
-      <div id="ans-command" class="account-notifications" style="display:none;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(201,155,60,.25);text-align:left;">
-        <h4 class="account-title" style="font-size:1.15rem;margin:.2rem 0 .45rem;">⚔ ANS COMMAND</h4>
-        <p class="account-sub" style="margin-bottom:.9rem;">R4/R5 — Send a push notification to an ANS member.</p>
-        <form id="ans-notification-form">
-          <label for="ans-recipient" style="display:block;margin:.65rem 0 .3rem;">Recipient</label>
-          <select id="ans-recipient" required style="width:100%;padding:.7rem;border-radius:5px;background:#17110d;color:inherit;border:1px solid rgba(201,155,60,.45);">
-            <option value="">Loading members...</option>
-          </select>
-          <label for="ans-notification-title" style="display:block;margin:.65rem 0 .3rem;">Title</label>
-          <input id="ans-notification-title" maxlength="100" required placeholder="Example: WAR COUNCIL" style="width:100%;padding:.7rem;border-radius:5px;background:#17110d;color:inherit;border:1px solid rgba(201,155,60,.45);box-sizing:border-box;">
-          <label for="ans-notification-body" style="display:block;margin:.65rem 0 .3rem;">Message</label>
-          <textarea id="ans-notification-body" maxlength="1000" rows="5" required placeholder="Write the message for the member..." style="width:100%;padding:.7rem;border-radius:5px;background:#17110d;color:inherit;border:1px solid rgba(201,155,60,.45);box-sizing:border-box;resize:vertical;"></textarea>
-          <button class="account-btn primary" id="ans-send-notification" type="submit" style="margin-top:.8rem;">📯 SEND EDICT</button>
-          <p id="ans-command-status" class="account-message" aria-live="polite" style="margin-top:.6rem;"></p>
-        </form>
-
-        <div style="margin-top:1.2rem;">
-          <h5 class="account-title" style="font-size:1rem;margin:.2rem 0 .5rem;">Notification history</h5>
-          <div id="ans-notification-history"><p class="account-sub">No notifications yet.</p></div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
 <div class="orn"><span>⚜</span></div>
+
+<!-- ANS COMMAND / EDICTS -->
+<section id="ans-command" class="tab">
+  <h2>ANS Command</h2>
+  <p class="intro">Official alliance edicts and announcements. Notifications are delivered to every device that has activated ANS notifications.</p>
+
+  <div id="ans-command-panel" class="ans-command-panel" style="display:none;">
+    <p class="ans-command-kicker">R4 / R5 Command</p>
+    <p class="ans-command-note">Issue an official edict to the entire alliance. No individual recipient is selected.</p>
+
+    <form id="ans-command-form" class="ans-command-form">
+      <label class="ans-command-label" for="ans-command-title">Edict title</label>
+      <input id="ans-command-title" class="ans-command-input" type="text" maxlength="120" placeholder="Title of the edict" required>
+
+      <label class="ans-command-label" for="ans-command-body">Message</label>
+      <textarea id="ans-command-body" class="ans-command-input ans-command-textarea" maxlength="2000" placeholder="Write the message for the alliance..." required></textarea>
+
+      <label class="ans-command-label">Recipient</label>
+      <div class="ans-recipient">Entire alliance</div>
+
+      <div class="account-actions">
+        <button id="ans-command-send" class="account-btn primary" type="submit">⚔ SEND EDICT</button>
+      </div>
+      <p id="ans-command-status" class="ans-command-status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <div class="ans-command-panel">
+    <div class="ans-history">
+      <h3 class="ans-history-title">Edict Archive</h3>
+      <div id="ans-command-history" aria-live="polite"><p class="ans-history-empty">Sign in to view the alliance edict archive.</p></div>
+    </div>
+  </div>
+</section>
 
 <!-- CONSTITUION OF THE SERVER -->
 <section id="const-serv" class="tab">
@@ -1701,7 +1738,9 @@ onAuthStateChanged(auth, user=>{
 
 <!-- ANS Web Push / Firebase Cloud Messaging -->
 <script type="module" src="./notifications-client.js"></script>
-<script type="module" src="./ans-admin.js"></script>
+
+<!-- ANS Command / Alliance Edicts -->
+<script type="module" src="./ans-command.js"></script>
 
 </body>
 </html>

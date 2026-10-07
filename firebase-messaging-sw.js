@@ -1,4 +1,3 @@
-/* ANS — Last Asylum | Firebase Cloud Messaging service worker */
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
 
@@ -14,34 +13,34 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  const notification = payload.notification || {};
-  const data = payload.data || {};
-  const title = notification.title || data.title || 'ANS — Last Asylum';
-  const options = {
-    body: notification.body || data.body || '',
-    icon: data.icon || './icons/icon-192.png',
-    badge: data.badge || './icons/icon-192.png',
-    tag: data.tag || 'ans-notification',
-    data: { url: data.url || './' }
-  };
+messaging.onBackgroundMessage(payload => {
+  const title = payload?.data?.title || payload?.notification?.title || 'ANS Edict';
+  const body = payload?.data?.body || payload?.notification?.body || '';
+  const url = payload?.data?.url || 'https://imm-3rfort.github.io/LAP/';
 
-  return self.registration.showNotification(title, options);
+  self.registration.showNotification(title, {
+    body,
+    icon: './icons/icon-192.png',
+    badge: './icons/icon-192.png',
+    tag: 'ans-edict',
+    renotify: true,
+    data: { url }
+  });
 });
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const targetUrl = new URL(event.notification.data?.url || './', self.location.origin).href;
+  const url = event.notification?.data?.url || 'https://imm-3rfort.github.io/LAP/';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
       for (const client of clientList) {
         if ('focus' in client) {
-          client.navigate(targetUrl);
+          client.navigate(url);
           return client.focus();
         }
       }
-      return clients.openWindow(targetUrl);
+      if (clients.openWindow) return clients.openWindow(url);
     })
   );
 });
