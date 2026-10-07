@@ -31,7 +31,7 @@ async function registerPushForCurrentUser() {
   if (!('Notification' in window) || !('serviceWorker' in navigator)) {
     throw new Error('Este navegador no soporta notificaciones push para ANS.');
   }
-  if (VAPID_PUBLIC_KEY.startsWith('PEGA_AQUI')) {
+  if (VAPID_PUBLIC_KEY.startsWith('BIg4XxQZ3F42lXMkPyYgMvHhbcZnfoneClhuXZXVsTWRYifU9-RQ_fsXcUTSPL5jpxmfZbp6_XjL9mgMgDjNbkI')) {
     throw new Error('Falta configurar la VAPID public key de Firebase.');
   }
 
