@@ -14,6 +14,9 @@
 .theme-switch-btns button:hover{color:var(--gold);border-color:var(--gold)}
 .theme-switch-btns button[aria-pressed="true"]{color:var(--ink);background:linear-gradient(135deg,var(--gold3),var(--gold));border-color:var(--gold)}
 
+/* ---------- Logo per theme: hide the monochrome logo until the gold one is ready (no flash) ---------- */
+html[data-theme="gold"]:not(.logo-ready) .logo img{opacity:0}
+
 /* ---------- Share a tip: edit / delete ---------- */
 .tip-card-actions{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end;margin-top:.7rem}
 .tip-card-actions .account-btn{padding:.45rem .8rem;font-size:.7rem}
