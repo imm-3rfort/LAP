@@ -16,10 +16,14 @@ window.GUIDE_IMAGES = {
     ['images/ministro-6.png', 'Minister of Construction | Building Construction Speed +50% ; Research Speed +25%. This is especially useful during Phase 2 of the Alliance Duel, when you want to maximize your points from construction and research. A good strategy is to coordinate this with your Survival Battle objectives whenever possible, so the same action can help you score points in both events.'],
     ['images/ministro-7.png', 'Minister of Development | Provides: Research Speed +50% ; Building Construction Speed +25%. This is especially useful during Phase 3 of the Alliance Duel, when research points are important. Just like with the Construction Minister, try to time your actions with your Survival Battle objectives so you can earn points from both events at the same time.'],
     ['images/ministro-8.png', 'Minister of the Inner Court | Provides: Grain, Timber and Herb Output +100%. This is useful when you want to maximize your resource production.'],
-    ['images/ministro-9.png', 'TIME IS EVERYTHING | The most important thing to remember is: get the Minister title first, then start the action.'],
+    ['images/ministro-9.png', 'TIME IS EVERYTHING | The most important thing to remember is: get the Minister title first, then start the action.']
   ],
   'guide-gift-codes': [
-    // 'images/codigos-1.png',
+    ['images/perfil-1.png', 'Step 1. Tap your Profile in the top-left corner of the screen.'],
+    ['images/codigos-1.png', 'Step 2. Tap Settings.'],
+    ['images/codigos-2.png', 'Step 3. Select Gift Code'],
+    ['images/codigos-3.png', 'Step 4. Enter your gift code and redeem your rewards!'],
+    ['images/codigos-4.png', 'Tip: Make sure to enter the code correctly, as some codes may be case-sensitive or have an expiration date.']
   ],
   'guide-help-members': [
     // 'images/ayuda-1.png',
