@@ -30,7 +30,7 @@ html[data-theme="gold"] body{color:var(--bone);background:radial-gradient(circle
              radial-gradient(circle at 80% 80%,rgba(91,27,21,.13),transparent 35%),
              linear-gradient(145deg,#080605,var(--ink),#120c08)}
 html[data-theme="gold"] body::after{background-image:radial-gradient(#fff 1px,transparent 1px);background-size:4px 4px}
-html[data-theme="gold"] .logo{-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%);filter:drop-shadow(0 12px 30px #000) drop-shadow(0 0 18px rgba(216,163,58,.12))}
+html[data-theme="gold"] .logo{filter:drop-shadow(0 12px 30px #000) drop-shadow(0 0 18px rgba(216,163,58,.12))}
 html[data-theme="gold"] h1{color:var(--gold);text-shadow:0 2px 0 #4c3010,0 0 25px rgba(216,163,58,.18)}
 html[data-theme="gold"] .sub{color:var(--muted)}
 html[data-theme="gold"] h2{color:var(--gold);text-shadow:0 2px 0 #4c3010,0 0 18px rgba(216,163,58,.12)}
