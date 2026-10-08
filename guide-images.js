@@ -16,7 +16,7 @@
    ========================================================= */
 window.GUIDE_IMAGES = {
   'guide-profile': [
-    // 'images/perfil-1.png',
+    'images/perfil-1.png',
   ],
   'guide-minister': [
     // 'images/ministro-1.png',
