@@ -1,0 +1,149 @@
+/* =========================================================
+   ANS THEMES — monochrome (default) / gold
+   - Monochrome lives in index.html.
+   - This file adds: the theme switch (sidebar), the Share a tip
+     edit/delete buttons, and the GOLD theme (original palette).
+   - Gold is applied when <html data-theme="gold">.
+   ========================================================= */
+
+/* ---------- Theme switch (sidebar) ---------- */
+.theme-switch{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:.5rem}
+.theme-switch-label{color:var(--muted);font:700 .7rem var(--cin);letter-spacing:.12em;text-transform:uppercase;text-align:center}
+.theme-switch-btns{display:flex;gap:.4rem}
+.theme-switch-btns button{flex:1;padding:.55rem .3rem;border:1px solid var(--gold2);border-radius:5px;background:transparent;color:var(--muted);cursor:pointer;font:700 .66rem var(--cin);letter-spacing:.05em;text-transform:uppercase;transition:background .2s,color .2s,border-color .2s}
+.theme-switch-btns button:hover{color:var(--gold);border-color:var(--gold)}
+.theme-switch-btns button[aria-pressed="true"]{color:var(--ink);background:linear-gradient(135deg,var(--gold3),var(--gold));border-color:var(--gold)}
+
+/* ---------- Share a tip: edit / delete ---------- */
+.tip-card-actions{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end;margin-top:.7rem}
+.tip-card-actions .account-btn{padding:.45rem .8rem;font-size:.7rem}
+.tip-card-edit{display:flex;flex-direction:column;gap:.6rem;margin-top:.8rem}
+.tip-card-msg{min-height:1.2em;margin:0;color:var(--muted);font-style:italic;text-align:center}
+.tip-card-edited{color:var(--muted)}
+
+/* ---------- GOLD THEME (original palette, generated from the original CSS) ---------- */
+html[data-theme="gold"]{--ink:#0b0806;--ink2:#120d09;--leather:#211710;--leather2:#2b1d13;--gold:#d8a33a;--gold2:#9b6d25;--gold3:#f0c96b;--bone:#e7d7b2;--muted:#9d8a6b;--blood:#7e241d;--blood2:#a93629;--line:rgba(168,120,42,.42)}
+html[data-theme="gold"] body{color:var(--bone);background:radial-gradient(circle at 50% -10%,rgba(104,72,34,.34),transparent 45%),
+             radial-gradient(circle at 80% 80%,rgba(91,27,21,.13),transparent 35%),
+             linear-gradient(145deg,#080605,var(--ink),#120c08)}
+html[data-theme="gold"] body::after{background-image:radial-gradient(#fff 1px,transparent 1px);background-size:4px 4px}
+html[data-theme="gold"] .logo{-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%);filter:drop-shadow(0 12px 30px #000) drop-shadow(0 0 18px rgba(216,163,58,.12))}
+html[data-theme="gold"] h1{color:var(--gold);text-shadow:0 2px 0 #4c3010,0 0 25px rgba(216,163,58,.18)}
+html[data-theme="gold"] .sub{color:var(--muted)}
+html[data-theme="gold"] h2{color:var(--gold);text-shadow:0 2px 0 #4c3010,0 0 18px rgba(216,163,58,.12)}
+html[data-theme="gold"] .intro,html[data-theme="gold"] .note{color:var(--muted)}
+html[data-theme="gold"] .intro b{color:var(--gold)}
+html[data-theme="gold"] .orn{color:var(--gold2)}
+html[data-theme="gold"] .orn::before,html[data-theme="gold"] .orn::after{background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+html[data-theme="gold"] .orn span{text-shadow:0 0 12px rgba(216,163,58,.25)}
+html[data-theme="gold"] .panel,html[data-theme="gold"] .duel-board,html[data-theme="gold"] .upgrade,html[data-theme="gold"] .tier{border:1px solid var(--line);background:linear-gradient(145deg,rgba(43,29,19,.92),rgba(16,11,8,.96));box-shadow:0 14px 32px rgba(0,0,0,.4),inset 0 0 30px rgba(0,0,0,.35)}
+html[data-theme="gold"] .upgrade summary{color:var(--bone);background:linear-gradient(90deg,rgba(24,16,11,.96),rgba(58,42,26,.48))}
+html[data-theme="gold"] .upgrade summary::after{color:var(--gold)}
+html[data-theme="gold"] .upgrade summary:hover{background:linear-gradient(90deg,rgba(126,36,29,.14),rgba(216,163,58,.08))}
+html[data-theme="gold"] .level-badge{color:var(--gold);text-shadow:0 2px 0 #4c3010}
+html[data-theme="gold"] .summary-title{color:var(--gold)}
+html[data-theme="gold"] .summary-unlock{color:var(--muted)}
+html[data-theme="gold"] .upgrade-content{border-top:1px solid var(--line)}
+html[data-theme="gold"] .info-box{border:1px solid rgba(90,67,39,.8);background:rgba(18,13,9,.48)}
+html[data-theme="gold"] .info-label{color:var(--gold)}
+html[data-theme="gold"] .c{border:1px solid var(--gold2);background:#1a120b}
+html[data-theme="gold"] .c.lab{border-color:var(--gold);color:#1a120b;background:var(--gold)}
+html[data-theme="gold"] .dim{color:#6f5e45}
+html[data-theme="gold"] .face{border:1px solid var(--gold2)}
+html[data-theme="gold"] .front{color:var(--bone);background:radial-gradient(circle at 50% 30%,rgba(110,76,38,.42),transparent 45%),linear-gradient(145deg,#2b1d13,#110c08);box-shadow:inset 0 0 30px #000}
+html[data-theme="gold"] .front:hover{border-color:var(--gold);box-shadow:inset 0 0 30px #000,0 14px 30px rgba(0,0,0,.42),0 0 18px rgba(216,163,58,.08)}
+html[data-theme="gold"] .front:focus-visible,html[data-theme="gold"] .bk:focus-visible,html[data-theme="gold"] .grp summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+html[data-theme="gold"] .front .day{color:var(--muted)}
+html[data-theme="gold"] .front .pn{color:var(--muted)}
+html[data-theme="gold"] .front .nm{color:var(--gold);text-shadow:0 2px 0 #4c3010,0 0 20px rgba(216,163,58,.25)}
+html[data-theme="gold"] .front .hint{color:var(--muted)}
+html[data-theme="gold"] .back{background:#120c08}
+html[data-theme="gold"] .bk{border:0;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#2b1d13,#1a120b);color:var(--gold)}
+html[data-theme="gold"] .bk:hover{background:#3a2a1a}
+html[data-theme="gold"] .pt th{border-bottom:1px solid var(--gold2);color:var(--gold)}
+html[data-theme="gold"] .pt td{border-bottom:1px dashed #4a3620}
+html[data-theme="gold"] .pt td.n,html[data-theme="gold"] .pt th.n{color:var(--gold)}
+html[data-theme="gold"] .grp{border:1px solid #5a4327;background:rgba(18,13,9,.5)}
+html[data-theme="gold"] .grp summary{color:var(--bone)}
+html[data-theme="gold"] .grp .pl::before{color:var(--gold)}
+html[data-theme="gold"] .empty{color:var(--muted)}
+html[data-theme="gold"] .site-nav{background:linear-gradient(180deg,rgba(22,15,10,.98),rgba(11,8,6,.98));border-right:1px solid var(--gold2);box-shadow:8px 0 35px rgba(0,0,0,.45)}
+html[data-theme="gold"] .nav-logo{border-bottom:1px solid rgba(168,120,42,.25);color:var(--gold);text-shadow:0 0 15px rgba(216,163,58,.15)}
+html[data-theme="gold"] .nav-links a{border:1px solid transparent;color:var(--muted)}
+html[data-theme="gold"] .nav-links a::before{background:var(--gold)}
+html[data-theme="gold"] .nav-links a:hover{color:var(--gold);background:linear-gradient(90deg,rgba(216,163,58,.1),transparent);border-color:rgba(168,120,42,.45)}
+html[data-theme="gold"] .nav-links a.active{color:var(--gold);background:linear-gradient(90deg,rgba(216,163,58,.16),rgba(216,163,58,.03));border-color:var(--gold2);box-shadow:inset 3px 0 0 var(--gold)}
+html[data-theme="gold"] .nav-links a.nav-btn{color:#120d09;background:linear-gradient(135deg,var(--gold3),var(--gold));border-color:var(--gold);box-shadow:0 5px 18px rgba(0,0,0,.25)}
+html[data-theme="gold"] .nav-links a.nav-btn:hover{color:#120d09;background:var(--gold3)}
+html[data-theme="gold"] .rank-badge{color:var(--gold);text-shadow:0 2px 0 #4c3010}
+html[data-theme="gold"] .rank-count{color:var(--muted)}
+html[data-theme="gold"] .tier.r5{border-color:var(--gold)}
+html[data-theme="gold"] .tier.r5 .c{background:var(--gold);color:#1a120b;border-color:var(--gold)}
+html[data-theme="gold"] .link{background:linear-gradient(var(--gold2),var(--gold))}
+html[data-theme="gold"] #const-serv .constitution-face{border:1px solid var(--gold2);background:linear-gradient(145deg,rgba(52,38,25,.97),rgba(20,13,9,.98));box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 45px rgba(0,0,0,.55)}
+html[data-theme="gold"] #const-serv .constitution-face::before{background-image:url("");background-size:cover;background-position:center}
+html[data-theme="gold"] #const-serv .constitution-face::after{border:1px solid rgba(216,163,58,.12)}
+html[data-theme="gold"] #const-serv .constitution-front h3{color:var(--gold)}
+html[data-theme="gold"] #const-serv .constitution-subtitle{color:var(--muted)}
+html[data-theme="gold"] #const-serv .constitution-index button{border:1px solid rgba(168,120,42,.35);background:linear-gradient(90deg,rgba(20,13,9,.9),rgba(45,31,20,.5));color:var(--bone)}
+html[data-theme="gold"] #const-serv .constitution-index button:hover{color:var(--gold);border-color:var(--gold);background:linear-gradient(90deg,rgba(126,36,29,.18),rgba(216,163,58,.08))}
+html[data-theme="gold"] #const-serv .constitution-open{border:1px solid var(--gold);background:linear-gradient(135deg,var(--gold3),var(--gold));color:#1a120b;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+html[data-theme="gold"] #const-serv .constitution-open:hover{box-shadow:0 9px 22px rgba(0,0,0,.35)}
+html[data-theme="gold"] #const-serv .constitution-sidebar{background:linear-gradient(180deg,rgba(18,12,8,.96),rgba(10,7,5,.96));border-right:1px solid var(--line)}
+html[data-theme="gold"] #const-serv .constitution-sidebar-title{color:var(--gold)}
+html[data-theme="gold"] #const-serv .constitution-sidebar button{border:1px solid transparent;background:transparent;color:var(--muted)}
+html[data-theme="gold"] #const-serv .constitution-sidebar button:hover{color:var(--gold);border-color:rgba(168,120,42,.45);background:rgba(216,163,58,.06)}
+html[data-theme="gold"] #const-serv .constitution-sidebar button.active{color:var(--gold);border-color:var(--gold2);background:rgba(216,163,58,.10);box-shadow:inset 2px 0 var(--gold)}
+html[data-theme="gold"] #const-serv .constitution-topbar{background:linear-gradient(to bottom,#1a120b 80%,transparent)}
+html[data-theme="gold"] #const-serv .constitution-topbar button{border:1px solid rgba(168,120,42,.55);background:#17100b;color:var(--gold)}
+html[data-theme="gold"] #const-serv .constitution-topbar button:hover{background:#2e2217;border-color:var(--gold)}
+html[data-theme="gold"] #const-serv .constitution-document h3{color:var(--gold)}
+html[data-theme="gold"] #const-serv .constitution-article .intro{color:var(--gold)}
+html[data-theme="gold"] #const-serv .constitution-sidebar::-webkit-scrollbar-track,html[data-theme="gold"] #const-serv .constitution-document::-webkit-scrollbar-track,html[data-theme="gold"] #const-serv .constitution-front-content::-webkit-scrollbar-track{background:#100b07}
+html[data-theme="gold"] #const-serv .constitution-sidebar::-webkit-scrollbar-thumb,html[data-theme="gold"] #const-serv .constitution-document::-webkit-scrollbar-thumb,html[data-theme="gold"] #const-serv .constitution-front-content::-webkit-scrollbar-thumb{background:#6f542d}
+@media(max-width:820px){
+html[data-theme="gold"] .site-nav{border-right:0;border-bottom:1px solid var(--gold2);box-shadow:0 8px 24px #0008}
+}
+@media(max-width:800px){
+html[data-theme="gold"] #const-serv .constitution-sidebar{border-right:0;border-bottom:1px solid var(--line)}
+}
+html[data-theme="gold"] .account-panel{border:1px solid var(--gold2);background:linear-gradient(145deg,rgba(43,29,19,.94),rgba(16,11,8,.97));box-shadow:0 14px 32px rgba(0,0,0,.4),inset 0 0 30px rgba(0,0,0,.35)}
+html[data-theme="gold"] .account-title{color:var(--gold)}
+html[data-theme="gold"] .account-sub{color:var(--muted)}
+html[data-theme="gold"] .account-label{color:var(--gold)}
+html[data-theme="gold"] .account-input{border:1px solid rgba(168,120,42,.55);background:#100b07;color:var(--bone);outline:none}
+html[data-theme="gold"] .account-input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(216,163,58,.08)}
+html[data-theme="gold"] .account-btn{border:1px solid var(--gold2);background:#17100b;color:var(--gold)}
+html[data-theme="gold"] .account-btn:hover{background:#2e2217;border-color:var(--gold)}
+html[data-theme="gold"] .account-btn.primary{color:#120d09;background:linear-gradient(135deg,var(--gold3),var(--gold));border-color:var(--gold)}
+html[data-theme="gold"] .account-btn.primary:hover{background:var(--gold3)}
+html[data-theme="gold"] .account-message{color:var(--muted)}
+html[data-theme="gold"] .account-message.ok{color:var(--gold3)}
+html[data-theme="gold"] .account-message.error{color:#d67a6d}
+html[data-theme="gold"] .account-switch{color:var(--muted)}
+html[data-theme="gold"] .account-link{border:0;background:none;color:var(--gold)}
+html[data-theme="gold"] .account-email{color:var(--gold3)}
+html[data-theme="gold"] .share-tip-panel{border:1px solid var(--gold2);background:linear-gradient(145deg,rgba(43,29,19,.94),rgba(16,11,8,.97));box-shadow:0 14px 32px rgba(0,0,0,.4),inset 0 0 30px rgba(0,0,0,.35)}
+html[data-theme="gold"] .share-tip-kicker{color:var(--gold3)}
+html[data-theme="gold"] .share-tip-label{color:var(--gold)}
+html[data-theme="gold"] .share-tip-input{border:1px solid rgba(168,120,42,.55);background:#100b07;color:var(--bone);outline:none}
+html[data-theme="gold"] .share-tip-input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(216,163,58,.08)}
+html[data-theme="gold"] .share-tip-status{color:var(--muted)}
+html[data-theme="gold"] .share-tip-status.ok{color:var(--gold3)}
+html[data-theme="gold"] .share-tip-status.error{color:#d67a6d}
+html[data-theme="gold"] .share-tips-title{color:var(--gold)}
+html[data-theme="gold"] .share-tips-empty{color:var(--muted)}
+html[data-theme="gold"] .share-tips-empty.error{color:#d67a6d}
+html[data-theme="gold"] .tip-card{border:1px solid rgba(168,120,42,.45);background:linear-gradient(145deg,rgba(43,29,19,.72),rgba(16,11,8,.88));box-shadow:inset 0 0 22px rgba(0,0,0,.22)}
+html[data-theme="gold"] .tip-card-head{border-bottom:1px solid rgba(168,120,42,.22)}
+html[data-theme="gold"] .tip-card-title{color:var(--gold3)}
+html[data-theme="gold"] .tip-card-date{color:var(--muted)}
+html[data-theme="gold"] .tip-card-body{color:var(--bone)}
+html[data-theme="gold"] .tip-card-author{color:var(--muted);border-top:1px dashed rgba(168,120,42,.18)}
+html[data-theme="gold"] .tip-card-author strong{color:var(--gold)}
+@media(max-width:820px){
+html[data-theme="gold"] .site-nav{box-shadow:10px 0 35px rgba(0,0,0,.55);border-right:1px solid var(--gold2);border-bottom:0}
+html[data-theme="gold"] .mobile-nav-toggle{border:1px solid var(--gold2);background:rgba(18,13,9,.96);color:var(--gold);box-shadow:0 6px 18px #0008}
+html[data-theme="gold"] .mobile-nav-toggle:hover{border-color:var(--gold);background:#2b1d13}
+html[data-theme="gold"] .nav-scrim{background:rgba(0,0,0,.62)}
+}

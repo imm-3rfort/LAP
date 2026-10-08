@@ -190,6 +190,8 @@ body[data-role="guest"] .guest-logged{display:block}
 body[data-role="guest"] .guest-block{display:none}
 .account-message.error,.share-tip-status.error,.share-tips-empty.error{font-style:italic}
 </style>
+<link rel="stylesheet" href="ans-theme.css">
+<script src="ans-theme.js"></script>
 </head>
 <body id="top">
 <button class="mobile-nav-toggle" id="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">☰</button>
@@ -222,6 +224,13 @@ body[data-role="guest"] .guest-block{display:none}
       <li data-access="member"><a href="#share-tip" data-tab="share-tip">Share a tip</a></li>
       <li data-access="guest"><a class="nav-btn" id="ideas-btn" href="https://forms.cloud.microsoft/r/nCfEWWHfsM" target="_blank" rel="noopener">Any ideas?</a></li>
     </ul>
+    <div class="theme-switch" role="group" aria-label="Color theme">
+      <span class="theme-switch-label">Theme</span>
+      <div class="theme-switch-btns">
+        <button type="button" data-theme-set="mono" aria-pressed="true">Monochrome</button>
+        <button type="button" data-theme-set="gold" aria-pressed="false">Gold</button>
+      </div>
+    </div>
   </div>
 </nav>
 

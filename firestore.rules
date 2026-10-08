@@ -26,7 +26,18 @@ service cloud.firestore {
         && request.resource.data.body.size() >= 1
         && request.resource.data.body.size() <= 2000
         && request.resource.data.createdAt is timestamp;
-      allow update, delete: if false;
+      // Only the author can edit (title/body only) or delete their own tip
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'body', 'editedAt'])
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 1
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.body is string
+        && request.resource.data.body.size() >= 1
+        && request.resource.data.body.size() <= 2000
+        && request.resource.data.editedAt is timestamp;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
     match /announcements/{id} {
