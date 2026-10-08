@@ -1,17 +1,19 @@
 /* =========================================================
-   GUIDES — IMÁGENES
+   GUIDES — IMÁGENES (carrusel)
    Aquí pones las imágenes de cada guía. Solo edita este archivo.
 
    1) Sube tus imágenes al repo, dentro de la carpeta "images"
       (nombres en minúsculas, sin espacios ni acentos: perfil-1.png)
-   2) Agrega su ruta en la guía que corresponda:
+   2) Agrega su ruta en la guía que corresponda. Cada imagen puede ir:
 
-      'guide-profile': [
-        'images/perfil-1.png',                          <- solo imagen
-        ['images/perfil-2.png', 'Paso 2: toca tu avatar']   <- imagen + texto debajo
-      ],
+        'images/perfil-1.png',                                  <- sin texto
+        ['images/perfil-2.png', 'Paso 2: toca tu avatar'],      <- con pie de foto
 
-   Importante: cada ruta entre comillas ' ', separadas por coma.
+   Las imágenes se muestran en un carrusel (flechas, puntos o deslizando con el dedo),
+   respetando su tamaño y proporción original. Al tocar una imagen se abre en pantalla
+   completa con zoom (botones + / −, rueda del mouse, pellizco en el celular y doble toque).
+
+   Cada ruta va entre comillas ' ' y separada por coma.
    Mayúsculas y minúsculas importan: perfil-1.png no es lo mismo que Perfil-1.PNG
    ========================================================= */
 window.GUIDE_IMAGES = {
