@@ -19,10 +19,10 @@
 window.GUIDE_IMAGES = {
   'guide-profile': [
     ['images/perfil-1.png', 'Step 1. Tap your Player Icon in the top-left corner of the screen.'],
-    ['images/perfil-2,png', 'Step 2. Tap the Pencil Icon next to your name.'],
-    ['images/perfil-2,png', 'Step 3. Tap “Tap to Input” to enter your new name. Important: Changing your name costs 1,000 Diamonds.'],
-    ['images/perfil-2,png', 'Step 4. To change your profile picture, tap the Camera Icon.'],
-    ['images/perfil-2,png', 'Step 5. Select your new profile picture. Changing your profile picture costs approximately USD $1.45.']
+    ['images/perfil-2.png', 'Step 2. Tap the Pencil Icon next to your name.'],
+    ['images/perfil-3.png', 'Step 3. Tap “Tap to Input” to enter your new name. Important: Changing your name costs 1,000 Diamonds.'],
+    ['images/perfil-4.png', 'Step 4. To change your profile picture, tap the Camera Icon.'],
+    ['images/perfil-5.png', 'Step 5. Select your new profile picture. Changing your profile picture costs approximately USD $1.45.']
   ],
   'guide-minister': [
     // 'images/ministro-1.png',
