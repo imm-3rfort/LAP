@@ -7,7 +7,7 @@ window.GUIDE_IMAGES = {
     ['images/perfil-5.png', 'Step 5. Select your new profile picture. Changing your profile picture costs approximately USD $1.45.']
   ],
   'guide-minister': [
-    ['images/perfil-1.png', 'Step 1. Tap your Profile in the top-left corner of the screen, then tap your Server Number. In this case, the server is #233.'],
+    ['images/perfil-1.png', 'Step 1. Tap your Profile in the top-left corner of the screen.'],
     ['images/ministro-1.png', 'Step 2. Then tap your Server Number. In this case, the server is #233.'],
     ['images/ministro-2.png', 'You’ll see several different Minister positions, such as Minister of Strategy, Minister of War, Minister of Construction, Minister of Development, and Minister of the Inner Court. Each position provides different buffs and benefits. Each Minister title lasts for 5 minutes, and your turn depends on how many players are currently waiting in the queue. Keep in mind that this may vary depending on how your server handles the system.'],
     ['images/ministro-3.png', '¡IMPORTANT!: Make sure you request the appropriate Minister before starting the action you want to boost. The bonuses only apply to new actions started while you have the title. For example, if you want the Construction Ministers bonus, make sure you receive the title before starting your building upgrade. It will not reduce the time of a construction that was already in progress.'],
