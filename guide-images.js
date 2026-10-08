@@ -18,7 +18,8 @@
    ========================================================= */
 window.GUIDE_IMAGES = {
   'guide-profile': [
-    'images/perfil-1.png',
+    ['images/perfil-1.png', 'Step 1. Tap la parte superior izquierda.'],
+    ['images/perfil-2,png', 'Step 2. Tap la pluma cerca de tu nombre.'],
   ],
   'guide-minister': [
     // 'images/ministro-1.png',
