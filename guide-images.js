@@ -26,7 +26,11 @@ window.GUIDE_IMAGES = {
     ['images/codigos-4.png', 'Tip: Make sure to enter the code correctly, as some codes may be case-sensitive or have an expiration date.']
   ],
   'guide-help-members': [
-    // 'images/ayuda-1.png',
+    ['images/ayuda-1.png', 'Method 1. Tap the Help (hand) icon to assist your alliance members with their ongoing tasks.'],
+    ['images/ayuda-2.png', 'Method 2. Tap Alliance on the main screen.'],
+    ['images/ayuda-3.png', 'Select Alliance Research to open the Alliance Tech menu.'],
+    ['images/ayuda-4.png', 'Choose an available technology and donate to help your alliance unlock upgrades and bonuses.'],
+    ['images/ayuda-5.png', 'Note: You can donate up to 30 times per recharge cycle. Your donation attempts replenish automatically over time, so remember to use them regularly!'],
   ],
   'guide-elixir-dispute': [
     // 'images/elixir-1.png',
