@@ -30,7 +30,7 @@ window.GUIDE_IMAGES = {
     ['images/ayuda-2.png', 'Method 2. Tap Alliance on the main screen.'],
     ['images/ayuda-3.png', 'Select Alliance Research to open the Alliance Tech menu.'],
     ['images/ayuda-4.png', 'Choose an available technology and donate to help your alliance unlock upgrades and bonuses.'],
-    ['images/ayuda-5.png', 'Note: You can donate up to 30 times per recharge cycle. Your donation attempts replenish automatically over time, so remember to use them regularly!'],
+    ['images/ayuda-5.png', 'Note: You can donate up to 30 times per recharge cycle. Your donation attempts replenish automatically over time, so remember to use them regularly!']
   ],
   'guide-elixir-dispute': [
     // 'images/elixir-1.png',
@@ -45,6 +45,11 @@ window.GUIDE_IMAGES = {
     // 'images/sabiduria-1.png',
   ],
   'guide-sync-battle': [
-    // 'images/sincronizar-1.png',
+    ['images/sincronizar-1.png', 'Tap Special Event in the top-right corner of the screen..'],
+    ['images/sincronizar-2.png', 'Open the Survival Battle section.'],
+    ['images/sincronizar-3.png', 'Tap the Calendar icon to check the event schedule.'],
+    ['images/sincronizar-4.png', 'See when each task takes place.'],
+    ['images/sincronizar-5.png', 'Check the Alliance Duel schedule as well and look for tasks that overlap with Survival Battle objectives.'],
+    ['images/sincronizar-6.png', 'Tip: Always check both schedules beforehand and save your resources, speedups, research, or construction upgrades for the best scoring opportunities. Timing is key to maximizing your rewards!']
   ]
 };
