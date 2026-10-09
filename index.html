@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+pasa e<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -177,6 +177,27 @@ body[data-role="guest"] [data-access="member"]{display:none !important}
 .nav-links .nav-sub a{min-height:36px;padding:.5rem .7rem;font-size:.7rem;letter-spacing:.02em;text-transform:none}
 .guide-text{width:min(760px,100%);margin:0 auto 1.2rem;color:var(--muted);text-align:justify;text-justify:inter-word}
 .guide-text p{margin:.55rem 0}.guide-text b{color:var(--gold);font-weight:400}.guide-text img{max-width:100%;height:auto;border-radius:6px}
+
+
+/* Elixir Scramble layout — uses the existing global theme variables */
+#guide-elixir-dispute .elixir-layout{width:min(1000px,100%);margin:0 auto 1.2rem}
+#guide-elixir-dispute .elixir-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}
+#guide-elixir-dispute .elixir-card{min-width:0;padding:1.05rem 1.15rem;border:1px solid var(--line);border-radius:9px;background:linear-gradient(145deg,var(--leather2),var(--ink2));box-shadow:0 10px 24px rgba(0,0,0,.22)}
+#guide-elixir-dispute .elixir-card h3{margin:0 0 .65rem;padding-bottom:.55rem;border-bottom:1px solid var(--line);color:var(--gold);font:700 .95rem/1.35 var(--cin);letter-spacing:.06em;text-transform:uppercase}
+#guide-elixir-dispute .elixir-card p{margin:.45rem 0;color:var(--bone);font-size:1.02rem;line-height:1.55;overflow-wrap:anywhere}
+#guide-elixir-dispute .elixir-card strong{color:var(--gold);font-weight:700}
+#guide-elixir-dispute .elixir-card ul{list-style:none;margin:.4rem 0 0;padding:0}
+#guide-elixir-dispute .elixir-card li{position:relative;padding:.38rem 0 .38rem 1rem;border-bottom:1px solid rgba(170,170,170,.12);color:var(--bone);font-size:1.02rem;line-height:1.5;overflow-wrap:anywhere}
+#guide-elixir-dispute .elixir-card li:last-child{border-bottom:0}
+#guide-elixir-dispute .elixir-card li::before{content:"›";position:absolute;left:.1rem;color:var(--gold2);font-weight:700}
+#guide-elixir-dispute .elixir-card.elixir-feature{background:linear-gradient(145deg,var(--leather2),var(--ink));border-color:var(--gold2)}
+#guide-elixir-dispute .elixir-callout{margin-top:.65rem;padding:.65rem .8rem;border-left:3px solid var(--gold2);background:rgba(128,128,128,.08);border-radius:0 5px 5px 0}
+#guide-elixir-dispute .elixir-section-title{display:flex;align-items:center;gap:.8rem;margin:1.65rem 0 .85rem;color:var(--gold2);font:700 .95rem var(--cin);letter-spacing:.1em;text-align:center;text-transform:uppercase}
+#guide-elixir-dispute .elixir-section-title::before,#guide-elixir-dispute .elixir-section-title::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+@media(max-width:620px){#guide-elixir-dispute .elixir-grid{grid-template-columns:minmax(0,1fr)}#guide-elixir-dispute .elixir-card{padding:.95rem}}
+
+
+  
 .guide-empty{font-style:italic;text-align:center}
 /* Guide images: carousel (keeps each image's real proportions) + zoom viewer */
 .guide-images{width:min(560px,100%);margin:1.2rem auto}
@@ -1531,61 +1552,131 @@ body[data-role="guest"] .guest-block{display:none}
 <section id="guide-elixir-dispute" class="tab" data-access="guest">
   <h2>Elixir Scramble</h2>
 
-  <!-- ▼▼▼ PEGA AQUÍ TU TEXTO EXPLICATIVO (borra la línea "Texto pendiente") ▼▼▼
-       Puedes usar <p>párrafo</p>, <b>negritas</b> y también imágenes sueltas:
-       <img src="LINK_DE_TU_IMAGEN" alt="descripción">  -->
-<section class="intro">
-    <p><b>Registration</b></p>
-    <div class="orn"><span>⚜</span></div>
-    <p>To sign up, select “Select Participants.” This is where you can view the available time slots and choose the one you want to participate in.</p>
-    <p><b>Objective</b></p>
-    <div class="orn"><span>⚜</span></div>
-    <p>The goal is to capture and hold buildings to earn points. After 30 minutes, the team with the most points wins.</p>
-    <p><b>Participation</b></p>
-    <div class="orn"><span>⚜</span></div>
-    <p>20 starters + 10 substitutes.</p>
-    <p>Starters have priority.</p>
-    <p>Once registration closes, the participant list is locked.</p>
-    <p><b>Matchmaking</b></p>
-    <div class="orn"><span>⚜</span></div>
-    <p>Matchmaking is based on the total power of the participants.</p>
-    <p>The game uses each player's highest historical power when determining the matchup.</p>
-    <p><b>Preparation — 5 Minutes Before</b></p>
-    <div class="orn"><span>⚜</span></div>
-    <p>Starters can enter the battlefield early to get into position.</p>
-    <p>During this preparation period, players are placed in a safe zone and cannot be attacked.</p>
-    <p><b>Battle Phases</b></p>
-    <div class="orn"><span>⚜</span></div>
-    <p>★ Start</p>
-    <p>The following buildings are available at the beginning:</p>
-    <p>➜ Alchemy Workshop</p>
-    <p>➜ Migration Portal</p>
-    <p>➜ Observatory</p>
-    <p>➜ Healing Shops</p>
-    <p>★ Minute 10</p>
-    <p>The main objectives become available:</p>
-    <p>➜ Elixir Castle</p>
-    <p>➜ War Relics → +15% team buff</p>
-    <p>➜ Cursed Altar → -15% enemy debuff</p>
-    <p>★ Key Buildings</p>
-    <p>➜ Migration Portal: provides +50% mobility.</p>
-    <p>➜ Healing Shops: help sustain your troops and keep your marches fighting.</p>
-    <p>➜ Observatory: provides +10% points. Securing it early is a major advantage.</p>
-    <p>➜ Alchemy Workshop: provides a large amount of points.</p>
-    <p>➜ War Relics: provide a team-wide buff.</p>
-    <p>➜ Cursed Altar: applies a debuff to the enemy team.</p>
-    <p>➜ Elixir Castle: the most important objective and the building that can decide the entire match.</p>
-    <p>★ Secondary Objectives</p>
-    <p>➜ Medkits: provide additional points.</p>
-    <p>➜ Camps: provide relatively few points, so they are lower priority.</p>
-    <p>★ Keys to Winning</p>
-    <p>➜ Map control > winning individual fights.</p>
-    <p>➜ Fast rotations > sitting on one building for too long.</p>
-    <p>➜ Early Observatory control = a major advantage.</p>
-    <p>➜ Elixir Castle = absolute priority.</p>
-    <p>➜ Use your buffs and debuffs at the right time to gain an advantage over the enemy.</p>
-  
-  </section>
+  <div class="elixir-layout">
+    <div class="elixir-grid">
+      <article class="elixir-card">
+        <h3>Registration</h3>
+        <p>To sign up, select “Select Participants.” This is where you can view the available time slots and choose the one you want to participate in.</p>
+      </article>
+
+      <article class="elixir-card">
+        <h3>Objective</h3>
+        <p>The goal is to capture and hold buildings to earn points. After 30 minutes, the team with the most points wins.</p>
+      </article>
+
+      <article class="elixir-card">
+        <h3>Participation</h3>
+        <ul>
+          <li>20 starters + 10 substitutes.</li>
+          <li>Starters have priority.</li>
+          <li>Once registration closes, the participant list is locked.</li>
+        </ul>
+      </article>
+
+      <article class="elixir-card">
+        <h3>Matchmaking</h3>
+        <p>Matchmaking is based on the total power of the participants.</p>
+        <p>The game uses each player's highest historical power when determining the matchup.</p>
+      </article>
+    </div>
+
+    <div class="elixir-section-title">⚜ Preparation ⚜</div>
+    <article class="elixir-card elixir-feature">
+      <h3>Preparation — 5 Minutes Before</h3>
+      <p>Starters can enter the battlefield early to get into position.</p>
+      <div class="elixir-callout">
+        <p>During this preparation period, players are placed in a safe zone and cannot be attacked.</p>
+      </div>
+    </article>
+
+    <div class="elixir-section-title">⚜ Battle Phases ⚜</div>
+    <div class="elixir-grid">
+      <article class="elixir-card">
+        <h3>★ Start</h3>
+        <p>The following buildings are available at the beginning:</p>
+        <ul>
+          <li>Alchemy Workshop</li>
+          <li>Migration Portal</li>
+          <li>Observatory</li>
+          <li>Healing Shops</li>
+        </ul>
+      </article>
+
+      <article class="elixir-card">
+        <h3>★ Minute 10</h3>
+        <p>The main objectives become available:</p>
+        <ul>
+          <li>Elixir Castle</li>
+          <li>War Relics → +15% team buff</li>
+          <li>Cursed Altar → -15% enemy debuff</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="elixir-section-title">⚜ Key Buildings ⚜</div>
+    <div class="elixir-grid">
+      <article class="elixir-card">
+        <h3>Migration Portal</h3>
+        <p>Provides <strong>+50% mobility.</strong></p>
+      </article>
+
+      <article class="elixir-card">
+        <h3>Healing Shops</h3>
+        <p>Help sustain your troops and keep your marches fighting.</p>
+      </article>
+
+      <article class="elixir-card">
+        <h3>Observatory</h3>
+        <p>Provides <strong>+10% points.</strong> Securing it early is a major advantage.</p>
+      </article>
+
+      <article class="elixir-card">
+        <h3>Alchemy Workshop</h3>
+        <p>Provides a large amount of points.</p>
+      </article>
+
+      <article class="elixir-card">
+        <h3>War Relics</h3>
+        <p>Provide a team-wide buff.</p>
+      </article>
+
+      <article class="elixir-card">
+        <h3>Cursed Altar</h3>
+        <p>Applies a debuff to the enemy team.</p>
+      </article>
+
+      <article class="elixir-card elixir-feature">
+        <h3>Elixir Castle</h3>
+        <p>The most important objective and the building that can decide the entire match.</p>
+      </article>
+    </div>
+
+    <div class="elixir-section-title">⚜ Final Strategy ⚜</div>
+    <div class="elixir-grid">
+      <article class="elixir-card">
+        <h3>★ Secondary Objectives</h3>
+        <ul>
+          <li><strong>Medkits:</strong> provide additional points.</li>
+          <li><strong>Camps:</strong> provide relatively few points, so they are lower priority.</li>
+        </ul>
+      </article>
+
+      <article class="elixir-card elixir-feature">
+        <h3>★ Keys to Winning</h3>
+        <ul>
+          <li>Map control &gt; winning individual fights.</li>
+          <li>Fast rotations &gt; sitting on one building for too long.</li>
+          <li>Early Observatory control = a major advantage.</li>
+          <li>Elixir Castle = absolute priority.</li>
+          <li>Use your buffs and debuffs at the right time to gain an advantage over the enemy.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+
+  <div class="guide-images" data-guide-images="guide-elixir-dispute"></div>
+</section>
+
   <!-- ▲▲▲ FIN DEL TEXTO ▲▲▲ -->
 
   <!-- Las imágenes de esta guía se agregan en GUIDE_IMAGES['guide-elixir-dispute'] (en el script, más abajo) -->
