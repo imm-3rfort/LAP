@@ -9,15 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Cinzel:wght@500;700;800&family=IM+Fell+English&display=swap" rel="stylesheet">
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
   
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "356ac489-0abc-4ba6-9f78-a48e03677a58",
-    });
-  });
-</script>
-  
 <style>
 :root{
   --ink:#090909;--ink2:#0e0e0e;--leather:#191919;--leather2:#202020;
@@ -254,6 +245,17 @@ body[data-role="guest"] .guest-block{display:none}
 </style>
 <link rel="stylesheet" href="ans-theme.css">
 <script src="ans-theme.js"></script>
+
+ <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "356ac489-0abc-4ba6-9f78-a48e03677a58",
+    });
+  });
+</script> 
+  
 </head>
 <body id="top">
 <button class="mobile-nav-toggle" id="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">☰</button>
