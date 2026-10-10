@@ -246,15 +246,17 @@ body[data-role="guest"] .guest-block{display:none}
 <link rel="stylesheet" href="ans-theme.css">
 <script src="ans-theme.js"></script>
 
- <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "356ac489-0abc-4ba6-9f78-a48e03677a58",
+      serviceWorkerPath: "LAP/OneSignalSDKWorker.js",
+      serviceWorkerParam: { scope: "/LAP/" }
     });
   });
-</script> 
+</script>
   
 </head>
 <body id="top">
