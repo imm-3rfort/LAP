@@ -256,6 +256,97 @@ body[data-role="guest"] .guest-block{display:none}
     });
   });
 </script>
+
+<script>
+/* Home "Enable notifications" button (OneSignal). Works on Android, desktop and iOS (iOS needs the site added to the Home Screen). */
+(function(){
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var standalone = (window.navigator.standalone === true) ||
+                   (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  var btn, txt, msg, OS = null, finished = false;
+
+  function set(text, label, opts){
+    opts = opts || {};
+    txt.textContent = text;
+    btn.textContent = label;
+    btn.disabled = !!opts.disabled;
+    btn.classList.toggle('primary', !!opts.primary);
+    msg.textContent = opts.msg || '';
+  }
+
+  function paint(){
+    if(!OS) return;
+    var supported = true, granted = false, denied = false, optedIn = false;
+    try{ if(OS.Notifications.isPushSupported) supported = !!OS.Notifications.isPushSupported(); }catch(e){}
+    try{ granted = !!OS.Notifications.permission; }catch(e){}
+    try{ denied = OS.Notifications.permissionNative === 'denied'; }catch(e){}
+    try{ optedIn = !!OS.User.PushSubscription.optedIn; }catch(e){}
+
+    if(!supported){
+      if(isIOS && !standalone){
+        set('On iPhone and iPad: tap Share, then "Add to Home Screen". Open ANS from your home screen and tap Enable notifications there (iOS 16.4 or later).',
+            'Enable notifications', {disabled:true});
+      }else{
+        set("This browser doesn't support notifications.", 'Not available', {disabled:true});
+      }
+    }else if(denied){
+      set('Notifications are blocked for this site. Allow them in your browser or phone settings, then reload this page.', 'Blocked', {disabled:true});
+    }else if(granted && optedIn){
+      set('Notifications are on for this device.', 'Turn off notifications', {});
+    }else{
+      set('Get alliance alerts on this device.', 'Enable notifications', {primary:true});
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    btn = document.getElementById('notify-btn');
+    txt = document.getElementById('notify-text');
+    msg = document.getElementById('notify-msg');
+    if(!btn) return;
+
+    // iOS in a normal Safari tab can't do web push: show the instructions right away
+    if(isIOS && !standalone){
+      set('On iPhone and iPad: tap Share, then "Add to Home Screen". Open ANS from your home screen and tap Enable notifications there (iOS 16.4 or later).',
+          'Enable notifications', {disabled:true});
+    }else{
+      set('Loading notifications…', 'Enable notifications', {disabled:true});
+    }
+
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(function(OneSignal){
+      OS = OneSignal; finished = true;
+      if(!(isIOS && !standalone)) paint();
+      try{ OneSignal.Notifications.addEventListener('permissionChange', paint); }catch(e){}
+      try{ OneSignal.User.PushSubscription.addEventListener('change', paint); }catch(e){}
+      setTimeout(paint, 1000); setTimeout(paint, 3000);   // in case OneSignal was still starting up
+
+      btn.addEventListener('click', async function(){
+        btn.disabled = true; msg.textContent = '';
+        try{
+          var on = false;
+          try{ on = !!OneSignal.Notifications.permission && !!OneSignal.User.PushSubscription.optedIn; }catch(e){}
+          if(on){
+            await OneSignal.User.PushSubscription.optOut();
+          }else{
+            if(!OneSignal.Notifications.permission) await OneSignal.Notifications.requestPermission();
+            if(OneSignal.Notifications.permission && !OneSignal.User.PushSubscription.optedIn) await OneSignal.User.PushSubscription.optIn();
+          }
+        }catch(e){
+          console.error('[ANS notifications]', e);
+          msg.textContent = 'Something went wrong. Please try again.';
+        }
+        paint();
+      });
+    });
+
+    // OneSignal could not load (blocked by an extension, no connection...)
+    setTimeout(function(){
+      if(!finished) set('Notifications are not available right now. Please try again later.', 'Not available', {disabled:true});
+    }, 8000);
+  });
+})();
+</script>
   
 </head>
 <body id="top">
@@ -378,6 +469,17 @@ body[data-role="guest"] .guest-block{display:none}
 
     </div>
   </div>
+
+  <!-- NOTIFICATIONS (OneSignal): visible for everyone -->
+  <div class="account-panel" id="notify-panel" style="margin-top:1.5rem;text-align:center">
+    <h3 class="account-title">Notifications</h3>
+    <p class="account-sub" id="notify-text">Get alliance alerts on this device.</p>
+    <div class="account-actions">
+      <button class="account-btn primary" type="button" id="notify-btn" disabled>Enable notifications</button>
+    </div>
+    <p class="account-message" id="notify-msg" aria-live="polite"></p>
+  </div>
+
     <!-- VIDEO TUTORIAL (YouTube Short) -->
   <div style="width:min(340px,100%);margin:2rem auto 0;aspect-ratio:9/16;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#000">
     <iframe src="https://www.youtube.com/embed/o-E_IUBAp7A" title="How to use the ANS website" style="width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
