@@ -169,7 +169,7 @@ const icon=k=>`<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${paths[
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ---------- pages ---------- */
-const GUIDES=[['guide-profile','Change PP and Name'],['guide-minister','Ministers'],['guide-gift-codes','Gift Codes'],['guide-help-members','Help members/alliance'],['guide-elixir-dispute','Elixir Scramble'],['guide-thief-hunt','Thief Hunt'],['guide-crystal-valley','Crystal Valley'],['guide-wisdom-trial','Quiz: Wisdom Trial'],['guide-sync-battle','Sync Survival Battle + Alliance Duel']];
+const GUIDES=[['guide-profile','Change PP and Name'],['guide-minister','Ministers'],['guide-gift-codes','Gift Codes'],['guide-help-members','Help members/alliance'],['guide-elixir-dispute','Elixir Scramble'],['guide-thief-hunt','Thief Hunt'],['guide-crystal-valley','Crystal Valley'],['guide-wisdom-trial','Quiz: Wisdom Trial'],['guide-sync-battle','Sync Survival Battle + Alliance Duel'], ['guide-era-of-revival', 'Era of Revival']];
 const HEADS={about:['About us','An alliance. A refuge. A family.'],constitution:['The Constitution','The pact that brings us together. The laws that keep us safe.'],sanctuary:['Sanctuary','From the ashes to the sanctuary. Level 1 — 30.'],duel:['Alliance Duel','Six days. One alliance. One goal.'],weapons:['Weapons','ANS arsenal.'],tips:['Share a tip','Shared knowledge keeps us alive.']};
 GUIDES.forEach(([id,t])=>HEADS[id]=[t,'The ANS field journal.']);
 const OLD_HASH={'about-ans':'about','const-serv':'constitution','alliance-duel':'duel','share-tip':'tips','wisdom-trial':'guide-wisdom-trial'};
