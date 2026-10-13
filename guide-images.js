@@ -59,11 +59,11 @@ window.GUIDE_IMAGES = {
   ],
  
   // Chapter 2: The Resistance System and the Hunting Trick
-  // Source video: "Resistance System Explained"
   'era-2': [
-    // ['images/era-2-1.png', 'Resistance requirement example: 2,650 for level 19.'],
-    // ['images/era-2-2.png', 'Warning screen showing the -30% damage penalty.'],
-    // ['images/era-2-3.png', 'Collecting Resistant XP on the Lord Statue.'],
+    ['images/era-2-1.png', 'Resistance requirement example: 2,650 RES for level 19 Monster.'],
+    ['images/era-2-2.png', 'Collecting Resistant XP on the Lord Statue.'],
+    ['images/era-2-3.png', 'Upgrade RES Level'],
+    ['images/era-2-4.png', 'Requirements for upgrade RES Level'],
   ],
  
   // Chapter 3: Lord Speciality and New Buildings
