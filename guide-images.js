@@ -81,11 +81,10 @@ window.GUIDE_IMAGES = {
   ],
  
   // Chapter 5: F2P Strategy: Recluse Merchant and Supreme Duel
-  // Source video: "BEST PICK IN RECLUSE MERCHANT"
   'era-5': [
-    // ['images/era-5-1.png', "Great Value section with Curios like Demon's Eye."],
-    // ['images/era-5-2.png', 'Selection boxes for Awaken Shards and Exclusive Weapons.'],
-    // ['images/era-5-3.png', 'Risk-free prediction panel in the Supreme Duel.'],
+    ['images/era-5-1.png', 'Great Value section with Curios like Demons Eye.'],
+    ['images/era-5-2.png', 'Selection boxes for Awaken Shards and Exclusive Weapons.'],
+    ['images/era-5-3.png', 'Risk-free prediction panel in the Supreme Duel.'],
   ],
  
   // Chapter 6: F2P Hunting Squad and Recommended Passes
