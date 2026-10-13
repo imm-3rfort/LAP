@@ -67,11 +67,11 @@ window.GUIDE_IMAGES = {
   ],
  
   // Chapter 3: Lord Speciality and New Buildings
-  // Source videos: "The Complete Era of Revival Breakdown" and "Resistance System Explained"
   'era-3': [
-    // ['images/era-3-1.png', "Soldiers' Rest in your base."],
-    // ['images/era-3-2.png', 'Handyman vs. Legion Commander.'],
-    // ['images/era-3-3.png', 'Breach Inspiration: +30% XP from monsters.'],
+    ['images/era-3-1.png', 'New Build: Lord Statue'],
+    ['images/era-3-2.png', 'Lords Speciality'],
+    ['images/era-3-3.png', 'New Build: Soldiers Rest'],
+    ['images/era-3-4.png', 'Soldiers Resting'],
   ],
  
   // Chapter 4: Extreme Speed-Up Combo
