@@ -55,7 +55,7 @@ window.GUIDE_IMAGES = {
   // Chapter 1: What Is the Era of Revival?
   'era-1': [
     ['images/era-1-1.png', 'Main tabs of the Era of Revival event.'],
-    ['images/era-1-2.png', 'Resist Heaven rewards and Claire evolving to UR.'],
+    ['images/era-1-2.png', 'Resist Heaven rewards and Claire evolving to UR.']
   ],
  
   // Chapter 2: The Resistance System and the Hunting Trick
@@ -63,7 +63,7 @@ window.GUIDE_IMAGES = {
     ['images/era-2-1.png', 'Resistance requirement example: 2,650 RES for level 19 Monster.'],
     ['images/era-2-2.png', 'Collecting Resistant XP on the Lord Statue.'],
     ['images/era-2-3.png', 'Upgrade RES Level'],
-    ['images/era-2-4.png', 'Requirements for upgrade RES Level'],
+    ['images/era-2-4.png', 'Requirements for upgrade RES Level']
   ],
  
   // Chapter 3: Lord Speciality and New Buildings
