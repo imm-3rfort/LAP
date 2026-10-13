@@ -52,4 +52,49 @@ window.GUIDE_IMAGES = {
     ['images/sincronizar-5.png', 'Check the Alliance Duel schedule as well and look for tasks that overlap with Survival Battle objectives.'],
     ['images/sincronizar-6.png', 'Tip: Always check both schedules beforehand and save your resources, speedups, research, or construction upgrades for the best scoring opportunities. Timing is key to maximizing your rewards!']
   ]
+  // Chapter 1: What Is the Era of Revival?
+  'era-1': [
+    ['images/era-1-1.png', 'Main tabs of the Era of Revival event.'],
+    ['images/era-1-2.png', 'Resist Heaven rewards and Claire evolving to UR.'],
+  ],
+ 
+  // Chapter 2: The Resistance System and the Hunting Trick
+  // Source video: "Resistance System Explained"
+  'era-2': [
+    // ['images/era-2-1.png', 'Resistance requirement example: 2,650 for level 19.'],
+    // ['images/era-2-2.png', 'Warning screen showing the -30% damage penalty.'],
+    // ['images/era-2-3.png', 'Collecting Resistant XP on the Lord Statue.'],
+  ],
+ 
+  // Chapter 3: Lord Speciality and New Buildings
+  // Source videos: "The Complete Era of Revival Breakdown" and "Resistance System Explained"
+  'era-3': [
+    // ['images/era-3-1.png', "Soldiers' Rest in your base."],
+    // ['images/era-3-2.png', 'Handyman vs. Legion Commander.'],
+    // ['images/era-3-3.png', 'Breach Inspiration: +30% XP from monsters.'],
+  ],
+ 
+  // Chapter 4: Extreme Speed-Up Combo
+  // Source video: "Ultimate Research & Upgrade Guide"
+  'era-4': [
+    // ['images/era-4-1.png', 'Free Research skill: -240 minutes.'],
+    // ['images/era-4-2.png', 'Level 6 City bonus: +20% speed.'],
+    // ['images/era-4-3.png', 'Sanctuary Level 30 build queue at 32 days.'],
+  ],
+ 
+  // Chapter 5: F2P Strategy: Recluse Merchant and Supreme Duel
+  // Source video: "BEST PICK IN RECLUSE MERCHANT"
+  'era-5': [
+    // ['images/era-5-1.png', "Great Value section with Curios like Demon's Eye."],
+    // ['images/era-5-2.png', 'Selection boxes for Awaken Shards and Exclusive Weapons.'],
+    // ['images/era-5-3.png', 'Risk-free prediction panel in the Supreme Duel.'],
+  ],
+ 
+  // Chapter 6: F2P Hunting Squad and Recommended Passes
+  // Source videos: "The Complete Era of Revival Breakdown" and "Don't Start Era of Revival Without Watching This!"
+  'era-6': [
+    // ['images/era-6-1.png', 'Era Bonus panel with the F2P hero list.'],
+    // ['images/era-6-2.png', 'Marina Awakening Pass.'],
+    // ['images/era-6-3.png', 'Weekly Pulse pass ($5 USD).'],
+  ]
 };
