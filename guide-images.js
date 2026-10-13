@@ -88,10 +88,10 @@ window.GUIDE_IMAGES = {
   ],
  
   // Chapter 6: F2P Hunting Squad and Recommended Passes
-  // Source videos: "The Complete Era of Revival Breakdown" and "Don't Start Era of Revival Without Watching This!"
   'era-6': [
-    // ['images/era-6-1.png', 'Era Bonus panel with the F2P hero list.'],
-    // ['images/era-6-2.png', 'Marina Awakening Pass.'],
-    // ['images/era-6-3.png', 'Weekly Pulse pass ($5 USD).'],
+    ['images/era-6-2.png', 'Era Bonus panel with the F2P hero list.'],
+    ['images/era-6-1.png', 'Era Bonus panel with the F2P hero list.'],
+    ['images/era-6-3.png', 'Marlena Awakening Pass'],
+    ['images/era-6-4.png', 'Marlena Awakening Extra Benefits: Skybreaker Slash (Level 1) - When Void Slash triggers a Crit. Marlena gains 1 stack of [Battle Will], with a stack cap equal to 2x the number of Warrior Heroes on team. Each stack of [Battle Will] grants Marlena 1% higher DMG Bonus and 1% lower DMG.'],
   ]
 };
