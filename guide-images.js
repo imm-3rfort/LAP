@@ -75,11 +75,9 @@ window.GUIDE_IMAGES = {
   ],
  
   // Chapter 4: Extreme Speed-Up Combo
-  // Source video: "Ultimate Research & Upgrade Guide"
   'era-4': [
-    // ['images/era-4-1.png', 'Free Research skill: -240 minutes.'],
-    // ['images/era-4-2.png', 'Level 6 City bonus: +20% speed.'],
-    // ['images/era-4-3.png', 'Sanctuary Level 30 build queue at 32 days.'],
+    ['images/era-4-1.png', 'Lords Speciality > The Handyman > Free Research Lv. 5 = -240 min free'],
+    ['images/era-4-2.png', 'Level 6 City bonus: +20% speed.'],
   ],
  
   // Chapter 5: F2P Strategy: Recluse Merchant and Supreme Duel
