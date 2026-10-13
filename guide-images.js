@@ -51,7 +51,7 @@ window.GUIDE_IMAGES = {
     ['images/sincronizar-4.png', 'See when each task takes place.'],
     ['images/sincronizar-5.png', 'Check the Alliance Duel schedule as well and look for tasks that overlap with Survival Battle objectives.'],
     ['images/sincronizar-6.png', 'Tip: Always check both schedules beforehand and save your resources, speedups, research, or construction upgrades for the best scoring opportunities. Timing is key to maximizing your rewards!']
-  ]
+  ],
   // Chapter 1: What Is the Era of Revival?
   'era-1': [
     ['images/era-1-1.png', 'Main tabs of the Era of Revival event.'],
