@@ -292,36 +292,168 @@ function duelPage(){
   return header(...HEADS.duel)+`<section class="content reveal">${DATA.duelIntro.map(p=>`<p class="lead">${p}</p>`).join('')}<p class="note-line">${DATA.duelNote}</p><div class="flip-grid duel-grid">${cards}</div></section>`;
 }
 
-/* ---------- about gear ---------- */
-const tierChips=(items)=>`<div class="chips tier-ladder">${items.map((t,i)=>`${i?'<span class="ladder-arrow" aria-hidden="true">→</span>':''}<span class="chip">${esc(t)}</span>`).join('')}</div>`;
-const heroTier=(label,names)=>`<div class="hero-tier"><strong>${esc(label)}</strong><div class="chips">${names.map(n=>`<span class="chip">${esc(n)}</span>`).join('')}</div></div>`;
-const gearRole=(n,title,order,why,tiers)=>`<div class="elixir-card elixir-feature gear-role"><h3>${n}. ${esc(title)}</h3><p class="gear-order"><strong>Upgrade priority:</strong> ${order.map(esc).join(' → ')}</p><p>${esc(why)}</p>${tiers.map(([l,names])=>heroTier(l,names)).join('')}</div>`;
+
 function gearPage(){
-  const basics=`<section class="chapter"><h2><span class="n">01</span>BASICS</h2>
-    <p>All gear (armor, boots, sword and gloves) and its production are managed in the Gear Workshop. To fully manage gear production, first focus on upgrading the Gear Workshop to level 20. At level 20, crafting UR gear becomes available, so pushing the Workshop level is an early priority before any serious gear investment.</p>
-    <div class="shots" data-shots="gear-1" data-hint="Gear Workshop (Craft tab)"></div>
-    <p>The Gear Workshop has four tabs, each used for a distinct function.</p>
-    <h3>1. Craft</h3><p>In the Craft tab, you produce gear pieces from materials. UR gear requires 750 Tempered Steel and Herbs.</p>
-    <div class="shots" data-shots="gear-2" data-hint="Dismantle tab"></div>
-    <h3>2. Dismantle</h3><p>In the Dismantle tab, you break down unwanted gear pieces into Tempered Steel. Every gear piece that isn't equipped on a hero shows up in this gear pile.</p>
-    <div class="shots" data-shots="gear-3" data-hint="Fuse tab"></div>
-    <h3>3. Fuse</h3><p>In the Fuse tab, you convert lower-tier materials into higher-tier ones. The conversion rate is 4 of the lower tier into 1 of the next tier up. The full material tier ladder is:</p>${tierChips(['CLOTH (gray)','LEATHER (green)','BRASS (blue)','REFINED IRON (purple)','TEMPERED STEEL (gold/orange)'])}
-    <div class="shots" data-shots="gear-4" data-hint="Salvage tab"></div>
-    <h3>4. Salvage</h3><p>In the Salvage tab, you downgrade gear materials. It's a corrective tool for situations where you need a specific lower-tier material. It's rarely used in normal progression, but it comes in handy in specific crafting situations.</p>
-    <div class="elixir-callout"><p><strong>Tip: Avoid buying Tempered Steel.</strong> Gear drops are continuous from rallying monsters, event rewards and daily rewards. Every unequipped gear piece shown in the Dismantle tab can become Tempered Steel through the Fuse tab. Make dismantling and fusing part of your daily routine.</p></div>
-  </section>`;
-  const priority=`<section class="chapter"><h2><span class="n">02</span>GEAR PRIORITY BY HERO ROLE</h2>
-    <p>The priority order for upgrading gear depends on the hero's function in the squad.</p>
-    ${gearRole(1,'TANKS (1st row)',['Armor','Boots','Sword','Gloves'],"A tank's survivability is what keeps the squad alive long enough for the damage dealers to do their job. Armor absorbs physical hits. Boots increase defensive mobility and endurance. Sword and Gloves on tanks give a lower offensive return than the same materials invested in Armor and Boots.",[['UR',['Arthur','Daskal','Shadow','Louis','Billy','Ulfrid']],['SSR',['Bella','Lucius','Griffith','Hastar']],['SR',['Durant']]])}
-    ${gearRole(2,'CARRY – DAMAGE DEALERS (2nd row)',['Sword','Gloves','Armor','Boots'],'Sword and Gloves directly increase attack output. Armor and Boots matter for keeping damage dealers alive, but the primary investment is offense.',[['UR',['Marlena','Annie','Cynthia','Joker','Zoya','Red Lady']],['SSR',['Claire','Bestar','Sivir','Ash','Grenwald','Kesso']],['SR',['William','Robin','Kafa']]])}
-    ${gearRole(3,'SUPPORT (2nd row)',['Boots','Armor','Sword','Gloves'],"A support hero's value is staying alive long enough to activate abilities at the right moment. Boots and Armor protect that function.",[['UR',['Harper','Bell']],['SSR',['Celia','Stellar']]])}
-  </section>`;
-  return header(...HEADS.gear)+`<section class="content reveal"><div class="guide-body">${basics}${priority}</div></section>`;
+
+  // ---------- GEAR GUIDE CREDIT ----------
+  const gearCredit = `
+    <div class="guide-profile gear-credit">
+      ${icon('user')}
+      <div>
+        <h3>This guide was provided by our dear Antonela, AKA LadyTonx &lt;3.</h3>
+        <small>ANS · Alliance field guide</small>
+      </div>
+    </div>
+  `;
+
+
+  // ---------- BASICS ----------
+  const basics=`
+    <section class="chapter">
+      <h2><span class="n">01</span>BASICS</h2>
+
+      <p>All gear (armor, boots, sword and gloves) and its production are managed in the Gear Workshop. To fully manage gear production, first focus on upgrading the Gear Workshop to level 20. At level 20, crafting UR gear becomes available, so pushing the Workshop level is an early priority before any serious gear investment.</p>
+
+      <div class="shots" data-shots="gear-1" data-hint="Gear Workshop (Craft tab)"></div>
+
+      <p>The Gear Workshop has four tabs, each used for a distinct function.</p>
+
+      <h3>1. Craft</h3>
+      <p>In the Craft tab, you produce gear pieces from materials. UR gear requires 750 Tempered Steel and Herbs.</p>
+
+      <div class="shots" data-shots="gear-2" data-hint="Dismantle tab"></div>
+
+      <h3>2. Dismantle</h3>
+      <p>In the Dismantle tab, you break down unwanted gear pieces into Tempered Steel. Every gear piece that isn't equipped on a hero shows up in this gear pile.</p>
+
+      <div class="shots" data-shots="gear-3" data-hint="Fuse tab"></div>
+
+      <h3>3. Fuse</h3>
+      <p>In the Fuse tab, you convert lower-tier materials into higher-tier ones. The conversion rate is 4 of the lower tier into 1 of the next tier up. The full material tier ladder is:</p>
+
+      ${tierChips(['CLOTH (gray)','LEATHER (green)','BRASS (blue)','REFINED IRON (purple)','TEMPERED STEEL (gold/orange)'])}
+
+      <div class="shots" data-shots="gear-4" data-hint="Salvage tab"></div>
+
+      <h3>4. Salvage</h3>
+      <p>In the Salvage tab, you downgrade gear materials. It's a corrective tool for situations where you need a specific lower-tier material. It's rarely used in normal progression, but it comes in handy in specific crafting situations.</p>
+
+      <div class="elixir-callout">
+        <p><strong>Tip: Avoid buying Tempered Steel.</strong> Gear drops are continuous from rallying monsters, event rewards and daily rewards. Every unequipped gear piece shown in the Dismantle tab can become Tempered Steel through the Fuse tab. Make dismantling and fusing part of your daily routine.</p>
+      </div>
+    </section>
+  `;
+
+
+  // ---------- GEAR PRIORITY BY HERO ROLE ----------
+  const priority=`
+    <section class="chapter">
+      <h2><span class="n">02</span>GEAR PRIORITY BY HERO ROLE</h2>
+
+      <p>The priority order for upgrading gear depends on the hero's function in the squad.</p>
+
+      ${gearRole(1,'TANKS (1st row)',['Armor','Boots','Sword','Gloves'],"A tank's survivability is what keeps the squad alive long enough for the damage dealers to do their job. Armor absorbs physical hits. Boots increase defensive mobility and endurance. Sword and Gloves on tanks give a lower offensive return than the same materials invested in Armor and Boots.",[['UR',['Arthur','Daskal','Shadow','Louis','Billy','Ulfrid']],['SSR',['Bella','Lucius','Griffith','Hastar']],['SR',['Durant']]])}
+
+      ${gearRole(2,'CARRY – DAMAGE DEALERS (2nd row)',['Sword','Gloves','Armor','Boots'],'Sword and Gloves directly increase attack output. Armor and Boots matter for keeping damage dealers alive, but the primary investment is offense.',[['UR',['Marlena','Annie','Cynthia','Joker','Zoya','Red Lady']],['SSR',['Claire','Bestar','Sivir','Ash','Grenwald','Kesso']],['SR',['William','Robin','Kafa']]])}
+
+      ${gearRole(3,'SUPPORT (2nd row)',['Boots','Armor','Sword','Gloves'],"A support hero's value is staying alive long enough to activate abilities at the right moment. Boots and Armor protect that function.",[['UR',['Harper','Bell']],['SSR',['Celia','Stellar']]])}
+    </section>
+  `;
+
+
+  // ---------- GEAR UPGRADE PRIORITY ----------
+  const upgradePriority=`
+    <section class="chapter">
+
+      <h2><span class="n">03</span>GEAR UPGRADE PRIORITY</h2>
+
+      <p>General rule for upgrading gears is <strong>NOT TO upgrade everything equally.</strong> Upgrading everything equally spends a lot of resources. With resources being limited, only the strongest heroes should be a focus of investment.</p>
+
+      <p><strong>Main priority should be:</strong></p>
+
+      <div class="elixir-card elixir-feature gear-role">
+        <div class="hero-tier"><strong>01</strong><div class="chips"><span class="chip">Main DPS dealer</span></div></div>
+        <div class="hero-tier"><strong>02</strong><div class="chips"><span class="chip">Main Tank</span></div></div>
+        <div class="hero-tier"><strong>03</strong><div class="chips"><span class="chip">Second DPS dealer</span></div></div>
+        <div class="hero-tier"><strong>04</strong><div class="chips"><span class="chip">Rest of the squad</span></div></div>
+      </div>
+
+      <p>Since the game is basically more oriented towards offense than defence, it won't be a big mistake to switch Main Tank gear upgrade priority to Second DPS dealer. Stronger damage dealers are valuable in events, PvE, PvP, rallies and progression.</p>
+
+      <p>Every UR gear can generally be upgraded using Gearstones and Herbs to level 40. After level 40, upgrades use Gearstones, Herbs and Tempered Steel. Promotion of gear (stars) can be done on gear at a minimum level of 10. Materials used to promote gear are Gearstones, Tempered Steel and UR Blueprints.</p>
+
+
+      <h3>1. Main DPS Dealer</h3>
+
+      <p>Main DPS dealers by faction are <strong>Marlena</strong> (Warrior), <strong>Cynthia</strong> (Ranger) and <strong>Annie</strong> (Warlock). Priority for them is Sword, and it should be kept at the highest level possible.</p>
+
+      <p>When promoting Swords, prioritize getting them to <strong>3 stars</strong>, which requires 30 UR Gear Blueprints (obtainable in Honor Shop – 10,000 Honor Points per blueprint).</p>
+
+      <p>After your Sword gets to 3 stars, promote Gloves to <strong>2 stars</strong> (15 Blueprints). My goal is to get Gloves to level 40 and keep them there.</p>
+
+      <p>Since most heroes in the game deal Energy Damage, it is a good idea to get Boots for Main DPS dealers to level 20 for 10% Energy Damage Resistance. Also, promoting Boots to 2 stars (15 Blueprints) keeps DPS dealers from dying early. If you were wondering, for my Main DPS dealer, I plan to get my Armor to level 20.</p>
+
+      <div class="shots" data-shots="gear-upgrade-dps" data-hint="Main DPS gear upgrade"></div>
+
+
+      <h3>2. Main Tank</h3>
+
+      <p>Main Tanks by faction are <strong>Daskal</strong> (Warrior), <strong>Louis</strong> (Ranger) and <strong>Billy</strong> (Warlock). But, for most F2P players, the Main Tank of the Warrior faction is Arthur, since he was the first obtainable UR hero.</p>
+
+      <p>When it comes to tanks, priority is Armor. Armor should be at level 40. Second are Boots; try to get them to level 20 at least.</p>
+
+      <p>Unfortunately, Armor only protects against Physical Damage (e.g. Raven), and going above level 40 is unnecessary. That being said, it is best to invest Blueprints to promote Boots and leave Armor without promotion. On tanks, focus on getting 2 stars for Boots (a total of 15 Blueprints).</p>
+
+      <p>When it comes to other pieces of gear, the goal is to get them to level 20.</p>
+
+      <div class="shots" data-shots="gear-upgrade-tank" data-hint="Main Tank gear upgrade"></div>
+
+
+      <h3>3. Second DPS Dealer</h3>
+
+      <p>Second DPS dealers by faction are <strong>Zoya</strong> (Warrior), <strong>Red Lady</strong> (Ranger) and <strong>Joker</strong> (Warlock). For most F2P players, the Second DPS dealer is Celia, and she is getting a UR update in Era of Revival.</p>
+
+      <p>Just like for Main DPS dealers, priority is Sword, then Gloves and finally Boots. It is enough to get all 3 gear pieces to 2 stars (a total of 45 Blueprints).</p>
+
+      <div class="shots" data-shots="gear-upgrade-second-dps" data-hint="Second DPS gear upgrade"></div>
+
+
+      <h3>Remember</h3>
+
+      <div class="elixir-card elixir-feature gear-role">
+        <p><strong>1.</strong> Main DPS dealer comes first. After your Main DPS reaches important milestones, start moving more resources toward your tank and Second DPS.</p>
+
+        <p><strong>2.</strong> Don't forget the tanks – your tank needs enough survivability to actually give DPS dealers time to do their job.</p>
+
+        <p><strong>3.</strong> Make sure that each upgrade contributes toward the gear progression you are building.</p>
+      </div>
+
+
+      <h3>TIPS</h3>
+
+      <div class="elixir-callout">
+        <p><strong>1.</strong> When it comes to PvE events, equip your DPS dealers with SSR Gloves at level 30. Their ability to deal 2% additional damage every 10 levels (6% in total) deals higher damage to Demon Kings.</p>
+
+        <p><strong>2.</strong> Try upgrading gear during weekend events for extra rewards.</p>
+      </div>
+
+    </section>
+  `;
+
+
+  // ---------- FINAL PAGE OUTPUT ----------
+  return header(...HEADS.gear)+`
+    <section class="content reveal">
+      <div class="guide-body">
+        ${gearCredit}
+        ${basics}
+        ${priority}
+        ${upgradePriority}
+      </div>
+    </section>
+  `;
 }
-function guidePage(page){
-  const [title,desc]=HEADS[page];
-  return header(title,desc)+`<section class="content reveal"><div class="guide-profile">${icon('user')}<div><h3>ANS · Ann</h3><small>Alliance field guide</small></div></div><div class="guide-body">${DATA.guides[page]||''}</div><div class="shots" data-shots="${page}"></div></section>`;
-}
+
 
 /* ---------- tips (members) ---------- */
 function tipsPage(){
