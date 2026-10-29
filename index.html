@@ -297,6 +297,14 @@ const tierChips=(items)=>`<div class="chips tier-ladder">${items.map((t,i)=>`${i
 const heroTier=(label,names)=>`<div class="hero-tier"><strong>${esc(label)}</strong><div class="chips">${names.map(n=>`<span class="chip">${esc(n)}</span>`).join('')}</div></div>`;
 const gearRole=(n,title,order,why,tiers)=>`<div class="elixir-card elixir-feature gear-role"><h3>${n}. ${esc(title)}</h3><p class="gear-order"><strong>Upgrade priority:</strong> ${order.map(esc).join(' → ')}</p><p>${esc(why)}</p>${tiers.map(([l,names])=>heroTier(l,names)).join('')}</div>`;
 function gearPage(){
+  const gearCredit=`
+  <div class="guide-profile">
+    ${icon('user')}
+    <div>
+      <h3>This guide was provided by our dear Antonela, AKA LadyTonx. <3</h3>
+    </div>
+  </div>
+`;
   const basics=`<section class="chapter"><h2><span class="n">01</span>BASICS</h2>
     <p>All gear (armor, boots, sword and gloves) and its production are managed in the Gear Workshop. To fully manage gear production, first focus on upgrading the Gear Workshop to level 20. At level 20, crafting UR gear becomes available, so pushing the Workshop level is an early priority before any serious gear investment.</p>
     <div class="shots" data-shots="gear-1" data-hint="Gear Workshop (Craft tab)"></div>
