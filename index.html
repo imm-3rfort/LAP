@@ -317,17 +317,16 @@ function gearPage(){
     ${gearRole(2,'CARRY – DAMAGE DEALERS (2nd row)',['Sword','Gloves','Armor','Boots'],'Sword and Gloves directly increase attack output. Armor and Boots matter for keeping damage dealers alive, but the primary investment is offense.',[['UR',['Marlena','Annie','Cynthia','Joker','Zoya','Red Lady']],['SSR',['Claire','Bestar','Sivir','Ash','Grenwald','Kesso']],['SR',['William','Robin','Kafa']]])}
     ${gearRole(3,'SUPPORT (2nd row)',['Boots','Armor','Sword','Gloves'],"A support hero's value is staying alive long enough to activate abilities at the right moment. Boots and Armor protect that function.",[['UR',['Harper','Bell']],['SSR',['Celia','Stellar']]])}
   </section>`;
-  /* Table 7 columns x 9 rows (1 header row + 8 body rows). Fill the arrays below; empty strings stay empty. */
+  /* TONX TABÑE*/
+  const priority=`<section class="chapter"><h2><span class="n">02</span>Table 1. My Upgrade/Promotion Plan</h2>
   const upgradeHead=['','','Sword','','Gloves','','Armor', '', 'Bots'];
   const upgradeRows=[
     ['','Lvl','Stars','Lvl','Stars','Lvl','Stars','Lvl','Stars'],
-    ['','','','','','','','',''],
-    ['','','','','','','','',''],
-    ['','','','','','','','',''],
-    ['','','','','','','','',''],
-    ['','','','','','','','',''],
-    ['','','','','','','','',''],
-    ['','','','','','','','','']
+    ['Main DPS','40','★★★','40','★★','40','-','20','★★'],
+    ['Main Tank','20','-','20','-','40','-','20','★★'],
+    ['2nd. DPS','40','★★','40','★★','40','-','20','★★'],
+    ['Support','40','★★','20','★★','20','-','20','★★'],
+    ['2nd. Tank','20','-','20','-','20','-','20','-']
   ];
   const upgradeTable=`<div class="gear-table-wrap"><table class="pt"><thead><tr>${upgradeHead.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${upgradeRows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   const upgrade=`<section class="chapter"><h2><span class="n">03</span>GEAR UPGRADE PRIORITY</h2>
