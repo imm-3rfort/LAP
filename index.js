@@ -1,96 +1,160 @@
-const {onCall,HttpsError}=require('firebase-functions/v2/https');
-const {setGlobalOptions}=require('firebase-functions/v2');
-const admin=require('firebase-admin');
+const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { onDocumentCreated } = require('firebase-functions/v2/firestore');
+const { defineSecret } = require('firebase-functions/params');
+const { initializeApp } = require('firebase-admin/app');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
+const { getMessaging } = require('firebase-admin/messaging');
 
-admin.initializeApp();
-setGlobalOptions({region:'us-central1'});
-const db=admin.firestore();
+initializeApp();
 
-exports.sendAnsNotification=onCall(async request=>{
-  if(!request.auth){
-    throw new HttpsError('unauthenticated','You must be signed in.');
+const db = getFirestore();
+
+async function getCallerRank(request) {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'You must be signed in.');
   }
 
-  const uid=request.auth.uid;
-  const title=String(request.data?.title || '').trim();
-  const body=String(request.data?.body || '').trim();
-
-  if(!title || !body){
-    throw new HttpsError('invalid-argument','Title and message are required.');
-  }
-  if(title.length>120 || body.length>2000){
-    throw new HttpsError('invalid-argument','The edict is too long.');
+  const snap = await db.collection('users').doc(request.auth.uid).get();
+  if (!snap.exists) {
+    throw new HttpsError('permission-denied', 'Your ANS profile does not exist.');
   }
 
-  const myTokens=await db.collection('fcmTokens').where('uid','==',uid).get();
-  let senderRank='';
-  for(const doc of myTokens.docs){
-    const rank=doc.data().rank;
-    if(['R1','R2','R3','R4','R5'].includes(rank)){senderRank=rank;break;}
+  const rank = snap.data().rank;
+  if (!['R4', 'R5'].includes(rank)) {
+    throw new HttpsError('permission-denied', 'Only R4 and R5 can send notifications.');
   }
 
-  if(!['R4','R5'].includes(senderRank)){
-    throw new HttpsError('permission-denied','Only R4 and R5 can send alliance edicts.');
+  return { rank, profile: snap.data() };
+}
+
+exports.listNotificationMembers = onCall(async (request) => {
+  const caller = await getCallerRank(request);
+  const snap = await db.collection('users').get();
+
+  const members = snap.docs.map(doc => {
+    const data = doc.data() || {};
+    return {
+      uid: doc.id,
+      email: data.email || '',
+      rank: data.rank || ''
+    };
+  }).filter(member => member.email);
+
+  members.sort((a, b) => a.email.localeCompare(b.email));
+
+  return { members, callerRank: caller.rank };
+});
+
+exports.sendAnsNotification = onCall(async (request) => {
+  const caller = await getCallerRank(request);
+
+  const title = String(request.data?.title || '').trim();
+  const body = String(request.data?.body || '').trim();
+  const recipientUid = String(request.data?.recipientUid || '').trim();
+
+  if (!title || !body || !recipientUid) {
+    throw new HttpsError('invalid-argument', 'Recipient, title and message are required.');
   }
 
-  const allTokens=await db.collection('fcmTokens').get();
-  const tokenDocs=[];
-  const seen=new Set();
-  for(const doc of allTokens.docs){
-    const data=doc.data();
-    const token=String(data.token || '').trim();
-    if(token && !seen.has(token)){
-      seen.add(token);
-      tokenDocs.push({id:doc.id,token});
+  if (title.length > 100 || body.length > 1000) {
+    throw new HttpsError('invalid-argument', 'The title or message is too long.');
+  }
+
+  const recipientSnap = await db.collection('users').doc(recipientUid).get();
+  if (!recipientSnap.exists) {
+    throw new HttpsError('not-found', 'The selected member does not exist.');
+  }
+
+  const recipient = recipientSnap.data() || {};
+  const tokenSnap = await db.collection('fcmTokens')
+    .where('uid', '==', recipientUid)
+    .get();
+
+  const tokens = tokenSnap.docs
+    .map(doc => doc.data()?.token)
+    .filter(Boolean);
+
+  if (!tokens.length) {
+    throw new HttpsError('failed-precondition', 'That member has no device with notifications activated.');
+  }
+
+  const messages = tokens.map(token => ({
+    token,
+    notification: { title, body },
+    data: {
+      title,
+      body,
+      url: './',
+      tag: 'ans-notification'
+    },
+    webpush: {
+      fcmOptions: { link: './' }
     }
-  }
+  }));
 
-  let sent=0,failed=0;
-  const invalid=[];
-  const chunkSize=500;
-
-  for(let i=0;i<tokenDocs.length;i+=chunkSize){
-    const chunk=tokenDocs.slice(i,i+chunkSize);
-    const response=await admin.messaging().sendEachForMulticast({
-      tokens:chunk.map(x=>x.token),
-      data:{
-        title,
-        body,
-        url:'https://imm-3rfort.github.io/LAP/',
-        type:'ANS_EDICT'
-      }
-    });
-    sent+=response.successCount;
-    failed+=response.failureCount;
-    response.responses.forEach((result,index)=>{
-      if(!result.success){
-        const code=result.error?.code || '';
-        if(code.includes('registration-token-not-registered') || code.includes('invalid-registration-token')){
-          invalid.push(chunk[index].id);
-        }
-      }
-    });
-  }
-
-  if(invalid.length){
-    const batch=db.batch();
-    invalid.forEach(id=>batch.delete(db.collection('fcmTokens').doc(id)));
-    await batch.commit();
-  }
+  const result = await getMessaging().sendEach(messages);
 
   await db.collection('announcements').add({
     title,
     body,
-    recipient:'all',
-    senderUid:uid,
-    senderEmail:request.auth.token.email || '',
-    senderRank,
-    createdAt:admin.firestore.FieldValue.serverTimestamp(),
-    notificationSent:true,
-    sentDevices:sent,
-    failedDevices:failed,
-    totalDevices:tokenDocs.length
+    recipientUid,
+    recipientEmail: recipient.email || '',
+    senderUid: request.auth.uid,
+    senderEmail: request.auth.token.email || caller.profile.email || '',
+    senderRank: caller.rank,
+    sentDevices: result.successCount,
+    failedDevices: result.failureCount,
+    createdAt: FieldValue.serverTimestamp()
   });
 
-  return {success:true,sent,failed,totalDevices:tokenDocs.length};
+  return {
+    ok: result.successCount > 0,
+    sentDevices: result.successCount,
+    failedDevices: result.failureCount
+  };
 });
+
+/* ------------------------------------------------------------------
+   New membership request -> push notification to every admin.
+   - Admins = documents in the "admins" collection (id = their uid).
+   - Delivery goes through OneSignal: the website calls OneSignal.login(uid)
+     when an admin signs in, so each admin device is reachable by external_id.
+   - One-time setup:  firebase functions:secrets:set ONESIGNAL_API_KEY
+     (OneSignal dashboard > Settings > Keys & IDs > REST API Key)
+------------------------------------------------------------------- */
+const ONESIGNAL_API_KEY = defineSecret('ONESIGNAL_API_KEY');
+const ONESIGNAL_APP_ID = '356ac489-0abc-4ba6-9f78-a48e03677a58';
+const SITE_URL = 'https://imm-3rfort.github.io/LAP/';
+
+exports.notifyNewMemberRequest = onDocumentCreated(
+  { document: 'members/{uid}', secrets: [ONESIGNAL_API_KEY] },
+  async (event) => {
+    const data = event.data?.data();
+    if (!data || data.status !== 'pending') return;
+
+    const admins = await db.collection('admins').get();
+    const adminIds = admins.docs.map((d) => d.id);
+    if (!adminIds.length) return;
+
+    const who = String(data.name || data.email || 'Someone').slice(0, 60);
+    const response = await fetch('https://api.onesignal.com/notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Key ${ONESIGNAL_API_KEY.value()}`
+      },
+      body: JSON.stringify({
+        app_id: ONESIGNAL_APP_ID,
+        target_channel: 'push',
+        include_aliases: { external_id: adminIds },
+        headings: { en: 'New ANS membership request' },
+        contents: { en: `${who} wants to join. Tap to review the request.` },
+        url: `${SITE_URL}#requests`
+      })
+    });
+
+    if (!response.ok) {
+      console.error('[notifyNewMemberRequest] OneSignal error', response.status, await response.text());
+    }
+  }
+);
