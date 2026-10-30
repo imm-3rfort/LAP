@@ -19,5 +19,18 @@ window.GEAR_IMAGES = {
   'gear-4': [
     ['images/gear-4.png', 'Salvage tab.'],
   ],
+/* Above Main DPS dealer image */
+'gear-5': [
+  ['images/gear-5.png', 'Main DPS dealer gear.'],
+],
 
+/* Main Tank image */
+'gear-6': [
+  ['images/gear-6.png', 'Main Tank gear.'],
+],
+
+/* Second DPS dealer image */
+'gear-7': [
+  ['images/gear-7.png', 'Second DPS dealer gear.'],
+],
 };
