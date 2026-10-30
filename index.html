@@ -219,12 +219,26 @@ body[data-role=guest] .nav-item[data-page=gallery],body[data-role=guest] .nav-it
 .bd-row .btn{margin-top:0}
 @media(max-width:1100px){.g-wall{column-count:2}}
 @media(max-width:760px){.g-wall{column-gap:8px}.g-item{margin-bottom:8px}.g-stage{height:min(62vh,520px)}.g-nav{width:38px;height:48px}.bd-form{grid-template-columns:1fr}.bd-day{min-height:52px;padding:4px}.bd-names{display:none}.bd-star{font-size:16px}.bd-nav h2{font-size:14px}}
+
+/* ---- self sign-up + membership approval ---- */
+body[data-role=awaiting] .nav-item[data-page=tips],body[data-role=awaiting] .nav-item[data-page=gallery],body[data-role=awaiting] .nav-item[data-page=birthdays]{display:none}
+body:not([data-admin="1"]) .nav-item[data-page=requests]{display:none}
+.nav-badge{margin-left:auto;min-width:20px;padding:2px 6px;border:1px solid var(--primary);color:var(--primary);font-family:var(--font-heading);font-size:9px;text-align:center}.nav-badge[hidden]{display:none}
+.member-banner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-left:2px solid var(--primary);background:var(--surface);padding:16px 22px;margin:18px 6% 0;color:var(--muted-foreground);line-height:1.6}
+.member-banner[hidden]{display:none}.member-banner .icon{flex:0 0 auto;width:22px;height:22px;color:var(--primary)}.member-banner .btn{margin-top:0;margin-left:auto}
+.auth-or{text-align:center;font-family:var(--font-heading);font-size:9px;color:var(--muted-foreground);margin:16px 0 0!important}
+.auth-links{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:16px}
+.auth-link{background:none;border:0;padding:0;color:var(--primary);font-size:14px;text-decoration:underline;text-underline-offset:4px}.auth-link[hidden]{display:none}
+#google-login{width:100%;margin-top:18px}
+.req-card .form-actions{margin-top:14px}
+@media(max-width:760px){.member-banner{margin:14px 23px 0}.member-banner .btn{margin-left:0}}
 </style></head><body data-role="pending">
 
 
-<div class="veil" id="veil"></div><aside class="sidebar" aria-label="Navegación principal"><a href="#home" class="brand" aria-label="ANS Home"><div class="crest"><img class="theme-logo monochrome-logo" src="logo-monochrome.svg" width="40" height="40" alt="Emblema ANS plata"><img class="theme-logo gold-logo" src="logo-gold.svg" width="40" height="40" alt="Emblema ANS dorado"></div><div class="brand-name">ANS</div><div class="brand-sub">LAST ASYLUM PLAGUE · #233</div></a><nav class="nav"><button class="nav-item active" data-page="home"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>Home</span></button><button class="nav-item " data-page="about"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6z"/><path d="m8 11 3 3 5-6"/></svg><span>About us</span></button><button class="nav-item " data-page="constitution"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v16M3 3c4-1 7 0 9 2 2-2 5-3 9-2v16c-4-1-7 0-9 2-2-2-5-3-9-2z"/></svg><span>Constitution of the Server</span></button><button class="nav-item " data-page="sanctuary"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V8h5v13m8 0V8h5v13M8 21V3h8v18M1 21h22M10 21v-5h4v5M3 8V5m5 3V5m8 3V5m5 3V5"/></svg><span>Sanctuary</span></button><button class="nav-item " data-page="duel"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>Alliance Duel</span></button><button class="nav-item " data-page="gear"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>About Gear</span></button><button class="nav-item " data-page="gallery"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="4"/></svg><span>ANS Gallery</span></button><button class="nav-item " data-page="birthdays"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span>ANS Birthdays</span></button><div class="side-divider"></div><button class="nav-item " data-page="guides" aria-expanded="false" aria-controls="guide-nav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h14v18H6a3 3 0 0 1 0-6h14M6 3a3 3 0 0 0-3 3v12m7-11h6m-6 4h6"/></svg><span>Guides</span><svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="guide-nav" class="nav-sub" hidden><button class="nav-item" data-page="guide-profile"><span>Change PP and Name</span></button><button class="nav-item" data-page="guide-minister"><span>Ministers</span></button><button class="nav-item" data-page="guide-gift-codes"><span>Gift Codes</span></button><button class="nav-item" data-page="guide-help-members"><span>Help members/alliance</span></button><button class="nav-item" data-page="guide-elixir-dispute"><span>Elixir Scramble</span></button><button class="nav-item" data-page="guide-thief-hunt"><span>Thief Hunt</span></button><button class="nav-item" data-page="guide-crystal-valley"><span>Crystal Valley</span></button><button class="nav-item" data-page="guide-wisdom-trial"><span>Quiz: Wisdom Trial</span></button><button class="nav-item" data-page="guide-sync-battle"><span>Sync Survival Battle + Alliance Duel</span></button><button class="nav-item" data-page="guide-era-of-revival"><span>Era of Revival Guide</span></button></div><button class="nav-item " data-page="tips"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Share a tip</span></button><button class="nav-item " data-page="ideas"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Any ideas?</span></button></nav><div class="side-bottom"><div class="theme-label">CHOOSE YOUR ATMOSPHERE</div><div class="theme-controls"><button class="theme-button selected" data-theme-choice="monochrome"><span class="theme-dot"></span>Monochrome</button><button class="theme-button" data-theme-choice="gold"><span class="theme-dot gold-dot"></span>Gold</button></div><p class="server-status"><span class="status-dot"></span>Server #233 · United we survive</p></div></aside>
-<main class="main"><header class="topbar"><button class="mobile-menu" id="mobile-menu" aria-label="Abrir menú" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="credit">Made it with love: ur dear Ann♡</span><div class="top-right"><span>EST. IN THE ASHES</span><button class="session close-session" id="session-button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg><span id="session-label">Not logged in</span></button></div></header><div id="view"></div><footer class="footer"><span>Made it with love: ur dear Ann♡</span><span>ANS · SERVER #233 · LAST ASYLUM PLAGUE</span></footer></main>
-<dialog class="modal" id="login-dialog"><button class="close" data-close aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><span class="eyebrow">THE GATES OF ANS</span><h2>Enter the sanctuary</h2><p>United against the plague. Welcome to our refuge.</p><div class="tabs"><button class="tab active" data-mode="member">Member</button><button class="tab" data-mode="guest">Guest</button></div><form id="login-form"><div id="auth-fields"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required><label for="password">Password</label><input id="password" type="password" minlength="6" autocomplete="current-password" required></div><p id="guest-description" hidden>Enter as a guest and explore our guides and events. Rankings and tips are reserved for members.</p><div class="form-actions"><button class="btn btn-primary" id="login-submit" type="submit"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="1"/><path d="M8 10V6a4 4 0 0 1 8 0v4m-4 4v3"/></svg><span>Login as a member</span></button></div><p class="form-status" id="login-status" aria-live="polite"></p></form></dialog>
+<div class="veil" id="veil"></div><aside class="sidebar" aria-label="Navegación principal"><a href="#home" class="brand" aria-label="ANS Home"><div class="crest"><img class="theme-logo monochrome-logo" src="logo-monochrome.svg" width="40" height="40" alt="Emblema ANS plata"><img class="theme-logo gold-logo" src="logo-gold.svg" width="40" height="40" alt="Emblema ANS dorado"></div><div class="brand-name">ANS</div><div class="brand-sub">LAST ASYLUM PLAGUE · #233</div></a><nav class="nav"><button class="nav-item active" data-page="home"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>Home</span></button><button class="nav-item " data-page="about"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6z"/><path d="m8 11 3 3 5-6"/></svg><span>About us</span></button><button class="nav-item " data-page="constitution"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v16M3 3c4-1 7 0 9 2 2-2 5-3 9-2v16c-4-1-7 0-9 2-2-2-5-3-9-2z"/></svg><span>Constitution of the Server</span></button><button class="nav-item " data-page="sanctuary"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V8h5v13m8 0V8h5v13M8 21V3h8v18M1 21h22M10 21v-5h4v5M3 8V5m5 3V5m8 3V5m5 3V5"/></svg><span>Sanctuary</span></button><button class="nav-item " data-page="duel"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>Alliance Duel</span></button><button class="nav-item " data-page="gear"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>About Gear</span></button><button class="nav-item " data-page="gallery"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="4"/></svg><span>ANS Gallery</span></button><button class="nav-item " data-page="birthdays"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span>ANS Birthdays</span></button><button class="nav-item " data-page="requests"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6z"/><path d="m8 11 3 3 5-6"/></svg><span>Membership requests</span><span class="nav-badge" id="req-badge" hidden>0</span></button><div class="side-divider"></div><button class="nav-item " data-page="guides" aria-expanded="false" aria-controls="guide-nav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h14v18H6a3 3 0 0 1 0-6h14M6 3a3 3 0 0 0-3 3v12m7-11h6m-6 4h6"/></svg><span>Guides</span><svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="guide-nav" class="nav-sub" hidden><button class="nav-item" data-page="guide-profile"><span>Change PP and Name</span></button><button class="nav-item" data-page="guide-minister"><span>Ministers</span></button><button class="nav-item" data-page="guide-gift-codes"><span>Gift Codes</span></button><button class="nav-item" data-page="guide-help-members"><span>Help members/alliance</span></button><button class="nav-item" data-page="guide-elixir-dispute"><span>Elixir Scramble</span></button><button class="nav-item" data-page="guide-thief-hunt"><span>Thief Hunt</span></button><button class="nav-item" data-page="guide-crystal-valley"><span>Crystal Valley</span></button><button class="nav-item" data-page="guide-wisdom-trial"><span>Quiz: Wisdom Trial</span></button><button class="nav-item" data-page="guide-sync-battle"><span>Sync Survival Battle + Alliance Duel</span></button><button class="nav-item" data-page="guide-era-of-revival"><span>Era of Revival Guide</span></button></div><button class="nav-item " data-page="tips"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Share a tip</span></button><button class="nav-item " data-page="ideas"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Any ideas?</span></button></nav><div class="side-bottom"><div class="theme-label">CHOOSE YOUR ATMOSPHERE</div><div class="theme-controls"><button class="theme-button selected" data-theme-choice="monochrome"><span class="theme-dot"></span>Monochrome</button><button class="theme-button" data-theme-choice="gold"><span class="theme-dot gold-dot"></span>Gold</button></div><p class="server-status"><span class="status-dot"></span>Server #233 · United we survive</p></div></aside>
+<main class="main"><header class="topbar"><button class="mobile-menu" id="mobile-menu" aria-label="Abrir menú" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="credit">Made it with love: ur dear Ann♡</span><div class="top-right"><span>EST. IN THE ASHES</span><button class="session close-session" id="session-button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg><span id="session-label">Not logged in</span></button></div></header><div class="member-banner" id="member-banner" hidden></div><div id="view"></div><footer class="footer"><span>Made it with love: ur dear Ann♡</span><span>ANS · SERVER #233 · LAST ASYLUM PLAGUE</span></footer></main>
+<dialog class="modal" id="login-dialog"><button class="close" data-close aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><span class="eyebrow">THE GATES OF ANS</span><h2>Enter the sanctuary</h2><p>United against the plague. Welcome to our refuge.</p><div class="tabs"><button class="tab active" data-mode="member">Member</button><button class="tab" data-mode="guest">Guest</button></div><form id="login-form"><div id="auth-fields"><button class="btn" type="button" id="google-login"><span aria-hidden="true" style="font-family:var(--font-heading)">G</span><span>Continue with Google</span></button><p class="auth-or">OR USE YOUR EMAIL</p><label for="email">Email</label><input id="email" type="email" autocomplete="email" required><label for="password">Password</label><input id="password" type="password" minlength="6" autocomplete="current-password" required><div class="auth-links"><button type="button" class="auth-link" id="auth-toggle">New here? Create an account</button><button type="button" class="auth-link" id="auth-reset">Forgot your password?</button></div></div><p id="guest-description" hidden>Enter as a guest and explore our guides and events. Rankings and tips are reserved for members.</p><div class="form-actions"><button class="btn btn-primary" id="login-submit" type="submit"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="1"/><path d="M8 10V6a4 4 0 0 1 8 0v4m-4 4v3"/></svg><span>Login as a member</span></button></div><p class="form-status" id="login-status" aria-live="polite"></p></form></dialog>
+<dialog class="modal" id="join-dialog"><button class="close" data-close aria-label="Close"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><span class="eyebrow">ONE LAST STEP</span><h2>Request membership</h2><p>Tell us who you are so an officer can recognize you. You will get access to tips, the gallery and birthdays as soon as you are approved.</p><form id="join-form"><label for="join-name">Your in-game name</label><input id="join-name" maxlength="30" required autocomplete="off"><label for="join-message">Anything we should know? (optional)</label><textarea id="join-message" maxlength="300" style="min-height:90px"></textarea><div class="form-actions"><button class="btn btn-primary" type="submit" id="join-send">Send request</button></div><p class="form-status" id="join-status" aria-live="polite"></p></form></dialog>
 <dialog class="modal" id="video-dialog"><button class="close" data-close aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><h2>Life in the asylum</h2><div id="video-content"></div></dialog><dialog class="modal" id="zoom-dialog"><button class="close" data-close aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><div class="zoom-stage" id="zoom-stage"><img id="zoom-image" alt="Captura de la guía"></div><div class="zoom-controls"><button class="btn" id="zoom-out" aria-label="Alejar">−</button><button class="btn" id="zoom-reset">100%</button><button class="btn" id="zoom-in" aria-label="Acercar">+</button></div><p id="zoom-caption"></p></dialog><div class="toast" id="toast" hidden role="status"></div>
 
 
@@ -249,7 +263,7 @@ paths.camera='<path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="4"/
 
 /* ---------- pages ---------- */
 const GUIDES=[['guide-profile','Change PP and Name'],['guide-minister','Ministers'],['guide-gift-codes','Gift Codes'],['guide-help-members','Help members/alliance'],['guide-elixir-dispute','Elixir Scramble'],['guide-thief-hunt','Thief Hunt'],['guide-crystal-valley','Crystal Valley'],['guide-wisdom-trial','Quiz: Wisdom Trial'],['guide-sync-battle','Sync Survival Battle + Alliance Duel'],['guide-era-of-revival','Era of Revival Guide']];
-const HEADS={about:['About us','An alliance. A refuge. A family.'],constitution:['The Constitution','The pact that unites us. The laws that protect us.'],sanctuary:['Sanctuary','From Ashes to Sanctuary. Levels 1–30.'],duel:['Alliance Duel','Six days. An alliance. A goal.'],gear:['About Gear','Everything you need to craft, fuse and upgrade your gear.'],tips:['Share a tip','Shared knowledge keeps us alive.'],gallery:['ANS Gallery','Most Valuable Moments (MVM) — the wall of our sanctuary.'],birthdays:['ANS Birthdays','Every member counts. Every birthday earns a star.']};
+const HEADS={about:['About us','An alliance. A refuge. A family.'],constitution:['The Constitution','The pact that unites us. The laws that protect us.'],sanctuary:['Sanctuary','From Ashes to Sanctuary. Levels 1–30.'],duel:['Alliance Duel','Six days. An alliance. A goal.'],gear:['About Gear','Everything you need to craft, fuse and upgrade your gear.'],tips:['Share a tip','Shared knowledge keeps us alive.'],gallery:['ANS Gallery','Most Valuable Moments (MVM) — the wall of our sanctuary.'],birthdays:['ANS Birthdays','Every member counts. Every birthday earns a star.'],requests:['Membership requests','Approve or decline who enters the sanctuary.']};
 GUIDES.forEach(([id,t])=>HEADS[id]=[t,'The ANS field journal.']);
 HEADS['guide-era-of-revival']=['Era of Revival Guide','Strategies, secrets and optimization for the 2-month season.'];
 const OLD_HASH={'weapons':'gear','about-ans':'about','const-serv':'constitution','alliance-duel':'duel','share-tip':'tips','wisdom-trial':'guide-wisdom-trial'};
@@ -257,8 +271,9 @@ const isPage=p=>p==='home'||!!HEADS[p];
 const hashPage=()=>{const h=location.hash.slice(1);const p=OLD_HASH[h]||h;return isPage(p)?p:'home'};
 
 let role='pending',currentPage='home',mode='member',firebase=null,user=null,authResolved=false,toastTimer;
+let membership='none',isAdmin=false,memberData=null,memberKnown=false,joinPrompted=false,authSignup=false,unsubscribeMember=null;
 let tips=[],unsubscribeTips=null,editingTip=null;
-function canView(r,page){if(page==='home')return true;if(r==='signed-out'||r==='pending')return false;if(page==='tips'||page==='ranks'||page==='gallery'||page==='birthdays')return r==='member';return true}
+function canView(r,page){if(page==='home')return true;if(r==='signed-out'||r==='pending')return false;if(page==='requests')return r==='member'&&isAdmin;if(page==='tips'||page==='ranks'||page==='gallery'||page==='birthdays')return r==='member';return true}
 function toast(text){const t=$('#toast');t.textContent=text;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,6000)}
 function showDialog(id){$(id).showModal()}
 function menuClose(){document.body.classList.remove('menu-open');$('#mobile-menu').setAttribute('aria-expanded','false')}
@@ -269,7 +284,7 @@ function login(tab='member'){
   document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   $('#auth-fields').hidden=mode==='guest';$('#guest-description').hidden=mode!=='guest';
   $('#email').required=mode!=='guest';$('#password').required=mode!=='guest';
-  $('#login-submit span').textContent=mode==='guest'?'Login as a guest':'Login as a member';
+  authSignup=false;paintAuthMode();
   $('#login-status').textContent='';
   showDialog('#login-dialog');
 }
@@ -277,8 +292,8 @@ function setRole(value){
   const first=role==='pending',changed=role!==value;
   role=value;
   document.body.dataset.role=role;
-  $('#session-label').textContent=role==='signed-out'?'Not logged in':role==='guest'?'Guest':'ANS Member';
-  syncTips();syncBirthdays();
+  $('#session-label').textContent=role==='signed-out'?'Not logged in':role==='guest'?'Guest':role==='awaiting'?(membership==='pending'?'Pending approval':membership==='rejected'?'Request declined':'Not a member yet'):'ANS Member';
+  syncTips();syncBirthdays();syncRequests();
   if(first){const p=hashPage();currentPage=canView(role,p)?p:'home';render(currentPage)}
   else if(changed)render(canView(role,currentPage)?currentPage:'home');
 }
@@ -592,6 +607,128 @@ function syncBirthdays(){
   },err=>{console.error('[ANS birthdays]',err);if(currentPage==='birthdays'&&$('#bd-cal'))$('#bd-cal').innerHTML='<p class="empty">The birthdays could not be loaded right now.</p>'});
 }
 
+/* ---------- self sign-up + membership approval ----------
+   Anyone can sign in (Google or email). A signed-in person is NOT a member until an admin approves the request.
+   members/{uid}.status: pending | approved | rejected   ·   admins/{uid} exists = can approve requests */
+function paintAuthMode(){
+  const guest=mode==='guest';
+  $('#login-submit span').textContent=guest?'Login as a guest':authSignup?'Create my account':'Login as a member';
+  $('#auth-toggle').textContent=authSignup?'I already have an account':'New here? Create an account';
+  $('#password').autocomplete=authSignup?'new-password':'current-password';
+  $('#auth-reset').hidden=authSignup;
+}
+$('#auth-toggle').onclick=()=>{authSignup=!authSignup;$('#login-status').textContent='';paintAuthMode()};
+$('#auth-reset').onclick=async()=>{
+  const email=$('#email').value.trim();
+  if(!email){$('#login-status').textContent='Type your email above first, then tap "Forgot your password?" again.';return}
+  try{await firebase.auth.sendPasswordResetEmail(firebase.a,email)}catch(e){console.error('[ANS Auth]',e)}
+  $('#login-status').textContent='If that email has an account, a password reset link is on its way.';
+};
+$('#google-login').onclick=async()=>{
+  if(!firebase){$('#login-status').textContent='Member login is not available right now. Try again in a moment.';return}
+  const A=firebase.auth,provider=new A.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
+  $('#login-status').textContent='Opening Google...';
+  try{await A.signInWithPopup(firebase.a,provider);$('#login-status').textContent='';$('#login-dialog').close()}
+  catch(err){
+    if(['auth/popup-blocked','auth/operation-not-supported-in-this-environment'].includes(err.code)){try{await A.signInWithRedirect(firebase.a,provider);return}catch(e2){err=e2}}
+    if(['auth/popup-closed-by-user','auth/cancelled-popup-request'].includes(err.code)){$('#login-status').textContent='';return}
+    console.error('[ANS Auth]',err);$('#login-status').textContent=AUTH_ERRORS[err.code]||'Google sign-in failed. Try again.';
+  }
+};
+async function onAuth(u){
+  user=u;authResolved=true;
+  unsubscribeMember?.();unsubscribeMember=null;memberKnown=false;
+  if(!u){membership='none';isAdmin=false;memberData=null;paintAdmin();paintBanner();setRole(guestFlag()?'guest':'signed-out');return}
+  setGuestFlag(false);
+  const db=firebase.db;
+  try{isAdmin=(await db.getDoc(db.doc(firebase.d,'admins',u.uid))).exists()}catch{isAdmin=false}
+  if(user!==u)return;
+  paintAdmin();
+  unsubscribeMember=db.onSnapshot(db.doc(firebase.d,'members',u.uid),snap=>{
+    const prev=membership;
+    memberData=snap.exists()?snap.data():null;
+    membership=memberData?(memberData.status||'pending'):'none';
+    setRole(membership==='approved'?'member':'awaiting');
+    paintBanner();
+    if(memberKnown&&prev!=='approved'&&membership==='approved')toast('Welcome to ANS! Your membership was approved.');
+    memberKnown=true;
+    if(membership==='none'&&!joinPrompted){joinPrompted=true;openJoin()}
+  },err=>{console.error('[ANS membership]',err);membership='none';setRole('awaiting');paintBanner(true)});
+}
+function paintAdmin(){
+  document.body.dataset.admin=isAdmin?'1':'';
+  if(isAdmin&&user)window.__osReady?.then(OS=>OS.login(user.uid)).catch(()=>{});   /* lets the server push new requests to this device */
+}
+function paintBanner(failed){
+  const b=$('#member-banner');if(!b)return;
+  if(!user||membership==='approved'){b.hidden=true;return}
+  const msg=failed?'We could not check your membership right now. Please try again later.':membership==='pending'?'Your membership request is pending. An officer will review it soon — this page updates by itself once you are approved.':membership==='rejected'?'Your membership request was declined. Please contact an R4 or R5 officer.':'Your account is not an ANS member yet. Send a request to unlock tips, the gallery and birthdays.';
+  b.innerHTML=`${icon('lock')}<span>${esc(msg)}</span>${(!failed&&membership==='none')?'<button class="btn btn-primary" id="join-open" type="button">Request membership</button>':''}`;
+  b.hidden=false;
+  $('#join-open')?.addEventListener('click',openJoin);
+}
+function openJoin(){
+  if(!user||membership!=='none')return;
+  if(!$('#join-name').value)$('#join-name').value=(user.displayName||'').slice(0,30);
+  $('#join-status').textContent='';
+  if(!$('#join-dialog').open)showDialog('#join-dialog');
+}
+$('#join-form').onsubmit=async e=>{
+  e.preventDefault();
+  if(!firebase||!user)return;
+  const name=$('#join-name').value.trim().slice(0,30),message=$('#join-message').value.trim().slice(0,300);
+  if(!name){$('#join-status').textContent='Add your in-game name so we know who you are.';return}
+  $('#join-send').disabled=true;$('#join-status').textContent='';
+  try{
+    const db=firebase.db;
+    await db.setDoc(db.doc(firebase.d,'members',user.uid),{uid:user.uid,name,email:user.email||'',message,status:'pending',requestedAt:db.serverTimestamp()});
+    $('#join-dialog').close();toast('Request sent. An officer will review it soon.');
+  }catch(err){console.error('[ANS membership]',err);$('#join-status').textContent='The request could not be sent. Try again.'}
+  finally{$('#join-send').disabled=false}
+};
+
+/* ---------- membership requests (admins only) ---------- */
+let requests=[],reqFilter='pending',unsubscribeReq=null,reqKnown=false;
+function paintReqBadge(){
+  const n=requests.filter(r=>r.status==='pending').length,b=$('#req-badge');
+  if(b){b.textContent=String(n);b.hidden=!n}
+}
+function syncRequests(){
+  unsubscribeReq?.();unsubscribeReq=null;reqKnown=false;
+  if(!isAdmin||role!=='member'||!firebase||!user){requests=[];paintReqBadge();return}
+  const db=firebase.db;
+  unsubscribeReq=db.onSnapshot(db.query(db.collection(firebase.d,'members'),db.orderBy('requestedAt','desc'),db.limit(300)),snap=>{
+    const before=requests.filter(r=>r.status==='pending').length;
+    requests=snap.docs.map(d=>({id:d.id,...d.data()}));
+    paintReqBadge();
+    if(reqKnown&&requests.filter(r=>r.status==='pending').length>before)toast('New membership request received.');
+    reqKnown=true;
+    if(currentPage==='requests')renderRequests();
+  },err=>{console.error('[ANS requests]',err);if(currentPage==='requests'&&$('#req-list'))$('#req-list').innerHTML='<p class="empty">The requests could not be loaded right now.</p>'});
+}
+function requestsPage(){
+  return header(...HEADS.requests)+`<section class="content reveal"><p class="lead">People who sign in with Google or email show up here. Approve them to unlock tips, the gallery and birthdays. Declining or removing someone takes that access away again.</p><div class="g-bar"><div class="g-tabs" id="req-tabs"></div></div><div id="req-list"></div></section>`;
+}
+function renderRequests(){
+  const list=$('#req-list');if(!list)return;
+  const counts={pending:0,approved:0,rejected:0};requests.forEach(r=>{if(r.status in counts)counts[r.status]++});
+  $('#req-tabs').innerHTML=[['pending','Pending'],['approved','Members'],['rejected','Declined']].map(([k,l])=>`<button class="btn${reqFilter===k?' active':''}" data-rf="${k}">${l} (${counts[k]})</button>`).join('');
+  const rows=requests.filter(r=>r.status===reqFilter);
+  list.innerHTML=rows.length?rows.map(r=>`<article class="tip req-card"><small>${esc(r.email||'')} · ${esc(fmtDate(r.requestedAt))}</small><h3>${esc(r.name||'(no name)')}</h3>${r.message?`<p>${esc(r.message)}</p>`:''}<div class="form-actions">${r.status!=='approved'?`<button class="btn btn-primary" data-rq="approved" data-id="${esc(r.id)}">Approve</button>`:''}${r.status==='pending'?`<button class="btn" data-rq="rejected" data-id="${esc(r.id)}">Decline</button>`:''}${r.status==='approved'&&r.id!==user?.uid?`<button class="btn" data-rq="rejected" data-id="${esc(r.id)}">Remove access</button>`:''}</div></article>`).join(''):'<p class="empty">Nothing here.</p>';
+}
+function bindRequests(){
+  renderRequests();
+  $('#req-tabs').onclick=e=>{const b=e.target.closest('[data-rf]');if(b){reqFilter=b.dataset.rf;renderRequests()}};
+  $('#req-list').onclick=async e=>{
+    const b=e.target.closest('[data-rq]');if(!b||!firebase||!user||!isAdmin)return;
+    const status=b.dataset.rq,id=b.dataset.id,r=requests.find(x=>x.id===id);
+    if(status==='rejected'&&!confirm(`${r?.status==='approved'?'Remove access for':'Decline'} ${r?.name||'this person'}?`))return;
+    b.disabled=true;
+    try{const db=firebase.db;await db.updateDoc(db.doc(firebase.d,'members',id),{status,decidedAt:db.serverTimestamp(),decidedBy:user.uid});toast(status==='approved'?'Member approved.':'Done.')}
+    catch(err){console.error('[ANS requests]',err);toast('That could not be saved. Try again.');b.disabled=false}
+  };
+}
+
 /* ---------- render ---------- */
 function render(page){
   if(!canView(role,page))page='home';
@@ -602,7 +739,7 @@ function render(page){
   if(page==='home')html=home();
   else{
     title=HEADS[page][0];
-    html=page==='about'?aboutPage():page==='constitution'?constitutionPage():page==='sanctuary'?sanctuaryPage():page==='duel'?duelPage():page==='gear'?gearPage():page==='tips'?tipsPage():page==='gallery'?galleryPage():page==='birthdays'?birthdaysPage():guidePage(page);
+    html=page==='about'?aboutPage():page==='constitution'?constitutionPage():page==='sanctuary'?sanctuaryPage():page==='duel'?duelPage():page==='gear'?gearPage():page==='tips'?tipsPage():page==='gallery'?galleryPage():page==='birthdays'?birthdaysPage():page==='requests'?requestsPage():guidePage(page);
   }
   $('#view').innerHTML=html;
   bindView();
@@ -611,6 +748,7 @@ function render(page){
   if(page==='tips'){renderTips();bindTips()}
   if(page==='gallery')mountGallery();
   if(page==='birthdays')bindBirthdays();
+  if(page==='requests')bindRequests();
   document.title=`ANS · ${title} · #233`;
 }
 function bindView(){
@@ -737,11 +875,12 @@ async function connectFirebase(){
     const [appM,authM,db]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
     const app=appM.getApps().length?appM.getApp():appM.initializeApp(CONFIG.firebase);
     firebase={auth:authM,db,a:authM.getAuth(app),d:db.getFirestore(app)};
-    authM.onAuthStateChanged(firebase.a,u=>{user=u;authResolved=true;if(u){setGuestFlag(false);setRole('member')}else setRole(guestFlag()?'guest':'signed-out')});
+    authM.getRedirectResult(firebase.a).catch(e=>console.error('[ANS Auth redirect]',e));
+    authM.onAuthStateChanged(firebase.a,onAuth);
   }catch(e){console.error('[ANS Auth]',e);if(!authResolved){authResolved=true;setRole(guestFlag()?'guest':'signed-out')}toast('Member login is not available right now. You can still enter as a guest.')}
 }
 setTimeout(()=>{if(!authResolved){authResolved=true;setRole(guestFlag()?'guest':'signed-out')}},4000);
-const AUTH_ERRORS={'auth/invalid-credential':'The email or password is incorrect.','auth/invalid-email':'Enter a valid email address.','auth/user-disabled':'This account has been disabled.','auth/too-many-requests':'Too many attempts. Try again later.'};
+const AUTH_ERRORS={'auth/invalid-credential':'The email or password is incorrect.','auth/invalid-email':'Enter a valid email address.','auth/user-disabled':'This account has been disabled.','auth/too-many-requests':'Too many attempts. Try again later.','auth/email-already-in-use':'That email already has an account. Try logging in instead.','auth/weak-password':'Use a password with at least 6 characters.','auth/network-request-failed':'Network error. Check your connection and try again.','auth/unauthorized-domain':'This website address is not authorized for sign-in yet.','auth/account-exists-with-different-credential':'That email is already registered with a different sign-in method.'};
 $('#login-form').onsubmit=async e=>{
   e.preventDefault();
   if(mode==='guest'){
@@ -751,7 +890,9 @@ $('#login-form').onsubmit=async e=>{
   if(!firebase){$('#login-status').textContent='Member login is not available right now. Try again in a moment.';return}
   $('#login-submit').disabled=true;$('#login-status').textContent='Opening the gates...';
   try{
-    await firebase.auth.signInWithEmailAndPassword(firebase.a,$('#email').value.trim(),$('#password').value);
+    const em=$('#email').value.trim(),pw=$('#password').value;
+    if(authSignup){const cr=await firebase.auth.createUserWithEmailAndPassword(firebase.a,em,pw);try{await firebase.auth.sendEmailVerification(cr.user)}catch{}}
+    else await firebase.auth.signInWithEmailAndPassword(firebase.a,em,pw);
     $('#password').value='';$('#login-dialog').close();
   }catch(err){console.error('[ANS Auth]',err);$('#login-status').textContent=AUTH_ERRORS[err.code]||'The gates could not be opened. Try again.'}
   finally{$('#login-submit').disabled=false}
@@ -759,6 +900,7 @@ $('#login-form').onsubmit=async e=>{
 $('#session-button').onclick=async()=>{
   if(role==='signed-out'||role==='pending')return login();
   if(!confirm('Leave the sanctuary?'))return;
+  if(isAdmin)window.__osReady?.then(OS=>OS.logout()).catch(()=>{});
   if(firebase?.a.currentUser){try{await firebase.auth.signOut(firebase.a)}catch{return toast('Could not sign out.')}}
   setGuestFlag(false);setRole('signed-out');navigate('home');
 };
