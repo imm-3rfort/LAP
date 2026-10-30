@@ -171,10 +171,58 @@ body[data-role=guest] .nav-item[data-page=tips]{display:none}
 .ladder-arrow{color:var(--primary)}
 .chapter>.shots+h3,.chapter>.shots+p{margin-top:22px}
 .gear-table-wrap{overflow-x:auto;margin:22px 0 8px}.gear-table-wrap .pt{min-width:680px}.gear-table-wrap .pt th,.gear-table-wrap .pt td{border:1px solid var(--border);height:38px}
+
+/* ---- ANS Gallery + ANS Birthdays (members only) ---- */
+body[data-role=guest] .nav-item[data-page=gallery],body[data-role=guest] .nav-item[data-page=birthdays]{display:none}
+.g-bar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:6px 0 22px}
+.g-count{font-family:var(--font-heading);font-size:10px;color:var(--muted-foreground)}
+.g-tabs{display:flex;gap:8px}.g-tabs .btn{margin-top:0}
+.g-tabs .btn.active,.bd-months .btn.active{background:var(--primary);color:var(--primary-foreground);border-color:var(--primary)}
+.g-wall{column-count:3;column-gap:14px}
+.g-item{display:block;width:100%;margin:0 0 14px;padding:0;border:1px solid var(--border);background:var(--surface);break-inside:avoid;position:relative;overflow:hidden;cursor:pointer}
+.g-item img{display:block;width:100%;height:auto;min-height:60px;transition:transform .5s}
+.g-item:hover img{transform:scale(1.03)}
+.g-item .g-cap{position:absolute;left:0;right:0;bottom:0;padding:28px 12px 10px;background:linear-gradient(0deg,var(--overlay),transparent);font-size:14px;line-height:1.4;text-align:left;opacity:0;transition:opacity .3s}
+.g-item:hover .g-cap,.g-item:focus-visible .g-cap{opacity:1}
+.g-car{outline:none}
+.g-stage{position:relative;height:min(70vh,640px);display:flex;align-items:center;justify-content:center;background:var(--background);border:1px solid var(--border);touch-action:pan-y}
+.g-open{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:10px;border:0;background:transparent;cursor:zoom-in}
+.g-open img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.g-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:56px;border:1px solid var(--border);background:var(--overlay);font-size:20px;display:flex;align-items:center;justify-content:center}
+.g-nav:hover{background:var(--surface-hover)}.g-nav.prev{left:10px}.g-nav.next{right:10px}
+.g-cap-line{margin-top:14px;text-align:center;color:var(--foreground);line-height:1.6;font-size:17px}.g-cap-line:empty{display:none}
+.g-counter{margin-top:8px;text-align:center;font-family:var(--font-heading);font-size:11px;color:var(--muted-foreground)}
+.g-thumbs{display:flex;gap:8px;overflow-x:auto;margin-top:16px;padding-bottom:8px}
+.g-thumb{flex:0 0 auto;width:76px;height:76px;padding:0;border:1px solid var(--border);background:var(--surface);opacity:.6;transition:opacity .2s}
+.g-thumb:hover,.g-thumb.active{opacity:1}.g-thumb.active{border-color:var(--primary)}
+.g-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.bd-card{border:1px solid var(--border);background:var(--surface);padding:20px;margin-bottom:30px}
+.bd-form{display:grid;grid-template-columns:2fr 1.2fr .8fr;gap:14px}
+.bd-form>div{min-width:0}.bd-card select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--foreground);padding:13px;font-family:var(--font-body);font-size:16px}
+.bd-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.bd-nav h2{font-size:16px;text-align:center}.bd-nav .btn{margin-top:0}
+.bd-months{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}.bd-months .btn{margin-top:0;min-height:32px;padding:7px 10px}
+.bd-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.bd-dow{font-family:var(--font-heading);font-size:9px;color:var(--muted-foreground);text-align:center;padding:6px 0}
+.bd-day{min-height:84px;border:1px solid var(--border);background:var(--surface);padding:6px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.bd-day.blank{border-color:transparent;background:transparent}
+.bd-day .d{font-family:var(--font-heading);font-size:10px;color:var(--muted-foreground)}
+.bd-day.today{box-shadow:inset 0 0 0 1px var(--primary)}.bd-day.today .d{color:var(--primary)}
+.bd-day.has{border-color:var(--primary);background:var(--surface-hover)}
+.bd-star{color:var(--primary);font-size:22px;line-height:1}.bd-day.mine .bd-star{text-shadow:0 0 12px var(--glow),0 0 4px var(--primary)}
+.bd-names{display:flex;flex-direction:column;font-size:12px;line-height:1.35;color:var(--foreground);min-width:0}
+.bd-names span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd-list{margin-top:26px}.bd-list h3{margin-bottom:6px}
+.bd-row{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--border);padding:14px 0}
+.bd-row .dt{font-family:var(--font-heading);font-size:12px;color:var(--primary);min-width:84px}
+.bd-row .nm{flex:1;color:var(--foreground);font-size:17px;min-width:120px}.bd-row .you{color:var(--muted-foreground);font-size:14px}
+.bd-row .btn{margin-top:0}
+@media(max-width:1100px){.g-wall{column-count:2}}
+@media(max-width:760px){.g-wall{column-gap:8px}.g-item{margin-bottom:8px}.g-stage{height:min(62vh,520px)}.g-nav{width:38px;height:48px}.bd-form{grid-template-columns:1fr}.bd-day{min-height:52px;padding:4px}.bd-names{display:none}.bd-star{font-size:16px}.bd-nav h2{font-size:14px}}
 </style></head><body data-role="pending">
 
 
-<div class="veil" id="veil"></div><aside class="sidebar" aria-label="Navegación principal"><a href="#home" class="brand" aria-label="ANS Home"><div class="crest"><img class="theme-logo monochrome-logo" src="logo-monochrome.svg" width="40" height="40" alt="Emblema ANS plata"><img class="theme-logo gold-logo" src="logo-gold.svg" width="40" height="40" alt="Emblema ANS dorado"></div><div class="brand-name">ANS</div><div class="brand-sub">LAST ASYLUM PLAGUE · #233</div></a><nav class="nav"><button class="nav-item active" data-page="home"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>Home</span></button><button class="nav-item " data-page="about"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6z"/><path d="m8 11 3 3 5-6"/></svg><span>About us</span></button><button class="nav-item " data-page="constitution"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v16M3 3c4-1 7 0 9 2 2-2 5-3 9-2v16c-4-1-7 0-9 2-2-2-5-3-9-2z"/></svg><span>Constitution of the Server</span></button><button class="nav-item " data-page="sanctuary"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V8h5v13m8 0V8h5v13M8 21V3h8v18M1 21h22M10 21v-5h4v5M3 8V5m5 3V5m8 3V5m5 3V5"/></svg><span>Sanctuary</span></button><button class="nav-item " data-page="duel"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>Alliance Duel</span></button><button class="nav-item " data-page="gear"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>About Gear</span></button><div class="side-divider"></div><button class="nav-item " data-page="guides" aria-expanded="false" aria-controls="guide-nav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h14v18H6a3 3 0 0 1 0-6h14M6 3a3 3 0 0 0-3 3v12m7-11h6m-6 4h6"/></svg><span>Guides</span><svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="guide-nav" class="nav-sub" hidden><button class="nav-item" data-page="guide-profile"><span>Change PP and Name</span></button><button class="nav-item" data-page="guide-minister"><span>Ministers</span></button><button class="nav-item" data-page="guide-gift-codes"><span>Gift Codes</span></button><button class="nav-item" data-page="guide-help-members"><span>Help members/alliance</span></button><button class="nav-item" data-page="guide-elixir-dispute"><span>Elixir Scramble</span></button><button class="nav-item" data-page="guide-thief-hunt"><span>Thief Hunt</span></button><button class="nav-item" data-page="guide-crystal-valley"><span>Crystal Valley</span></button><button class="nav-item" data-page="guide-wisdom-trial"><span>Quiz: Wisdom Trial</span></button><button class="nav-item" data-page="guide-sync-battle"><span>Sync Survival Battle + Alliance Duel</span></button><button class="nav-item" data-page="guide-era-of-revival"><span>Era of Revival Guide</span></button></div><button class="nav-item " data-page="tips"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Share a tip</span></button><button class="nav-item " data-page="ideas"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Any ideas?</span></button></nav><div class="side-bottom"><div class="theme-label">CHOOSE YOUR ATMOSPHERE</div><div class="theme-controls"><button class="theme-button selected" data-theme-choice="monochrome"><span class="theme-dot"></span>Monochrome</button><button class="theme-button" data-theme-choice="gold"><span class="theme-dot gold-dot"></span>Gold</button></div><p class="server-status"><span class="status-dot"></span>Server #233 · United we survive</p></div></aside>
+<div class="veil" id="veil"></div><aside class="sidebar" aria-label="Navegación principal"><a href="#home" class="brand" aria-label="ANS Home"><div class="crest"><img class="theme-logo monochrome-logo" src="logo-monochrome.svg" width="40" height="40" alt="Emblema ANS plata"><img class="theme-logo gold-logo" src="logo-gold.svg" width="40" height="40" alt="Emblema ANS dorado"></div><div class="brand-name">ANS</div><div class="brand-sub">LAST ASYLUM PLAGUE · #233</div></a><nav class="nav"><button class="nav-item active" data-page="home"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>Home</span></button><button class="nav-item " data-page="about"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6z"/><path d="m8 11 3 3 5-6"/></svg><span>About us</span></button><button class="nav-item " data-page="constitution"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v16M3 3c4-1 7 0 9 2 2-2 5-3 9-2v16c-4-1-7 0-9 2-2-2-5-3-9-2z"/></svg><span>Constitution of the Server</span></button><button class="nav-item " data-page="sanctuary"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V8h5v13m8 0V8h5v13M8 21V3h8v18M1 21h22M10 21v-5h4v5M3 8V5m5 3V5m8 3V5m5 3V5"/></svg><span>Sanctuary</span></button><button class="nav-item " data-page="duel"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>Alliance Duel</span></button><button class="nav-item " data-page="gear"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 14 14m-2-1 5-1-1 5M3 4l1 5 5-1m11-5L6 17m2-1-5-1 1 5m17-16-1 5-5-1"/></svg><span>About Gear</span></button><button class="nav-item " data-page="gallery"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="4"/></svg><span>ANS Gallery</span></button><button class="nav-item " data-page="birthdays"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span>ANS Birthdays</span></button><div class="side-divider"></div><button class="nav-item " data-page="guides" aria-expanded="false" aria-controls="guide-nav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h14v18H6a3 3 0 0 1 0-6h14M6 3a3 3 0 0 0-3 3v12m7-11h6m-6 4h6"/></svg><span>Guides</span><svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="guide-nav" class="nav-sub" hidden><button class="nav-item" data-page="guide-profile"><span>Change PP and Name</span></button><button class="nav-item" data-page="guide-minister"><span>Ministers</span></button><button class="nav-item" data-page="guide-gift-codes"><span>Gift Codes</span></button><button class="nav-item" data-page="guide-help-members"><span>Help members/alliance</span></button><button class="nav-item" data-page="guide-elixir-dispute"><span>Elixir Scramble</span></button><button class="nav-item" data-page="guide-thief-hunt"><span>Thief Hunt</span></button><button class="nav-item" data-page="guide-crystal-valley"><span>Crystal Valley</span></button><button class="nav-item" data-page="guide-wisdom-trial"><span>Quiz: Wisdom Trial</span></button><button class="nav-item" data-page="guide-sync-battle"><span>Sync Survival Battle + Alliance Duel</span></button><button class="nav-item" data-page="guide-era-of-revival"><span>Era of Revival Guide</span></button></div><button class="nav-item " data-page="tips"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Share a tip</span></button><button class="nav-item " data-page="ideas"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Any ideas?</span></button></nav><div class="side-bottom"><div class="theme-label">CHOOSE YOUR ATMOSPHERE</div><div class="theme-controls"><button class="theme-button selected" data-theme-choice="monochrome"><span class="theme-dot"></span>Monochrome</button><button class="theme-button" data-theme-choice="gold"><span class="theme-dot gold-dot"></span>Gold</button></div><p class="server-status"><span class="status-dot"></span>Server #233 · United we survive</p></div></aside>
 <main class="main"><header class="topbar"><button class="mobile-menu" id="mobile-menu" aria-label="Abrir menú" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button><span class="credit">Made it with love: ur dear Ann♡</span><div class="top-right"><span>EST. IN THE ASHES</span><button class="session close-session" id="session-button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg><span id="session-label">Not logged in</span></button></div></header><div id="view"></div><footer class="footer"><span>Made it with love: ur dear Ann♡</span><span>ANS · SERVER #233 · LAST ASYLUM PLAGUE</span></footer></main>
 <dialog class="modal" id="login-dialog"><button class="close" data-close aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><span class="eyebrow">THE GATES OF ANS</span><h2>Enter the sanctuary</h2><p>United against the plague. Welcome to our refuge.</p><div class="tabs"><button class="tab active" data-mode="member">Member</button><button class="tab" data-mode="guest">Guest</button></div><form id="login-form"><div id="auth-fields"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required><label for="password">Password</label><input id="password" type="password" minlength="6" autocomplete="current-password" required></div><p id="guest-description" hidden>Enter as a guest and explore our guides and events. Rankings and tips are reserved for members.</p><div class="form-actions"><button class="btn btn-primary" id="login-submit" type="submit"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="1"/><path d="M8 10V6a4 4 0 0 1 8 0v4m-4 4v3"/></svg><span>Login as a member</span></button></div><p class="form-status" id="login-status" aria-live="polite"></p></form></dialog>
 <dialog class="modal" id="video-dialog"><button class="close" data-close aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><h2>Life in the asylum</h2><div id="video-content"></div></dialog><dialog class="modal" id="zoom-dialog"><button class="close" data-close aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button><div class="zoom-stage" id="zoom-stage"><img id="zoom-image" alt="Captura de la guía"></div><div class="zoom-controls"><button class="btn" id="zoom-out" aria-label="Alejar">−</button><button class="btn" id="zoom-reset">100%</button><button class="btn" id="zoom-in" aria-label="Acercar">+</button></div><p id="zoom-caption"></p></dialog><div class="toast" id="toast" hidden role="status"></div>
@@ -197,9 +245,11 @@ const paths={shield:'<path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6z"/><path d="
 const icon=k=>`<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${paths[k]||paths.book}</svg>`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+paths.camera='<path d="M3 8h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="4"/>';paths.star='<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>';
+
 /* ---------- pages ---------- */
 const GUIDES=[['guide-profile','Change PP and Name'],['guide-minister','Ministers'],['guide-gift-codes','Gift Codes'],['guide-help-members','Help members/alliance'],['guide-elixir-dispute','Elixir Scramble'],['guide-thief-hunt','Thief Hunt'],['guide-crystal-valley','Crystal Valley'],['guide-wisdom-trial','Quiz: Wisdom Trial'],['guide-sync-battle','Sync Survival Battle + Alliance Duel'],['guide-era-of-revival','Era of Revival Guide']];
-const HEADS={about:['About us','An alliance. A refuge. A family.'],constitution:['The Constitution','The pact that unites us. The laws that protect us.'],sanctuary:['Sanctuary','From Ashes to Sanctuary. Levels 1–30.'],duel:['Alliance Duel','Six days. An alliance. A goal.'],gear:['About Gear','Everything you need to craft, fuse and upgrade your gear.'],tips:['Share a tip','Shared knowledge keeps us alive.']};
+const HEADS={about:['About us','An alliance. A refuge. A family.'],constitution:['The Constitution','The pact that unites us. The laws that protect us.'],sanctuary:['Sanctuary','From Ashes to Sanctuary. Levels 1–30.'],duel:['Alliance Duel','Six days. An alliance. A goal.'],gear:['About Gear','Everything you need to craft, fuse and upgrade your gear.'],tips:['Share a tip','Shared knowledge keeps us alive.'],gallery:['ANS Gallery','Most Valuable Moments (MVM) — the wall of our sanctuary.'],birthdays:['ANS Birthdays','Every member counts. Every birthday earns a star.']};
 GUIDES.forEach(([id,t])=>HEADS[id]=[t,'The ANS field journal.']);
 HEADS['guide-era-of-revival']=['Era of Revival Guide','Strategies, secrets and optimization for the 2-month season.'];
 const OLD_HASH={'weapons':'gear','about-ans':'about','const-serv':'constitution','alliance-duel':'duel','share-tip':'tips','wisdom-trial':'guide-wisdom-trial'};
@@ -208,7 +258,7 @@ const hashPage=()=>{const h=location.hash.slice(1);const p=OLD_HASH[h]||h;return
 
 let role='pending',currentPage='home',mode='member',firebase=null,user=null,authResolved=false,toastTimer;
 let tips=[],unsubscribeTips=null,editingTip=null;
-function canView(r,page){if(page==='home')return true;if(r==='signed-out'||r==='pending')return false;if(page==='tips'||page==='ranks')return r==='member';return true}
+function canView(r,page){if(page==='home')return true;if(r==='signed-out'||r==='pending')return false;if(page==='tips'||page==='ranks'||page==='gallery'||page==='birthdays')return r==='member';return true}
 function toast(text){const t=$('#toast');t.textContent=text;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,6000)}
 function showDialog(id){$(id).showModal()}
 function menuClose(){document.body.classList.remove('menu-open');$('#mobile-menu').setAttribute('aria-expanded','false')}
@@ -228,7 +278,7 @@ function setRole(value){
   role=value;
   document.body.dataset.role=role;
   $('#session-label').textContent=role==='signed-out'?'Not logged in':role==='guest'?'Guest':'ANS Member';
-  syncTips();
+  syncTips();syncBirthdays();
   if(first){const p=hashPage();currentPage=canView(role,p)?p:'home';render(currentPage)}
   else if(changed)render(canView(role,currentPage)?currentPage:'home');
 }
@@ -413,6 +463,135 @@ function syncTips(){
   unsubscribeTips=db.onSnapshot(db.query(db.collection(firebase.d,'tips'),db.orderBy('createdAt','desc'),db.limit(50)),snap=>{tips=snap.docs.map(d=>({id:d.id,...d.data()}));if(currentPage==='tips')renderTips()},err=>{console.error('[ANS tips]',err);if(currentPage==='tips'&&$('#tips-list'))$('#tips-list').innerHTML='<p class="empty">The tips could not be loaded right now.</p>'});
 }
 
+/* ---------- ANS Gallery (members): photo wall + carousel. Photos are listed in gallery-images.js ---------- */
+let galleryItems=[],galView='wall',galIndex=0;
+async function loadGalleryImages(){
+  try{
+    const r=await fetch('gallery-images.js?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)return;
+    window.ANS_GALLERY=undefined;new Function(await r.text())();
+    galleryItems=(window.ANS_GALLERY||[]).map(it=>Array.isArray(it)?{src:it[0],caption:it[1]||''}:{src:it,caption:''}).filter(x=>x.src);
+    if(currentPage==='gallery')render('gallery');
+  }catch(e){console.error('[ANS gallery-images.js]',e)}
+}
+function galleryPage(){
+  const n=galleryItems.length;
+  const body=n?`<div class="g-bar"><span class="g-count">${n} ${n===1?'moment':'moments'}</span><div class="g-tabs"><button class="btn" data-gview="wall">Wall</button><button class="btn" data-gview="carousel">Carousel</button></div></div><div id="g-view"></div>`:'<p class="empty">The wall is still empty. Our most valuable moments will appear here soon.</p>';
+  return header(...HEADS.gallery)+`<section class="content reveal"><p class="lead">Victories, funny moments and everything that makes ANS a family. Tap any photo to see it up close.</p>${body}</section>`;
+}
+function mountGallery(){
+  const v=$('#g-view');if(!v)return;
+  document.querySelectorAll('[data-gview]').forEach(b=>{b.classList.toggle('active',b.dataset.gview===galView);b.onclick=()=>{galView=b.dataset.gview;mountGallery()}});
+  galView==='wall'?drawWall(v):drawCarousel(v);
+}
+function drawWall(v){
+  v.innerHTML=`<div class="g-wall">${galleryItems.map((g,i)=>`<button class="g-item" data-gi="${i}" aria-label="Open photo ${i+1}${g.caption?': '+esc(g.caption):''}"><img src="${esc(g.src)}" alt="${esc(g.caption)}" loading="lazy" decoding="async">${g.caption?`<span class="g-cap">${esc(g.caption)}</span>`:''}</button>`).join('')}</div>`;
+  v.querySelectorAll('.g-item').forEach(b=>{
+    b.onclick=()=>{galIndex=+b.dataset.gi;galView='carousel';mountGallery();v.scrollIntoView({behavior:'smooth',block:'start'})};
+    b.querySelector('img').addEventListener('error',()=>b.remove());   /* a missing file simply disappears from the wall */
+  });
+}
+function drawCarousel(v){
+  const n=galleryItems.length;galIndex=((galIndex%n)+n)%n;
+  const g=galleryItems[galIndex];
+  v.innerHTML=`<div class="g-car" tabindex="0" aria-label="Photo carousel"><div class="g-stage">${n>1?'<button class="g-nav prev" aria-label="Previous photo">←</button>':''}<button class="g-open" aria-label="Zoom photo"><img src="${esc(g.src)}" alt="${esc(g.caption)}"></button>${n>1?'<button class="g-nav next" aria-label="Next photo">→</button>':''}</div><p class="g-cap-line">${esc(g.caption)}</p><p class="g-counter">${galIndex+1} / ${n}</p>${n>1?`<div class="g-thumbs">${galleryItems.map((t,i)=>`<button class="g-thumb${i===galIndex?' active':''}" data-gi="${i}" aria-label="Photo ${i+1}"><img src="${esc(t.src)}" alt="" loading="lazy" decoding="async"></button>`).join('')}</div>`:''}</div>`;
+  const car=v.querySelector('.g-car'),go=d=>{galIndex+=d;drawCarousel(v);v.querySelector('.g-car').focus({preventScroll:true})};
+  v.querySelector('.g-open').onclick=()=>openZoom({src:g.src,caption:g.caption});
+  if(n>1){
+    v.querySelector('.prev').onclick=()=>go(-1);v.querySelector('.next').onclick=()=>go(1);
+    v.querySelectorAll('.g-thumb').forEach(t=>t.onclick=()=>{galIndex=+t.dataset.gi;drawCarousel(v)});
+    car.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}if(e.key==='ArrowRight'){e.preventDefault();go(1)}});
+    const stage=v.querySelector('.g-stage');let x0=null;
+    stage.addEventListener('pointerdown',e=>{x0=e.clientX});
+    stage.addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50)go(dx<0?1:-1)});
+    const th=v.querySelector('.g-thumbs'),a=v.querySelector('.g-thumb.active');
+    if(th&&a)th.scrollLeft=a.offsetLeft-th.clientWidth/2+a.clientWidth/2;
+  }
+}
+
+/* ---------- ANS Birthdays (members): one birthday per member (month + day only), calendar by month ---------- */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MAXDAYS=[31,29,31,30,31,30,31,31,30,31,30,31];
+let birthdays=[],unsubscribeBd=null,bdMonth=new Date().getMonth(),bdDirty=false;
+const isLeap=y=>y%4===0&&(y%100!==0||y%400===0);
+const bdMine=()=>user?birthdays.find(b=>b.id===user.uid):null;
+function birthdaysPage(){
+  return header(...HEADS.birthdays)+`<section class="content reveal"><p class="lead">Add your birthday and we will mark it with a star on the calendar. Only the day and the month are saved, never the year. Every ANS member can see this calendar.</p>
+  <div class="bd-card"><h3>Your birthday</h3><form id="bd-form"><div class="bd-form"><div><label for="bd-name">Name shown on the calendar</label><input id="bd-name" maxlength="30" required autocomplete="off"></div><div><label for="bd-month">Month</label><select id="bd-month">${MONTHS.map((m,i)=>`<option value="${i}">${m}</option>`).join('')}</select></div><div><label for="bd-day">Day</label><select id="bd-day"></select></div></div><div class="form-actions"><button class="btn btn-primary" type="submit" id="bd-save">Save my birthday</button><button class="btn" type="button" id="bd-delete" hidden>Remove my birthday</button></div><p class="form-status" id="bd-status" aria-live="polite"></p></form></div>
+  <div id="bd-cal"></div></section>`;
+}
+function fillBdDays(){
+  const sel=$('#bd-day'),keep=+sel.value||1,max=MAXDAYS[+$('#bd-month').value];
+  sel.innerHTML=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+  sel.value=String(Math.min(keep,max));
+}
+function refreshBdForm(force){
+  if(!$('#bd-form'))return;
+  const mine=bdMine();
+  $('#bd-delete').hidden=!mine;$('#bd-save').textContent=mine?'Save changes':'Save my birthday';
+  if(bdDirty&&!force)return;
+  $('#bd-name').value=mine?.name||user?.displayName||'';
+  $('#bd-month').value=String(mine?mine.month-1:new Date().getMonth());fillBdDays();
+  if(mine)$('#bd-day').value=String(mine.day);
+}
+async function bdRemove(){
+  if(!firebase||!user||!confirm('Remove your birthday from the calendar?'))return;
+  try{await firebase.db.deleteDoc(firebase.db.doc(firebase.d,'birthdays',user.uid));bdDirty=false;toast('Your birthday was removed.');refreshBdForm(true)}
+  catch(err){console.error('[ANS birthdays]',err);toast('Your birthday could not be removed. Try again.')}
+}
+function renderBdCalendar(){
+  const mount=$('#bd-cal');if(!mount)return;
+  const year=new Date().getFullYear(),m=bdMonth,now=new Date();
+  const valid=birthdays.filter(b=>Number.isInteger(b.month)&&Number.isInteger(b.day)&&b.month>=1&&b.month<=12&&b.day>=1&&b.day<=MAXDAYS[b.month-1]);
+  const inMonth=valid.filter(b=>b.month===m+1).sort((a,b)=>a.day-b.day||String(a.name).localeCompare(String(b.name)));
+  const byDay={};inMonth.forEach(b=>{const d=(m===1&&b.day===29&&!isLeap(year))?28:b.day;(byDay[d]=byDay[d]||[]).push(b)});
+  const first=new Date(year,m,1).getDay(),total=new Date(year,m+1,0).getDate();
+  let cells='';for(let i=0;i<first;i++)cells+='<div class="bd-day blank" aria-hidden="true"></div>';
+  for(let d=1;d<=total;d++){
+    const list=byDay[d]||[],own=list.some(b=>b.id===user?.uid),names=list.map(b=>b.name).join(', ');
+    cells+=`<div class="bd-day${list.length?' has':''}${own?' mine':''}${now.getMonth()===m&&now.getDate()===d?' today':''}"${list.length?` title="${esc(names)}" aria-label="${MONTHS[m]} ${d}: ${esc(names)}"`:''}><span class="d">${d}</span>${list.length?`<span class="bd-star" aria-hidden="true">★</span><span class="bd-names">${list.slice(0,2).map(b=>`<span>${esc(b.name)}</span>`).join('')}${list.length>2?`<span>+${list.length-2} more</span>`:''}</span>`:''}</div>`;
+  }
+  const chips=MONTHS.map((n,i)=>`<button class="btn${i===m?' active':''}" data-bdm="${i}" aria-label="${n}">${n.slice(0,3)}${valid.some(b=>b.month===i+1)?' ★':''}</button>`).join('');
+  const rows=inMonth.map(b=>{const own=b.id===user?.uid;return `<div class="bd-row"><span class="dt">★ ${MONTHS[m].slice(0,3)} ${b.day}</span><span class="nm">${esc(b.name)}${own?' <span class="you">· you</span>':''}</span>${own?`<button class="btn" data-bd-edit>Edit</button><button class="btn" data-bd-del>Delete</button>`:''}</div>`}).join('');
+  mount.innerHTML=`<div class="bd-nav"><button class="btn" data-bdp="-1" aria-label="Previous month">←</button><h2>${MONTHS[m]} ${year}</h2><button class="btn" data-bdp="1" aria-label="Next month">→</button></div><div class="bd-months">${chips}</div><div class="bd-grid">${DOW.map(d=>`<div class="bd-dow">${d}</div>`).join('')}${cells}</div><div class="bd-list"><h3>Birthdays in ${MONTHS[m]}</h3>${rows||'<p class="empty">No birthdays this month.</p>'}</div>`;
+  mount.querySelectorAll('[data-bdp]').forEach(b=>b.onclick=()=>{bdMonth=(bdMonth+ +b.dataset.bdp+12)%12;renderBdCalendar()});
+  mount.querySelectorAll('[data-bdm]').forEach(b=>b.onclick=()=>{bdMonth=+b.dataset.bdm;renderBdCalendar()});
+  mount.querySelector('[data-bd-del]')?.addEventListener('click',bdRemove);
+  mount.querySelector('[data-bd-edit]')?.addEventListener('click',()=>{bdDirty=false;refreshBdForm(true);$('#bd-form').scrollIntoView({behavior:'smooth',block:'center'});$('#bd-name').focus()});
+}
+function bindBirthdays(){
+  bdDirty=false;
+  $('#bd-month').addEventListener('change',()=>{bdDirty=true;fillBdDays()});
+  ['#bd-name','#bd-day'].forEach(s=>{$(s).addEventListener('input',()=>{bdDirty=true});$(s).addEventListener('change',()=>{bdDirty=true})});
+  $('#bd-delete').onclick=bdRemove;
+  $('#bd-form').onsubmit=async e=>{
+    e.preventDefault();
+    if(!firebase||!user||role!=='member')return;
+    const name=$('#bd-name').value.trim().slice(0,30),month=+$('#bd-month').value+1,day=+$('#bd-day').value;
+    if(!name){$('#bd-status').textContent='Add the name you want to show on the calendar.';return}
+    if(!(day>=1&&day<=MAXDAYS[month-1])){$('#bd-status').textContent='Pick a valid day for that month.';return}
+    $('#bd-save').disabled=true;$('#bd-status').textContent='';
+    try{
+      const db=firebase.db,ref=db.doc(firebase.d,'birthdays',user.uid);
+      if(bdMine())await db.updateDoc(ref,{name,month,day,editedAt:db.serverTimestamp()});
+      else await db.setDoc(ref,{uid:user.uid,name,month,day,createdAt:db.serverTimestamp()});
+      bdDirty=false;bdMonth=month-1;toast('Birthday saved. ★');renderBdCalendar();
+    }catch(err){console.error('[ANS birthdays]',err);$('#bd-status').textContent='Your birthday could not be saved. Try again.'}
+    finally{$('#bd-save').disabled=false}
+  };
+  refreshBdForm(true);renderBdCalendar();
+}
+function syncBirthdays(){
+  unsubscribeBd?.();unsubscribeBd=null;
+  if(role!=='member'||!firebase||!user){birthdays=[];return}
+  const db=firebase.db;
+  unsubscribeBd=db.onSnapshot(db.query(db.collection(firebase.d,'birthdays'),db.limit(300)),snap=>{
+    birthdays=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(currentPage==='birthdays'){renderBdCalendar();refreshBdForm(false)}
+  },err=>{console.error('[ANS birthdays]',err);if(currentPage==='birthdays'&&$('#bd-cal'))$('#bd-cal').innerHTML='<p class="empty">The birthdays could not be loaded right now.</p>'});
+}
+
 /* ---------- render ---------- */
 function render(page){
   if(!canView(role,page))page='home';
@@ -423,13 +602,15 @@ function render(page){
   if(page==='home')html=home();
   else{
     title=HEADS[page][0];
-    html=page==='about'?aboutPage():page==='constitution'?constitutionPage():page==='sanctuary'?sanctuaryPage():page==='duel'?duelPage():page==='gear'?gearPage():page==='tips'?tipsPage():guidePage(page);
+    html=page==='about'?aboutPage():page==='constitution'?constitutionPage():page==='sanctuary'?sanctuaryPage():page==='duel'?duelPage():page==='gear'?gearPage():page==='tips'?tipsPage():page==='gallery'?galleryPage():page==='birthdays'?birthdaysPage():guidePage(page);
   }
   $('#view').innerHTML=html;
   bindView();
   if(page==='home')initNotify();
   if(page.startsWith('guide-')||page==='gear')mountShots();
   if(page==='tips'){renderTips();bindTips()}
+  if(page==='gallery')mountGallery();
+  if(page==='birthdays')bindBirthdays();
   document.title=`ANS · ${title} · #233`;
 }
 function bindView(){
@@ -622,6 +803,7 @@ async function loadGearImages(){
 }
 await loadGuideImages();
 await loadGearImages();
+loadGalleryImages();   /* not awaited: the gallery never delays login */
 connectFirebase();
 
 </script>
