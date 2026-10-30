@@ -318,16 +318,17 @@ function gearPage(){
     ${gearRole(3,'SUPPORT (2nd row)',['Boots','Armor','Sword','Gloves'],"A support hero's value is staying alive long enough to activate abilities at the right moment. Boots and Armor protect that function.",[['UR',['Harper','Bell']],['SSR',['Celia','Stellar']]])}
   </section>`;
   /* Table 7 columns x 9 rows (1 header row + 8 body rows). Fill the arrays below; empty strings stay empty. */
+  const upgradeHead=['Table 1. My Upgrade/Promotion Plan.'];
   const upgradeHead=['','','Sword','','Gloves','','Armor', '', 'Bots'];
   const upgradeRows=[
-    ['','','','','','',''],
-    ['','','','','','',''],
-    ['','','','','','',''],
-    ['','','','','','',''],
-    ['','','','','','',''],
-    ['','','','','','',''],
-    ['','','','','','',''],
-    ['','','','','','','']
+    ['','Lvl','Stars','Lvl','Stars','Lvl','Stars','Lvl','Stars'],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','',''],
+    ['','','','','','','','','']
   ];
   const upgradeTable=`<div class="gear-table-wrap"><table class="pt"><thead><tr>${upgradeHead.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${upgradeRows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   const upgrade=`<section class="chapter"><h2><span class="n">03</span>GEAR UPGRADE PRIORITY</h2>
