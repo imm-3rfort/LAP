@@ -1,10 +1,60 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
+
+    // ---------- helpers ----------
     function signedIn() {
       return request.auth != null;
     }
+    function isAdminUser() {                       // you: a document exists in admins/{uid}
+      return signedIn() && exists(/databases/$(db)/documents/admins/$(request.auth.uid));
+    }
+    function isApprovedMember() {                  // approved by you in the Requests page
+      return signedIn()
+        && exists(/databases/$(db)/documents/members/$(request.auth.uid))
+        && get(/databases/$(db)/documents/members/$(request.auth.uid)).data.status == 'approved';
+    }
+    function cmsIsEditor() {                       // you, or anyone you added in the CMS "Who can edit"
+      return isAdminUser()
+        || (signedIn() && exists(/databases/$(db)/documents/cms_editors/$(request.auth.uid)));
+    }
 
+    // ---------- membership (index.html: login, Requests, ANS Members) ----------
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;                       // add admins from the Firebase console
+    }
+    match /members/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdminUser());
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'pending';
+      // the owner may re-send a request (never self-approve); only an admin can approve or reject
+      allow update: if isAdminUser()
+        || (signedIn() && request.auth.uid == uid
+            && resource.data.status != 'approved'
+            && request.resource.data.uid == request.auth.uid
+            && request.resource.data.status == 'pending');
+      allow delete: if isAdminUser();
+    }
+    match /roster/{uid} {                          // public list of member names for ANS Members
+      allow read: if isApprovedMember() || isAdminUser();
+      allow write: if isAdminUser();
+    }
+    match /profiles/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isApprovedMember() || isAdminUser());
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+    match /birthdays/{uid} {
+      allow read: if isApprovedMember() || isAdminUser();
+      allow create, update: if isApprovedMember() && request.auth.uid == uid
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+
+    // ---------- your existing rules (unchanged) ----------
     match /fcmTokens/{tokenId} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
       allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
@@ -48,6 +98,25 @@ service cloud.firestore {
     match /content/{doc} {
       allow read: if signedIn();
       allow write: if false;
+    }
+
+    // ---------- CMS (new) ----------
+    // read: approved members only (guests and people waiting for approval read nothing)
+    // write: you (admin) and the editors you grant
+    match /cms_editors/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdminUser());
+      allow write: if isAdminUser();
+    }
+    match /cms_categories/{id} {
+      allow read: if isApprovedMember() || cmsIsEditor();
+      allow write: if cmsIsEditor();
+    }
+    match /cms_pages/{id} {
+      allow read: if (isApprovedMember() && resource.data.status == 'published') || cmsIsEditor();
+      allow write: if cmsIsEditor();
+    }
+    match /cms_drafts/{id} {                       // drafts: editors only
+      allow read, write: if cmsIsEditor();
     }
   }
 }

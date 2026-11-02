@@ -248,6 +248,9 @@ body[data-role=guest] .nav-item[data-page=profile],body[data-role=guest] .nav-it
 .mb-badge.ok{border-color:var(--primary);color:var(--primary)}
 .mb-bio{margin-top:10px;color:var(--muted-foreground);line-height:1.6;font-size:15px;overflow-wrap:anywhere}
 .mb-hero{margin-top:8px;font-size:13px;color:var(--muted-foreground);overflow-wrap:anywhere}
+/* ---- CMS: guests and people still waiting for approval only see Home + About (+ My profile while waiting) ---- */
+body[data-role=guest] .nav-item:not([data-page=home]):not([data-page=about]),body[data-role=guest] #guide-nav,body[data-role=guest] .side-divider,
+body[data-role=awaiting] .nav-item:not([data-page=home]):not([data-page=about]):not([data-page=profile]),body[data-role=awaiting] #guide-nav,body[data-role=awaiting] .side-divider{display:none!important}
 </style></head><body data-role="pending">
 
 
@@ -289,7 +292,7 @@ const hashPage=()=>{const h=location.hash.slice(1);const p=OLD_HASH[h]||h;return
 let role='pending',currentPage='home',mode='member',firebase=null,user=null,authResolved=false,toastTimer;
 let membership='none',isAdmin=false,memberData=null,memberKnown=false,joinPrompted=false,authSignup=false,unsubscribeMember=null;
 let tips=[],unsubscribeTips=null,editingTip=null;
-function canView(r,page){if(page==='home')return true;if(r==='signed-out'||r==='pending')return false;if(page==='requests')return r==='member'&&isAdmin;if(page==='profile')return r==='member'||r==='awaiting';if(page==='tips'||page==='ranks'||page==='gallery'||page==='birthdays')return r==='member';return true}
+function canView(r,page){if(page==='home')return true;if(r==='signed-out'||r==='pending')return false;if(page==='about')return true;if(page==='requests')return r==='member'&&isAdmin;if(page==='profile')return r==='member'||r==='awaiting';return r==='member'}   /* guest / awaiting: Home + About (rules only). Everything else: approved members only */
 function toast(text){const t=$('#toast');t.textContent=text;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,6000)}
 function showDialog(id){$(id).showModal()}
 function menuClose(){document.body.classList.remove('menu-open');$('#mobile-menu').setAttribute('aria-expanded','false')}
@@ -743,7 +746,7 @@ function bindRequests(){
     const status=b.dataset.rq,id=b.dataset.id,r=requests.find(x=>x.id===id);
     if(status==='rejected'&&!confirm(`${r?.status==='approved'?'Remove access for':'Decline'} ${r?.name||'this person'}?`))return;
     b.disabled=true;
-    try{const db=firebase.db;await db.updateDoc(db.doc(firebase.d,'members',id),{status,decidedAt:db.serverTimestamp(),decidedBy:user.uid});toast(status==='approved'?'Member approved.':'Done.')}
+    try{const db=firebase.db;const batch=db.writeBatch(firebase.d);batch.update(db.doc(firebase.d,'members',id),{status,decidedAt:db.serverTimestamp(),decidedBy:user.uid});batch.set(db.doc(firebase.d,'roster',id),{uid:id,name:String(r?.name||'Member').slice(0,30),status,updatedAt:db.serverTimestamp()});await batch.commit();toast(status==='approved'?'Member approved.':'Done.')}
     catch(err){console.error('[ANS requests]',err);toast('That could not be saved. Try again.');b.disabled=false}
   };
 }
@@ -836,7 +839,7 @@ async function reconcileRoster(){
       ops.slice(i,i+400).forEach(([id,name,status])=>batch.set(db.doc(firebase.d,'roster',id),{uid:id,name,status,updatedAt:db.serverTimestamp()}));
       await batch.commit();
     }
-  }catch(err){rosterFailed=true;console.error('[ANS roster]',err)}
+  }catch(err){rosterFailed=true;setTimeout(()=>{rosterFailed=false},60000);console.error('[ANS roster]',err)}
 }
 function membersPage(){
   return header(...HEADS.members)+`<section class="content reveal"><p class="lead">Everyone who joined the sanctuary. <b>ANS Member</b> means an officer verified them. Update your own card in <b>My profile</b>.</p><div class="g-bar"><span class="g-count" id="mb-count"></span><div class="g-tabs" id="mb-tabs"></div></div><div id="mb-list"></div></section>`;
@@ -844,7 +847,9 @@ function membersPage(){
 function renderMembers(){
   const list=$('#mb-list');if(!list)return;
   const pmap=Object.fromEntries(profiles.map(p=>[p.id,p]));
-  const rows=roster.filter(r=>r.status!=='rejected').map(r=>({id:r.id,verified:r.status==='approved',p:pmap[r.id],name:(pmap[r.id]?.name)||r.name||'Member'}))
+  const rmap=Object.fromEntries(roster.map(r=>[r.id,r])),qmap=Object.fromEntries(requests.map(r=>[r.id,r]));
+  const all=[...roster,...profiles.filter(p=>!rmap[p.id]).map(p=>({id:p.id,name:p.name,status:qmap[p.id]?.status||'pending'}))];
+  const rows=all.filter(r=>r.status!=='rejected').map(r=>({id:r.id,verified:r.status==='approved',p:pmap[r.id],name:(pmap[r.id]?.name)||r.name||'Member'}))
     .sort((a,b)=>(b.verified-a.verified)||a.name.localeCompare(b.name));
   const ok=rows.filter(r=>r.verified).length;
   $('#mb-count').textContent=`${ok} verified · ${rows.length-ok} awaiting`;
@@ -866,8 +871,10 @@ function render(page){
     title=HEADS[page][0];
     html=page==='about'?aboutPage():page==='constitution'?constitutionPage():page==='sanctuary'?sanctuaryPage():page==='duel'?duelPage():page==='gear'?gearPage():page==='tips'?tipsPage():page==='gallery'?galleryPage():page==='birthdays'?birthdaysPage():page==='requests'?requestsPage():page==='profile'?profilePage():page==='members'?membersPage():guidePage(page);
   }
+  if(window.ANS_CMS?.override){const ov=window.ANS_CMS.override(page);if(ov)html=ov}   /* CMS: customized built-in page */
   $('#view').innerHTML=html;
   bindView();
+  window.ANS_CMS?.after?.(page,{openZoom,render});   /* CMS hook */
   if(page==='home')initNotify();
   if(page.startsWith('guide-')||page==='gear')mountShots();
   if(page==='tips'){renderTips();bindTips()}
@@ -1129,4 +1136,5 @@ connectFirebase();
 })();
 
 </script>
+<script type="module" src="ans-cms.js"></script>
 </body></html>
