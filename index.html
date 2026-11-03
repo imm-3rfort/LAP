@@ -352,7 +352,7 @@ HEADS['guide-era-of-revival']=['Era of Revival Guide','Strategies, secrets and o
 Object.assign(HEADS,{
   game:['About the game','Everything about Last Asylum Plague.'],'game-heroes':['Heroes','Meet the heroes of Last Asylum Plague.'],'game-resources':['Resources','What you gather, spend and save.'],'game-cross':['Cross-Server moves','How moving between servers works.'],
   server:['About the server','Server #233 and the alliance that calls it home.'],'hall-of-fame':['Hall of Fame','The legends of our sanctuary.'],'black-book':['Black Book','Those the sanctuary remembers.'],
-  guides:['Guides','The ANS field journal.'],'guide-beginners':['Beginners Guide','Your first steps in the asylum.'],'guide-events':['Event Guide','Win the events together.'],'guide-sanctuary':['Sanctuary','How to upgrade your Sanctuary.'],
+  guides:['Guides','The ANS field journal.'],'guide-beginners':['Beginners Guide','Your first steps in the asylum.'],'guide-events':['Event Guide','Win the events together.'],
   knowledge:['Knowledge','Reference material for every survivor.'],contact:['Contact','Reach out to the alliance.'],settings:['Settings','Atmosphere and language.']
 });
 /* MENU: [id, label, icon, children]. Every node is also a page. Who sees what is decided by canView(). */
@@ -364,7 +364,7 @@ const MENU=[
    ['about','About us','shield',[['gallery','Gallery'],['hall-of-fame','Hall of Fame'],['birthdays','Birthday Calendar'],['members','Members'],['black-book','Black Book']]]
  ]],
  ['guides','Guides','book',[
-   ['guide-beginners','Beginners Guide','',[['guide-profile','Change Profile Picture and Name'],['guide-help-members','Help members/Alliance'],['guide-minister','Ministers'],['guide-sanctuary','Sanctuary'],['guide-gift-codes','Gift Codes']]],
+   ['guide-beginners','Beginners Guide','',[['guide-profile','Change Profile Picture and Name'],['guide-help-members','Help members/Alliance'],['guide-minister','Ministers'],['guide-gift-codes','Gift Codes']]],
    ['guide-events','Event Guide','',[['guide-elixir-dispute','Elixir Scramble'],['guide-thief-hunt','Thief Hunt'],['guide-crystal-valley','Crystal Valley'],['guide-era-of-revival','Era of Revival'],['duel','Alliance Duel','',[['guide-sync-battle','Sync Survival Battle + Alliance Duel']]],['guide-wisdom-trial','Quiz: Wisdom Trial']]]
  ]],
  ['knowledge','Knowledge','castle',[['gear','Gear']]],
@@ -488,7 +488,7 @@ function newPage(page){
   if(page==='settings')return settingsPage();
   if(page==='server')return serverPage();
   if(page==='contact')return contactPage();
-  if(['game','guides','guide-beginners','guide-events','knowledge','game-heroes','game-resources','game-cross','hall-of-fame','black-book','guide-sanctuary'].includes(page))return sectionPage(page);
+  if(['game','guides','guide-beginners','guide-events','knowledge','game-heroes','game-resources','game-cross','hall-of-fame','black-book'].includes(page))return sectionPage(page);
   return null;
 }
 
