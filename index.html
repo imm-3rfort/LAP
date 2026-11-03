@@ -328,9 +328,7 @@ input,textarea,select{font-size:17px}
 /* ---- Origin of the Curse (scoped: only .oc) ---- */
 .oc{--oc-red:var(--danger);--oc-yellow:var(--ember)}
 .oc-sec{scroll-margin-top:90px}
-.oc img.oc-ico{width:56px;height:56px;object-fit:contain;filter:grayscale(.9) contrast(1.05);transition:filter .4s}
-[data-theme=gold] .oc img.oc-ico{filter:sepia(.55) saturate(.9)}
-.oc .elixir-card:hover img.oc-ico,.oc .oc-src:hover img.oc-ico{filter:none}
+.oc img.oc-ico{width:56px;height:56px;object-fit:contain}
 .oc-hero-icons{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:6px 0 22px}
 .oc-stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;border:1px solid var(--border);margin:6px 0 24px}
 .oc-stat{padding:16px 12px;text-align:center;border-right:1px solid var(--border);min-width:0}
@@ -390,6 +388,13 @@ input,textarea,select{font-size:17px}
 .oc-chest{border:1px solid var(--border);background:var(--surface);padding:14px 16px}
 .oc-chest b{display:block;font-family:var(--font-heading);font-weight:400;font-size:12px;color:var(--primary);margin-bottom:6px}
 .oc-chest span{color:var(--muted-foreground);font-size:16px;line-height:1.5}
+.oc-items{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:8px}
+.oc-item{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-heading);font-size:13px;color:var(--foreground)}
+.oc-item img{width:34px;height:34px;object-fit:contain}
+.oc-rank{width:100%;border-collapse:collapse;margin:8px 0 22px}
+.oc-rank td{padding:10px 10px 10px 0;border-bottom:1px solid var(--border);vertical-align:middle}
+.oc-rank td:first-child{font-family:var(--font-heading);font-size:13px;color:var(--primary);white-space:nowrap;width:84px}
+.oc-chest.hit{border-color:var(--primary)}
 .oc-steps{display:grid;gap:14px}
 .oc-step{display:grid;grid-template-columns:54px minmax(0,1fr);gap:16px;border:1px solid var(--border);background:var(--surface);padding:20px}
 .oc-step>b{font-family:var(--font-title);font-size:40px;color:var(--primary);line-height:1}
@@ -404,15 +409,37 @@ input,textarea,select{font-size:17px}
 /* Origin of the Curse — page content + small widgets (calculator, curve, tabs). Everything scoped to .oc */
 (function(){
   var BASE='https://wiki-last-asylum.com/media/events/origin-of-the-curse/';
-  var SOURCE_URL='https://wiki-last-asylum.com/en/wiki/origin-of-the-curse';
+  var SOURCE_URL='https://wiki-last-asylum.com/en/wiki/origin-of-the-curse',SOURCE2='https://lastasylum.gg/en/events/origin-of-the-curse';
   var TOP_CHEST=600000;           /* total (both rounds) needed for the top chest */
-  /* ---- REWARDS: fill these in when you have them. One list per server tab; each chest = [points needed, contents] ---- */
+  var ICON='https://lastasylum.gg/img/';
+  var IC={F:'icon_wenmingxunzhang',D:'icon_zuanshi',C:'icon_cuihuaji',S:'icon_speed_tongyong',P:'icon_powerbox',B:'icon_qiguanqianghuasuijibox1',W:'icon_wannengsuipian_chengse',U:'Icon_item_UAVSkillChip_03',M:'icon_item_drone_chipMaterial_seniorl',H:'icon_herozixuanbox_awaken',
+          X:'icon_changpinbox05',X4:'icon_changpinbox04',FB:'icon_foodbox',WB:'icon_woodbox',A:'icon_lianmenggongxiandian',R:'icon_rongyudian',RB:'icon_resourcebox',ST:'icon_speed_xunlian',SY:'icon_speed_yiliao'};
+  var THRESH=[15000,30000,60000,100000,150000,225000,325000,450000,600000];
+  /* each chest: [code, qty] pairs (qty 1 = no number shown) */
   var REWARDS=[
-    {tab:'Server under 78 days',   chests:[]},
-    {tab:'78+ days, season not started', chests:[]},
-    {tab:'Season 1 running',       chests:[]}
+   {tab:'Server days 1\u201377',chests:[
+    [['F',1000],['D',50],['C',2],['S',10],['P',12]],[['F',1000],['D',50],['C',3],['S',10],['P',12]],[['F',2000],['D',50],['B',1],['W',1],['P',6]],
+    [['F',1500],['D',50],['C',2],['S',20],['P',2]],[['F',1500],['D',50],['C',3],['S',20],['P',2]],[['F',3000],['D',50],['B',1],['W',2],['P',3]],
+    [['F',2500],['D',100],['C',3],['S',30],['P',3]],[['F',2500],['D',100],['C',7],['S',30],['P',3]],[['F',5000],['D',200],['B',1],['W',2],['P',5]]]},
+   {tab:'Day 78+, before Season 1',chests:[
+    [['F',1000],['D',50],['C',5],['S',10],['P',12]],[['F',1000],['D',50],['B',1],['S',10],['P',12]],[['F',2000],['D',50],['U',1],['W',1],['P',6]],
+    [['F',1500],['D',50],['C',5],['S',20],['P',2]],[['F',1500],['D',50],['B',1],['S',20],['P',2]],[['F',3000],['D',50],['M',50],['W',2],['P',3]],
+    [['F',2500],['D',100],['C',10],['S',30],['P',3]],[['F',2500],['D',100],['B',1],['S',30],['P',3]],[['F',5000],['D',200],['M',100],['W',2],['P',5]]]},
+   {tab:'Season 1 (from day 2)',chests:[
+    [['F',1000],['D',50],['C',5],['S',10],['P',12]],[['F',1000],['D',50],['B',1],['S',10],['P',12]],[['F',2000],['D',50],['U',1],['H',1],['P',6]],
+    [['F',1500],['D',50],['C',5],['S',20],['P',2]],[['F',1500],['D',50],['B',1],['S',20],['P',2]],[['F',3000],['D',50],['M',50],['H',2],['P',3]],
+    [['F',2500],['D',100],['C',10],['S',30],['P',3]],[['F',2500],['D',100],['B',1],['S',30],['P',3]],[['F',5000],['D',200],['M',100],['H',2],['P',5]]]}
   ];
-  var RANKINGS='Two rankings pay out: the top 1,000 players and the top 100 alliances. Your best round (not the sum) decides your place.';
+  var ALLIANCE=[
+   ['1',[['X',3],['W',15],['FB',40],['WB',40],['F',20000]]],['2\u20133',[['X',2],['W',10],['FB',35],['WB',35],['F',15000]]],['4\u201310',[['X',1],['W',5],['FB',30],['WB',30],['F',10000]]],
+   ['11\u201320',[['X',1],['FB',25],['WB',25],['F',8000]]],['21\u201350',[['X4',2],['FB',20],['WB',20],['F',6000]]],['51\u2013100',[['X4',1],['FB',15],['WB',15],['F',5000]]]];
+  var PLAYERS=[
+   ['1',[['A',10],['R',1000],['RB',1000],['ST',200],['SY',100]]],['2\u20133',[['A',9],['R',700],['RB',900],['ST',150],['SY',75]]],['4\u201310',[['A',8],['R',500],['RB',800],['ST',100],['SY',50]]],
+   ['11\u201320',[['A',7],['R',400],['RB',700],['ST',80],['SY',40]]],['21\u201350',[['A',6],['R',300],['RB',600],['ST',60],['SY',30]]],['51\u2013100',[['A',5],['R',200],['RB',500],['ST',50],['SY',25]]],
+   ['101\u2013200',[['A',4],['R',100],['RB',400],['ST',40],['SY',20]]],['201\u2013500',[['A',4],['RB',250],['ST',30],['SY',15]]],['501\u20131000',[['A',3],['RB',200],['ST',20],['SY',10]]]];
+  var items=function(list){return '<div class="oc-items">'+list.map(function(it){return '<span class="oc-item"><img src="'+ICON+IC[it[0]]+'.png" alt="Reward" loading="lazy" onerror="this.style.display=\'none\'">'+(it[1]>1?'\u00d7'+it[1].toLocaleString('en-US'):'')+'</span>'}).join('')+'</div>'};
+  var rankTable=function(rows){return '<table class="oc-rank"><tbody>'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+items(r[1])+'</td></tr>'}).join('')+'</tbody></table>'};
+  var RANKINGS='Two rankings pay out as well: the top 1,000 players and the top 100 alliances. Your best round (not the sum) decides your place.';
 
   var img=function(n,alt,cls){return '<img class="'+(cls||'oc-ico')+'" src="'+BASE+n+'.webp" alt="'+(alt||'')+'" loading="lazy" onerror="this.style.display=\'none\'">'};
   var card=function(icon,title,text,feat){return '<article class="elixir-card'+(feat?' elixir-feature':'')+'"><div class="oc-card-head">'+img(icon,title)+'<h3>'+title+'</h3></div><p>'+text+'</p></article>'};
@@ -503,11 +530,12 @@ input,textarea,select{font-size:17px}
     slider('oc-bones','Beast Bones per round',0,10,2)+
     slider('oc-kits','Healing Kits per round',0,10,0)+
     '<div><label>Minutes between artifacts</label><div class="oc-seg" data-oc-gapbox>'+[3,5,8].map(function(g,i){return '<button class="btn'+(i===0?' on':'')+'" type="button" data-oc-gap="'+g+'">'+g+' min</button>'}).join('')+'</div></div>'+
+    '<div><label>Server type (chest rewards)</label><div class="oc-seg" data-oc-srvbox>'+REWARDS.map(function(r,i){return '<button class="btn'+(i===0?' on':'')+'" type="button" data-oc-srv="'+i+'">'+r.tab+'</button>'}).join('')+'</div></div>'+
     '<div><label>Rounds with this result</label><div class="oc-seg" data-oc-roundbox>'+[1,2].map(function(r){return '<button class="btn'+(r===2?' on':'')+'" type="button" data-oc-rounds="'+r+'">'+r+'</button>'}).join('')+'</div></div>'+
    '</div><div class="oc-result"><table><tbody>'+
     '<tr><td>Presence</td><td data-o="presence">0</td></tr><tr><td>Runestones</td><td data-o="runes">0</td></tr><tr><td>Beast Bones</td><td data-o="bones">0</td></tr><tr><td>Healing Kits</td><td data-o="kits">0</td></tr>'+
-    '<tr><td>One round</td><td data-o="round">0</td></tr><tr class="sum"><td>Total, both rounds as set</td><td data-o="total">0</td></tr>'+
-   '</tbody></table><div class="oc-bar"><i data-o-bar></i></div><p style="margin:6px 0 0;font-size:16px" data-o="chest"></p><p style="margin:6px 0 0;font-size:15px" data-o="warn"></p></div></div>');
+    '<tr><td>Chests unlocked</td><td data-o="chests">0</td></tr><tr><td>One round</td><td data-o="round">0</td></tr><tr class="sum"><td>Total, both rounds as set</td><td data-o="total">0</td></tr>'+
+   '</tbody></table><div class="oc-bar"><i data-o-bar></i></div><p style="margin:6px 0 0;font-size:16px" data-o="chest"></p><div style="margin:10px 0 0" data-o="last"></div><p style="margin:6px 0 0;font-size:15px" data-o="warn"></p></div></div>');
 
   /* ---------- 05 rules ---------- */
   var rules=sec('oc-rules','05','Rules that decide the round',
@@ -523,15 +551,14 @@ input,textarea,select{font-size:17px}
 
   /* ---------- 06 rewards ---------- */
   var rewardPane=function(r,i){
-    var body=r.chests.length
-      ? '<div class="oc-chests">'+r.chests.map(function(c,k){return '<div class="oc-chest"><b>Chest '+(k+1)+' \u00b7 '+Number(c[0]).toLocaleString('en-US')+'</b><span>'+c[1]+'</span></div>'}).join('')+'</div>'
-      : '<div class="screens-empty">Chest contents for this server type go here.</div>';
-    return '<div class="oc-pane" data-oc-pane="'+i+'"'+(i?' hidden':'')+'>'+body+'</div>';
+    return '<div class="oc-pane" data-oc-pane="'+i+'"'+(i?' hidden':'')+'><div class="oc-chests">'+r.chests.map(function(c,k){return '<div class="oc-chest"><b>Chest '+(k+1)+' \u00b7 '+THRESH[k].toLocaleString('en-US')+' potions</b>'+items(c)+'</div>'}).join('')+'</div></div>';
   };
   var rewards=sec('oc-rewards','06','Nine chests and two rankings',
-   '<p>Chests unlock with your <strong>combined</strong> Cursed Potions from both rounds, and what they hold depends on your server. '+RANKINGS+' The top chest needs '+TOP_CHEST.toLocaleString('en-US')+' potions in total.</p>'+
+   '<p>Chests unlock with your <strong>combined</strong> Cursed Potions from both rounds, and what they hold depends on your server. '+RANKINGS+'</p>'+
    '<div class="oc-tabs" role="tablist">'+REWARDS.map(function(r,i){return '<button type="button" role="tab" class="'+(i===0?'on':'')+'" data-oc-tab="'+i+'">'+r.tab+'</button>'}).join('')+'</div>'+
-   REWARDS.map(rewardPane).join(''));
+   REWARDS.map(rewardPane).join('')+
+   '<h3>Alliance ranking rewards</h3>'+rankTable(ALLIANCE)+
+   '<h3>Player ranking rewards</h3>'+rankTable(PLAYERS));
 
   /* ---------- 07 strategy ---------- */
   var step=function(n,t,items){return '<div class="oc-step"><b>'+n+'</b><div><h3>'+t+'</h3><ul>'+items.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div></div>'};
@@ -563,7 +590,7 @@ input,textarea,select{font-size:17px}
    '</div>'+
    '<div class="elixir-callout"><p><strong>Still unknown:</strong> how many artifacts one raid takes and exactly where Runestones land. It should become clear after the first battle.</p></div>');
 
-  var outro='<p class="oc-credit">Guide adapted from the community wiki at <a href="'+SOURCE_URL+'" target="_blank" rel="noopener">wiki-last-asylum.com</a>. Numbers are the ones listed there and may change.</p>';
+  var outro='<p class="oc-credit">Guide adapted from the community wiki at <a href="'+SOURCE_URL+'" target="_blank" rel="noopener">wiki-last-asylum.com</a>; chest and ranking rewards from <a href="'+SOURCE2+'" target="_blank" rel="noopener">lastasylum.gg</a>. Numbers are the ones listed there and may change.</p>';
 
   window.ANS_DATA=window.ANS_DATA||{};window.ANS_DATA.guides=window.ANS_DATA.guides||{};
   window.ANS_DATA.guides['guide-origin-curse']='<div class="oc">'+intro+schedule+zone+points+calc+rules+rewards+strategy+outro+'</div>';
@@ -598,7 +625,10 @@ input,textarea,select{font-size:17px}
     var set=function(k,t){root.querySelector('[data-o="'+k+'"]').textContent=t};
     set('presence',fmt(presence));set('runes',fmt(sumR));set('bones',fmt(sumB));set('kits',fmt(sumK));set('round',fmt(round));set('total',fmt(total));
     root.querySelector('[data-o-bar]').style.width=Math.min(100,total/TOP_CHEST*100)+'%';
-    set('chest',total>=TOP_CHEST?'This plan reaches the '+fmt(TOP_CHEST)+' chest.':'You are '+fmt(TOP_CHEST-total)+' potions short of the '+fmt(TOP_CHEST)+' chest.');
+    var n=THRESH.filter(function(t){return total>=t}).length,srv=+(root.querySelector('[data-oc-srv].on')||{dataset:{ocSrv:0}}).dataset.ocSrv;
+    set('chests',n+' of 9');
+    set('chest',(n?'Chest '+n+' reached. ':'No chest yet. ')+(n<9?'Next one at '+fmt(THRESH[n])+' ('+fmt(THRESH[n]-total)+' to go).':'You have every chest.'));
+    var chosen=REWARDS[srv].chests[n-1];root.querySelector('[data-o="last"]').innerHTML=n?'Best chest for this server type:'+items(chosen):'';
     set('warn',skipped?skipped+' artifact'+(skipped>1?'s':'')+' would finish after minute 30 and '+(skipped>1?'are':'is')+' not counted.':'');
   }
 
@@ -614,7 +644,7 @@ input,textarea,select{font-size:17px}
     if(j){e.preventDefault();var t=document.getElementById(j.dataset.ocJump);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});return}
     var tab=e.target.closest('[data-oc-tab]');
     if(tab){var box=tab.closest('.oc-sec');box.querySelectorAll('[data-oc-tab]').forEach(function(b){b.classList.toggle('on',b===tab)});box.querySelectorAll('[data-oc-pane]').forEach(function(p){p.hidden=p.dataset.ocPane!==tab.dataset.ocTab});return}
-    var g=e.target.closest('[data-oc-gap],[data-oc-rounds]');
+    var g=e.target.closest('[data-oc-gap],[data-oc-rounds],[data-oc-srv]');
     if(g){var root=g.closest('[data-oc-calc]');g.parentNode.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b===g)});runCalc(root)}
   });
   document.addEventListener('input',function(e){var root=e.target.closest&&e.target.closest('[data-oc-calc]');if(root)runCalc(root)});
