@@ -7,6 +7,10 @@
 window.ANS_I18N = {
   langs: [['en', 'English'], ['ru', 'Русский'], ['hr', 'Hrvatski'], ['ro', 'Română'], ['es', 'Español'], ['fa', 'فارسی', 'rtl'], ['ur', 'اردو', 'rtl'], ['bs', 'Bosanski']],
   rows: [
+    ["What's new", 'Что нового', 'Što je novo', 'Ce este nou', 'Novedades', 'تازه‌ها', 'تازہ ترین', 'Šta je novo'],
+    ['Keep everyone up to date.', 'Держим всех в курсе.', 'Držimo sve u tijeku.', 'Ține pe toată lumea la curent.', 'Mantén a todos al día.', 'همه را در جریان بگذارید.', 'سب کو باخبر رکھیں۔', 'Držimo sve u toku.'],
+    ['Post update', 'Опубликовать', 'Objavi novost', 'Publică noutatea', 'Publicar novedad', 'انتشار خبر', 'اپ ڈیٹ پوسٹ کریں', 'Objavi novost'],
+    ['Nothing new yet.', 'Пока нет новостей.', 'Još nema novosti.', 'Încă nu sunt noutăți.', 'Aún no hay novedades.', 'هنوز خبری نیست.', 'ابھی کچھ نیا نہیں۔', 'Još nema novosti.'],
     ['Home', 'Главная', 'Početna', 'Acasă', 'Inicio', 'خانه', 'ہوم', 'Početna'],
     ['About the game', 'Об игре', 'O igri', 'Despre joc', 'Sobre el juego', 'درباره بازی', 'کھیل کے بارے میں', 'O igri'],
     ['Heroes', 'Герои', 'Heroji', 'Eroi', 'Héroes', 'قهرمانان', 'ہیروز', 'Heroji'],

@@ -128,6 +128,19 @@ service cloud.firestore {
       allow update: if false;
       allow delete: if cmsIsEditor();
     }
+    match /news/{id} {                             // "What's new" on the home page: you and your editors write, members read
+      allow read: if isApprovedMember() || cmsIsEditor();
+      allow create: if cmsIsEditor()
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 1
+        && request.resource.data.text.size() <= 1000
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 100
+        && request.resource.data.createdAt is timestamp;
+      allow update: if false;
+      allow delete: if isAdminUser() || (cmsIsEditor() && resource.data.authorUid == request.auth.uid);
+    }
     match /cms_drafts/{id} {                       // drafts: editors only
       allow read, write: if cmsIsEditor();
     }

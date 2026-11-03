@@ -293,6 +293,16 @@ body[data-role=pending] #view{visibility:hidden}
 [dir=rtl] #site-menu .nav-sub{margin-left:0;margin-right:12px;padding-left:0;padding-right:6px;border-left:0;border-right:1px solid var(--border)}
 [dir=rtl] .user-menu{right:auto;left:0}
 
+/* ---- What's new feed (home) ---- */
+.news-form{border:1px solid var(--border);background:var(--surface);padding:20px;margin-bottom:22px;max-width:860px}
+.news-form input,.news-form textarea{width:100%;background:var(--background);color:var(--foreground);border:1px solid var(--border);padding:12px;font-size:17px;margin:6px 0 10px}
+.news-form textarea{min-height:90px;resize:vertical}
+.news-item{display:flex;gap:16px;border:1px solid var(--border);background:var(--surface);padding:18px;margin-bottom:12px;max-width:860px}
+.news-item .avatar{width:56px;height:56px;font-size:16px;flex:0 0 auto}
+.news-body{min-width:0;flex:1}.news-body h3{margin:0 0 4px;font-size:17px}
+.news-meta{color:var(--muted-foreground);font-size:14px;margin-bottom:8px}.news-meta b{color:var(--foreground);font-weight:600}
+.news-body p{font-size:18px;line-height:1.7;overflow-wrap:anywhere;white-space:pre-wrap}
+.news-del{background:none;border:1px solid var(--border);color:var(--muted-foreground);padding:6px 10px;font-size:13px;align-self:flex-start}
 /* ---- readability: bigger, clearer text on phones and computers ---- */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
@@ -369,6 +379,7 @@ const hashPage=()=>{const h=location.hash.slice(1);const p=OLD_HASH[h]||h;return
 let role='pending',currentPage='home',mode='member',firebase=null,user=null,authResolved=false,toastTimer;
 let membership='none',isAdmin=false,isStaff=false,memberData=null,memberKnown=false,joinPrompted=false,authSignup=false,unsubscribeMember=null;
 let tips=[],unsubscribeTips=null,editingTip=null;
+let news=[],unsubscribeNews=null;
 function canView(r,page){
   if(PUBLIC_PAGES.has(page))return true;
   if(r==='signed-out'||r==='pending')return false;
@@ -394,7 +405,7 @@ function setRole(value){
   const first=role==='pending',changed=role!==value;
   role=value;
   document.body.dataset.role=role;
-  syncTips();syncBirthdays();syncRequests();syncDirectory();
+  syncTips();syncBirthdays();syncRequests();syncDirectory();syncNews();
   buildMenu();paintUser();
   if(first){const p=hashPage();currentPage=canView(role,p)?p:'home';render(currentPage)}
   else if(changed)render(canView(role,currentPage)?currentPage:'home');
@@ -439,7 +450,7 @@ function navigate(page){
 function header(title,desc){return `<div class="page-head reveal"><span class="eyebrow">ANS · SERVER #233</span><h1>${esc(title)}</h1><p>${esc(desc)}</p></div>`}
 
 /* ---------- home ---------- */
-function home(){return `<section class="hero"><img class="hero-image" src="ans-plague.jpg" width="1536" height="1024" alt="Plague doctor with a lantern among the arches of a gothic sanctuary"><div class="fog"></div><div class="particles">${Array.from({length:14},(_,i)=>`<i style="--i:${i}"></i>`).join('')}</div><div class="raven" aria-hidden="true"><svg viewBox="0 0 80 40"><path class="wing" d="M40 21C26 2 12 0 1 3L20 19 2 15l25 12zM40 21C54 2 68 0 79 3L60 19l18-4-25 12z"/><path d="m30 24 11-6 13 7-11 2-3 9-5-9-8 4z"/></svg></div><div class="hero-content reveal"><span class="eyebrow">LAST ASYLUM PLAGUE · SERVER #233</span><h1>ANS</h1><p class="subtitle">In the shadows, we stand together.</p><div class="ornament" aria-hidden="true">⚜</div><p class="hero-description">The world may fall to the plague.<br>Our alliance will not.<br><em>One sanctuary. One family. One purpose.</em></p><div class="actions">${role==='signed-out'?`<button class="btn btn-primary" data-login="signup">${icon('shield')}Become a member</button><button class="btn" data-login="member">${icon('user')}Log in</button><button class="btn" data-go="game">About the game ${icon('arrow')}</button>`:role==='member'?`<button class="btn btn-primary" data-go="about">${icon('shield')}Enter the alliance</button><button class="btn" data-go="constitution">${icon('book')}Read the constitution</button>`:`<button class="btn btn-primary" data-go="game">${icon('book')}About the game</button><button class="btn" data-go="server">${icon('shield')}About the server</button>`}</div><p class="hero-foot">${icon('lock')}${role==='signed-out'?'The gates are open. Your story starts here.':role==='member'?'Welcome home. ANS stands with you.':'Welcome, traveler. The sanctuary awaits.'}</p></div><a class="hero-scroll" href="#sanctuary-preview"><span>BEYOND THE GATES</span>${icon('chevron')}</a></section><section class="section" id="sanctuary-preview"><div class="section-heading"><h2><span class="symbol">⚜</span> Within our sanctuary</h2><span class="kicker">Knowledge is our strongest weapon.</span></div><div class="portal-grid">${(role==='member'?[['about','shield','The Alliance','Our people, our values, our unbreakable bond.'],['constitution','book','The Constitution','The laws that keep our server standing.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]:[['game','book','About the game','Heroes, buildings, resources and more.'],['server','shield','About the server','Server #233 and the alliance behind it.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]).map(([p,i,t,d])=>`<button class="portal" data-go="${p}">${icon(i)}<h3>${t}</h3><p>${d}</p><span class="arrow">${icon('arrow')}</span></button>`).join('')}</div></section><section class="section"><div class="lower-grid"><div class="notice"><div class="notice-icon">${icon('bell')}</div><div><h3>When the ravens bring news</h3><p>Stay close to the alliance.<br>Never miss a call to arms.</p><button class="btn" id="notify">${icon('bell')}<span id="notify-label">Enable notifications</span></button><p class="notify-state" id="notify-state" aria-live="polite"></p></div></div><button class="film" id="video" aria-label="Watch the ANS video"><img src="ans-plague.jpg" loading="lazy" width="1536" height="1024" alt="The ANS sanctuary"><span class="play">${icon('play')}</span><span class="film-caption">LIFE IN THE ASYLUM</span></button></div></section>`}
+function home(){return `<section class="hero"><img class="hero-image" src="ans-plague.jpg" width="1536" height="1024" alt="Plague doctor with a lantern among the arches of a gothic sanctuary"><div class="fog"></div><div class="particles">${Array.from({length:14},(_,i)=>`<i style="--i:${i}"></i>`).join('')}</div><div class="raven" aria-hidden="true"><svg viewBox="0 0 80 40"><path class="wing" d="M40 21C26 2 12 0 1 3L20 19 2 15l25 12zM40 21C54 2 68 0 79 3L60 19l18-4-25 12z"/><path d="m30 24 11-6 13 7-11 2-3 9-5-9-8 4z"/></svg></div><div class="hero-content reveal"><span class="eyebrow">LAST ASYLUM PLAGUE · SERVER #233</span><h1>ANS</h1><p class="subtitle">In the shadows, we stand together.</p><div class="ornament" aria-hidden="true">⚜</div><p class="hero-description">The world may fall to the plague.<br>Our alliance will not.<br><em>One sanctuary. One family. One purpose.</em></p><div class="actions">${role==='signed-out'?`<button class="btn btn-primary" data-login="signup">${icon('shield')}Become a member</button><button class="btn" data-login="member">${icon('user')}Log in</button><button class="btn" data-go="game">About the game ${icon('arrow')}</button>`:role==='member'?`<button class="btn btn-primary" data-go="about">${icon('shield')}Enter the alliance</button><button class="btn" data-go="constitution">${icon('book')}Read the constitution</button>`:`<button class="btn btn-primary" data-go="game">${icon('book')}About the game</button><button class="btn" data-go="server">${icon('shield')}About the server</button>`}</div><p class="hero-foot">${icon('lock')}${role==='signed-out'?'The gates are open. Your story starts here.':role==='member'?'Welcome home. ANS stands with you.':'Welcome, traveler. The sanctuary awaits.'}</p></div><a class="hero-scroll" href="#sanctuary-preview"><span>BEYOND THE GATES</span>${icon('chevron')}</a></section><section class="section" id="sanctuary-preview"><div class="section-heading"><h2><span class="symbol">⚜</span> Within our sanctuary</h2><span class="kicker">Knowledge is our strongest weapon.</span></div><div class="portal-grid">${(role==='member'?[['about','shield','The Alliance','Our people, our values, our unbreakable bond.'],['constitution','book','The Constitution','The laws that keep our server standing.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]:[['game','book','About the game','Heroes, buildings, resources and more.'],['server','shield','About the server','Server #233 and the alliance behind it.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]).map(([p,i,t,d])=>`<button class="portal" data-go="${p}">${icon(i)}<h3>${t}</h3><p>${d}</p><span class="arrow">${icon('arrow')}</span></button>`).join('')}</div></section><section class="section" id="news-section"></section><section class="section"><div class="lower-grid"><div class="notice"><div class="notice-icon">${icon('bell')}</div><div><h3>When the ravens bring news</h3><p>Stay close to the alliance.<br>Never miss a call to arms.</p><button class="btn" id="notify">${icon('bell')}<span id="notify-label">Enable notifications</span></button><p class="notify-state" id="notify-state" aria-live="polite"></p></div></div><button class="film" id="video" aria-label="Watch the ANS video"><img src="ans-plague.jpg" loading="lazy" width="1536" height="1024" alt="The ANS sanctuary"><span class="play">${icon('play')}</span><span class="film-caption">LIFE IN THE ASYLUM</span></button></div></section>`}
 
 /* ---------- new pages: section landings, shells, server, contact, settings ---------- */
 const INTRO={
@@ -971,12 +982,42 @@ function bindProfile(){
   };
   refreshProfileForm(true);
 }
+/* ---------- What's new (home): editors post, every member reads, with the author's photo ---------- */
+function syncNews(){
+  unsubscribeNews?.();unsubscribeNews=null;
+  if(role!=='member'||!firebase||!user){news=[];renderNews();return}
+  const db=firebase.db;
+  unsubscribeNews=db.onSnapshot(db.query(db.collection(firebase.d,'news'),db.orderBy('createdAt','desc'),db.limit(20)),snap=>{news=snap.docs.map(d=>({id:d.id,...d.data()}));renderNews()},err=>{console.error('[ANS news]',err)});
+}
+function renderNews(){
+  const el=$('#news-section');if(!el)return;
+  if(role!=='member'){el.innerHTML='';return}
+  if(el.dataset.typing==='1'&&$('#news-text')?.value)return;   /* never wipe a post that is being written */
+  const photoOf=n=>n.authorUid===user?.uid?myProfile?.photo:profiles.find(p=>p.id===n.authorUid)?.photo;
+  const nameOf=n=>n.authorUid===user?.uid?displayName():(profiles.find(p=>p.id===n.authorUid)?.name||n.authorName||'ANS');
+  const form=isStaff?`<form class="news-form" id="news-form"><label for="news-title">Title (optional)</label><input id="news-title" maxlength="100" autocomplete="off"><label for="news-text">What is new?</label><textarea id="news-text" maxlength="1000" required></textarea><div class="form-actions"><button class="btn btn-primary" type="submit" id="news-send">Post update</button></div><p class="form-status" id="news-status" aria-live="polite"></p></form>`:'';
+  const list=news.map(n=>`<article class="news-item">${avatarHtml(photoOf(n),nameOf(n))}<div class="news-body"><div class="news-meta"><b>${esc(nameOf(n))}</b> · ${esc(fmtDate(n.createdAt))}</div>${n.title?`<h3>${esc(n.title)}</h3>`:''}<p>${esc(n.text)}</p></div>${(isAdmin||n.authorUid===user?.uid)?`<button class="news-del" data-news-del="${esc(n.id)}" aria-label="Delete update">✕</button>`:''}</article>`).join('');
+  el.innerHTML=`<div class="section-heading"><h2><span class="symbol">⚜</span> What's new</h2><span class="kicker">Keep everyone up to date.</span></div>${form}${list||'<p class="empty">Nothing new yet.</p>'}`;
+  $('#news-text')?.addEventListener('input',e=>{el.dataset.typing=e.target.value?'1':''});
+  $('#news-form')?.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const text=$('#news-text').value.trim().slice(0,1000),title=$('#news-title').value.trim().slice(0,100);
+    if(!text||!firebase||!user)return;
+    $('#news-send').disabled=true;$('#news-status').textContent='';
+    try{const db=firebase.db;await db.addDoc(db.collection(firebase.d,'news'),{authorUid:user.uid,authorName:displayName().slice(0,30),title,text,createdAt:db.serverTimestamp()});el.dataset.typing='';toast('Update posted.')}
+    catch(err){console.error('[ANS news]',err);$('#news-status').textContent='The update could not be posted. Try again.';$('#news-send').disabled=false}
+  });
+  el.querySelectorAll('[data-news-del]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('Delete this update?'))return;
+    try{await firebase.db.deleteDoc(firebase.db.doc(firebase.d,'news',b.dataset.newsDel))}catch(err){console.error('[ANS news]',err);toast('It could not be deleted.')}
+  });
+}
 function syncDirectory(){
   unsubscribeRoster?.();unsubscribeProfiles?.();unsubscribeRoster=unsubscribeProfiles=null;
   if(role!=='member'||!firebase||!user){roster=[];profiles=[];return}
   const db=firebase.db;
   unsubscribeRoster=db.onSnapshot(db.collection(firebase.d,'roster'),snap=>{roster=snap.docs.map(d=>({id:d.id,...d.data()}));reconcileRoster();if(currentPage==='members')renderMembers()},err=>{console.error('[ANS roster]',err);if(currentPage==='members'&&$('#mb-list'))$('#mb-list').innerHTML='<p class="empty">The member list could not be loaded right now.</p>'});
-  unsubscribeProfiles=db.onSnapshot(db.query(db.collection(firebase.d,'profiles'),db.limit(300)),snap=>{profiles=snap.docs.map(d=>({id:d.id,...d.data()}));if(currentPage==='members')renderMembers()},err=>console.error('[ANS profiles]',err));
+  unsubscribeProfiles=db.onSnapshot(db.query(db.collection(firebase.d,'profiles'),db.limit(300)),snap=>{profiles=snap.docs.map(d=>({id:d.id,...d.data()}));if(currentPage==='members')renderMembers();if(currentPage==='home')renderNews()},err=>console.error('[ANS profiles]',err));
 }
 /* Admins keep roster/{uid} in step with members/{uid} (status + name) so every member can see who is verified, without emails. */
 async function reconcileRoster(){
@@ -1029,7 +1070,7 @@ function render(page){
   $('#view').innerHTML=html;
   bindView();
   window.ANS_CMS?.after?.(page,{openZoom,render});   /* CMS hook */
-  if(page==='home')initNotify();
+  if(page==='home'){initNotify();renderNews()}
   if(page.startsWith('guide-')||page==='gear')mountShots();
   if(page==='tips'){renderTips();bindTips()}
   if(page==='gallery')mountGallery();
