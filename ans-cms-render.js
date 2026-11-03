@@ -11,7 +11,14 @@ export const safeUrl = u => {
 };
 export const imgSrc = u => {
   u = String(u || '').trim();
+  if (/^cms-img:[A-Za-z0-9]{6,40}$/.test(u)) return u;        // image stored in Firestore (cms_images/{id}), no GitHub needed
   return /^data:image\/(png|jpe?g|webp|gif);base64,/i.test(u) ? u : safeUrl(u);
+};
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+/* attributes for an <img>: Firestore images start blank and ans-cms.js fills them in as soon as they are loaded */
+export const imgAttr = u => {
+  const s = imgSrc(u);
+  return /^cms-img:/.test(s) ? `src="${BLANK}" data-cms-img="${esc(s.slice(8))}"` : `src="${esc(s)}"${rawUrl(s) ? ` data-raw="${esc(rawUrl(s))}"` : ''}`;
 };
 
 /* tiny inline markup: **bold**  *italic*  [text](https://link)  and line breaks */
@@ -24,7 +31,7 @@ export const inline = t => esc(t)
   })
   .replace(/\n/g, '<br>');
 
-/* GitHub Pages address -> where uploaded images live in the repo (also used as a fallback while Pages is still deploying) */
+/* GitHub Pages address (only for old images that were uploaded to the repo; new uploads live in Firestore) -> where uploaded images live in the repo (also used as a fallback while Pages is still deploying) */
 export function ghInfo() {
   try {
     const saved = JSON.parse(localStorage.getItem('ans-cms-gh') || 'null');
@@ -38,10 +45,7 @@ export const rawUrl = src => {
   const g = ghInfo();
   return g && /^images\/cms\//.test(src) ? `https://raw.githubusercontent.com/${g.owner}/${g.repo}/${g.branch || 'main'}/${src}` : '';
 };
-const imgTag = (src, alt) => {
-  const s = imgSrc(src);
-  return `<img src="${esc(s)}" alt="${esc(alt || '')}" loading="lazy" decoding="async"${rawUrl(s) ? ` data-raw="${esc(rawUrl(s))}"` : ''}>`;
-};
+const imgTag = (src, alt) => `<img ${imgAttr(src)} alt="${esc(alt || '')}" decoding="async">`;
 const zoomAttr = (src, caption) => `data-cms-zoom="${esc(JSON.stringify({ src: imgSrc(src), caption: caption || '' }))}"`;
 
 const USER_ICON = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg>';

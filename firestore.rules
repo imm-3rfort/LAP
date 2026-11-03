@@ -25,12 +25,12 @@ service cloud.firestore {
       allow write: if false;                       // add admins from the Firebase console
     }
     match /members/{uid} {
-      allow read: if signedIn() && (request.auth.uid == uid || isAdminUser());
+      allow read: if signedIn() && (request.auth.uid == uid || cmsIsEditor());     // you + the editors you allow
       allow create: if signedIn() && request.auth.uid == uid
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.status == 'pending';
       // the owner may re-send a request (never self-approve); only an admin can approve or reject
-      allow update: if isAdminUser()
+      allow update: if cmsIsEditor()                       // approve / reject: you and your editors
         || (signedIn() && request.auth.uid == uid
             && resource.data.status != 'approved'
             && request.resource.data.uid == request.auth.uid
@@ -38,18 +38,18 @@ service cloud.firestore {
       allow delete: if isAdminUser();
     }
     match /roster/{uid} {                          // public list of member names for ANS Members
-      allow read: if isApprovedMember() || isAdminUser();
-      allow write: if isAdminUser();
+      allow read: if isApprovedMember() || cmsIsEditor();
+      allow write: if cmsIsEditor();
     }
     match /profiles/{uid} {
-      allow read: if signedIn() && (request.auth.uid == uid || isApprovedMember() || isAdminUser());
+      allow read: if signedIn() && (request.auth.uid == uid || isApprovedMember() || cmsIsEditor());
       allow create, update: if signedIn() && request.auth.uid == uid
         && request.resource.data.uid == request.auth.uid;
       allow delete: if signedIn() && request.auth.uid == uid;
     }
     match /birthdays/{uid} {
-      allow read: if isApprovedMember() || isAdminUser();
-      allow create, update: if isApprovedMember() && request.auth.uid == uid
+      allow read: if isApprovedMember() || cmsIsEditor();
+      allow create, update: if (isApprovedMember() || cmsIsEditor()) && request.auth.uid == uid
         && request.resource.data.uid == request.auth.uid;
       allow delete: if signedIn() && request.auth.uid == uid;
     }
@@ -112,8 +112,21 @@ service cloud.firestore {
       allow write: if cmsIsEditor();
     }
     match /cms_pages/{id} {
-      allow read: if (isApprovedMember() && resource.data.status == 'published') || cmsIsEditor();
+      allow read: if (isApprovedMember() && resource.data.status == 'published')
+        // a visitor may read ONLY the published, customized versions of the public pages (keep in sync with PUBLIC_KEYS in ans-cms.js)
+        || (resource.data.status == 'published'
+            && resource.data.get('replaces', null) in ['game', 'game-heroes', 'sanctuary', 'game-resources', 'game-cross', 'server', 'contact'])
+        || cmsIsEditor();
       allow write: if cmsIsEditor();
+    }
+    match /cms_images/{id} {                       // pictures uploaded in the CMS editor (stored here instead of GitHub)
+      allow get: if true;   // one picture at a time by its random id (public pages show them to visitors); nobody can list the collection
+      allow list: if false;
+      allow create: if cmsIsEditor()
+        && request.resource.data.data is string
+        && request.resource.data.data.size() < 950000;
+      allow update: if false;
+      allow delete: if cmsIsEditor();
     }
     match /cms_drafts/{id} {                       // drafts: editors only
       allow read, write: if cmsIsEditor();

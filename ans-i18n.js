@@ -1,0 +1,62 @@
+/* ANS · interface languages.
+   Each row = [English text, Russian, Croatian, Romanian, Spanish, Persian, Urdu, Bosnian]. The English text is the key:
+   the site swaps any text that matches it exactly. Empty string = not translated yet (stays English).
+   These are the interface labels (menu, buttons, settings). The long guides and the constitution are still English:
+   add their paragraphs as new rows when you have reviewed translations (do NOT rely on machine translation for them).
+   NOTE: have a native speaker of each language review these short labels once. */
+window.ANS_I18N = {
+  langs: [['en', 'English'], ['ru', 'Русский'], ['hr', 'Hrvatski'], ['ro', 'Română'], ['es', 'Español'], ['fa', 'فارسی', 'rtl'], ['ur', 'اردو', 'rtl'], ['bs', 'Bosanski']],
+  rows: [
+    ['Home', 'Главная', 'Početna', 'Acasă', 'Inicio', 'خانه', 'ہوم', 'Početna'],
+    ['About the game', 'Об игре', 'O igri', 'Despre joc', 'Sobre el juego', 'درباره بازی', 'کھیل کے بارے میں', 'O igri'],
+    ['Heroes', 'Герои', 'Heroji', 'Eroi', 'Héroes', 'قهرمانان', 'ہیروز', 'Heroji'],
+    ['Buildings (Sanctuary)', 'Здания (Святилище)', 'Građevine (Svetište)', 'Clădiri (Sanctuar)', 'Edificios (Santuario)', 'ساختمان‌ها (پناهگاه)', 'عمارتیں (سینکچوری)', 'Građevine (Svetište)'],
+    ['Resources', 'Ресурсы', 'Resursi', 'Resurse', 'Recursos', 'منابع', 'وسائل', 'Resursi'],
+    ['Cross-Server moves', 'Переезды между серверами', 'Premještaji između servera', 'Mutări între servere', 'Traslados entre servidores', 'انتقال بین سرورها', 'سرورز کے درمیان منتقلی', 'Premještaji između servera'],
+    ['About the server', 'О сервере', 'O serveru', 'Despre server', 'Sobre el servidor', 'درباره سرور', 'سرور کے بارے میں', 'O serveru'],
+    ['Constitution', 'Конституция', 'Ustav', 'Constituția', 'Constitución', 'قانون اساسی', 'آئین', 'Ustav'],
+    ['About us', 'О нас', 'O nama', 'Despre noi', 'Sobre nosotros', 'درباره ما', 'ہمارے بارے میں', 'O nama'],
+    ['Gallery', 'Галерея', 'Galerija', 'Galerie', 'Galería', 'گالری', 'گیلری', 'Galerija'],
+    ['Hall of Fame', 'Зал славы', 'Kuća slavnih', 'Galeria faimei', 'Salón de la Fama', 'تالار مشاهیر', 'ہال آف فیم', 'Kuća slavnih'],
+    ['Birthday Calendar', 'Календарь дней рождения', 'Kalendar rođendana', 'Calendar de zile de naștere', 'Calendario de cumpleaños', 'تقویم تولدها', 'سالگرہ کیلنڈر', 'Kalendar rođendana'],
+    ['Members', 'Участники', 'Članovi', 'Membri', 'Miembros', 'اعضا', 'ممبران', 'Članovi'],
+    ['Black Book', 'Чёрная книга', 'Crna knjiga', 'Cartea neagră', 'Libro Negro', 'کتاب سیاه', 'کالی کتاب', 'Crna knjiga'],
+    ['Guides', 'Руководства', 'Vodiči', 'Ghiduri', 'Guías', 'راهنماها', 'گائیڈز', 'Vodiči'],
+    ['Beginners Guide', 'Руководство для новичков', 'Vodič za početnike', 'Ghid pentru începători', 'Guía para principiantes', 'راهنمای مبتدیان', 'نئے کھلاڑیوں کی گائیڈ', 'Vodič za početnike'],
+    ['Change Profile Picture and Name', 'Смена аватара и имени', 'Promjena profilne slike i imena', 'Schimbarea pozei de profil și a numelui', 'Cambiar foto de perfil y nombre', 'تغییر تصویر پروفایل و نام', 'پروفائل تصویر اور نام تبدیل کریں', 'Promjena profilne slike i imena'],
+    ['Help members/Alliance', 'Помощь участникам/альянсу', 'Pomoć članovima/savezu', 'Ajutor pentru membri/alianță', 'Ayudar a miembros/alianza', 'کمک به اعضا/اتحاد', 'ممبران/اتحاد کی مدد', 'Pomoć članovima/savezu'],
+    ['Ministers', 'Министры', 'Ministri', 'Miniștri', 'Ministros', 'وزیران', 'وزراء', 'Ministri'],
+    ['Sanctuary', 'Святилище', 'Svetište', 'Sanctuar', 'Santuario', 'پناهگاه', 'سینکچوری', 'Svetište'],
+    ['Gift Codes', 'Подарочные коды', 'Poklon kodovi', 'Coduri cadou', 'Códigos de regalo', 'کدهای هدیه', 'گفٹ کوڈز', 'Poklon kodovi'],
+    ['Event Guide', 'Руководство по событиям', 'Vodič za događaje', 'Ghid pentru evenimente', 'Guía de eventos', 'راهنمای رویدادها', 'ایونٹ گائیڈ', 'Vodič za događaje'],
+    ['Knowledge', 'Знания', 'Znanje', 'Cunoștințe', 'Conocimiento', 'دانش', 'معلومات', 'Znanje'],
+    ['Gear', 'Снаряжение', 'Oprema', 'Echipament', 'Equipo', 'تجهیزات', 'گیئر', 'Oprema'],
+    ['Contact', 'Контакты', 'Kontakt', 'Contact', 'Contacto', 'تماس', 'رابطہ', 'Kontakt'],
+    ['Share a tip', 'Поделиться советом', 'Podijeli savjet', 'Distribuie un sfat', 'Compartir un consejo', 'اشتراک نکته', 'ٹپ شیئر کریں', 'Podijeli savjet'],
+    ['Any ideas?', 'Есть идеи?', 'Imaš ideju?', 'Ai idei?', '¿Alguna idea?', 'ایده‌ای دارید؟', 'کوئی آئیڈیا؟', 'Imaš li ideju?'],
+    ['CHOOSE YOUR ATMOSPHERE', 'ВЫБЕРИТЕ АТМОСФЕРУ', 'ODABERI ATMOSFERU', 'ALEGE ATMOSFERA', 'ELIGE TU AMBIENTE', 'فضای خود را انتخاب کنید', 'اپنا ماحول منتخب کریں', 'ODABERI ATMOSFERU'],
+    ['Monochrome', 'Монохромная', 'Monokromatska', 'Monocromă', 'Monocromática', 'تک‌رنگ', 'یک رنگی', 'Monokromatska'],
+    ['Gold', 'Золотая', 'Zlatna', 'Aurie', 'Dorada', 'طلایی', 'سنہری', 'Zlatna'],
+    ['Log in', 'Войти', 'Prijava', 'Autentificare', 'Iniciar sesión', 'ورود', 'لاگ اِن', 'Prijava'],
+    ['Become a member', 'Стать участником', 'Postani član', 'Devino membru', 'Hazte miembro', 'عضو شوید', 'ممبر بنیں', 'Postani član'],
+    ['My profile', 'Мой профиль', 'Moj profil', 'Profilul meu', 'Mi perfil', 'پروفایل من', 'میری پروفائل', 'Moj profil'],
+    ['Settings', 'Настройки', 'Postavke', 'Setări', 'Ajustes', 'تنظیمات', 'ترتیبات', 'Postavke'],
+    ['Membership requests', 'Заявки на вступление', 'Zahtjevi za članstvo', 'Cereri de membru', 'Solicitudes de membresía', 'درخواست‌های عضویت', 'رکنیت کی درخواستیں', 'Zahtjevi za članstvo'],
+    ['Log out', 'Выйти', 'Odjava', 'Deconectare', 'Cerrar sesión', 'خروج', 'لاگ آؤٹ', 'Odjava'],
+    ['Language', 'Язык', 'Jezik', 'Limbă', 'Idioma', 'زبان', 'زبان', 'Jezik'],
+    ['Atmosphere', 'Атмосфера', 'Atmosfera', 'Atmosferă', 'Ambiente', 'فضا', 'ماحول', 'Atmosfera'],
+    ['Display name', 'Отображаемое имя', 'Prikazano ime', 'Nume afișat', 'Nombre visible', 'نام نمایشی', 'ظاہر کیا جانے والا نام', 'Prikazano ime'],
+    ['About me', 'Обо мне', 'O meni', 'Despre mine', 'Sobre mí', 'درباره من', 'میرے بارے میں', 'O meni'],
+    ['Favorite hero (optional)', 'Любимый герой (необязательно)', 'Omiljeni heroj (neobavezno)', 'Eroul preferat (opțional)', 'Héroe favorito (opcional)', 'قهرمان محبوب (اختیاری)', 'پسندیدہ ہیرو (اختیاری)', 'Omiljeni heroj (neobavezno)'],
+    ['Birthday (optional)', 'День рождения (необязательно)', 'Rođendan (neobavezno)', 'Ziua de naștere (opțional)', 'Cumpleaños (opcional)', 'تولد (اختیاری)', 'سالگرہ (اختیاری)', 'Rođendan (neobavezno)'],
+    ['Month', 'Месяц', 'Mjesec', 'Luna', 'Mes', 'ماه', 'مہینہ', 'Mjesec'],
+    ['Day', 'День', 'Dan', 'Ziua', 'Día', 'روز', 'دن', 'Dan'],
+    ['Save profile', 'Сохранить профиль', 'Spremi profil', 'Salvează profilul', 'Guardar perfil', 'ذخیره پروفایل', 'پروفائل محفوظ کریں', 'Sačuvaj profil'],
+    ['Change photo', 'Изменить фото', 'Promijeni sliku', 'Schimbă poza', 'Cambiar foto', 'تغییر عکس', 'تصویر تبدیل کریں', 'Promijeni sliku'],
+    ['Remove photo', 'Удалить фото', 'Ukloni sliku', 'Șterge poza', 'Quitar foto', 'حذف عکس', 'تصویر ہٹائیں', 'Ukloni sliku'],
+    ['Pending', 'Ожидают', 'Na čekanju', 'În așteptare', 'Pendientes', 'در انتظار', 'زیر التواء', 'Na čekanju'],
+    ['Coming soon', 'Скоро', 'Uskoro', 'În curând', 'Próximamente', 'به‌زودی', 'جلد آ رہا ہے', 'Uskoro'],
+    ['This section is being prepared.', 'Этот раздел готовится.', 'Ovaj odjeljak je u pripremi.', 'Această secțiune este în pregătire.', 'Esta sección está en preparación.', 'این بخش در حال آماده‌سازی است.', 'یہ سیکشن تیاری میں ہے۔', 'Ovaj odjeljak je u pripremi.'],
+    ['The information will be added here soon.', 'Информация скоро появится здесь.', 'Informacije će uskoro biti dodane ovdje.', 'Informațiile vor fi adăugate aici în curând.', 'La información se añadirá aquí pronto.', 'اطلاعات به‌زودی در اینجا اضافه می‌شود.', 'معلومات جلد یہاں شامل کی جائیں گی۔', 'Informacije će uskoro biti dodane ovdje.']
+  ]
+};

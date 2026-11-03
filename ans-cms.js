@@ -8,7 +8,7 @@
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 import { getFirestore, collection, doc, getDoc, onSnapshot, query, where, writeBatch, addDoc, setDoc, deleteDoc, updateDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-import { esc, pageHtml, CMS_CSS, carouselInner, rawUrl } from './ans-cms-render.js';
+import { esc, pageHtml, CMS_CSS, carouselInner, rawUrl, imgAttr } from './ans-cms-render.js';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCdsBBd8-TtX8T8zDFiSr5xumDwD51H0Mc', authDomain: 'lap-ans.firebaseapp.com', projectId: 'lap-ans',
@@ -114,7 +114,10 @@ const removeEditor = async memberUid => { if (confirm('Remove editing permission
 const run = fn => async (...a) => { try { await fn(...a); } catch (e) { console.error('[ANS CMS]', e); alert('That change could not be saved. You may not have permission.'); } };
 
 /* ---------- built-in pages: customize once, then edit like any other page ---------- */
-const isBuiltin = p => p === 'about' || p === 'constitution' || p === 'sanctuary' || p === 'duel' || p === 'gear' || (p && p.startsWith('guide-'));
+/* every page of the menu except the home hero, the live pages (gallery, birthdays, members) and the personal ones can be customized */
+const isBuiltin = p => !!p && !['home', 'requests', 'profile', 'settings', 'tips', 'gallery', 'birthdays', 'members'].includes(p);
+/* pages a visitor without an account may read: their published customized versions are public (keep in sync with firestore.rules) */
+const PUBLIC_KEYS = ['game', 'game-heroes', 'sanctuary', 'game-resources', 'game-cross', 'server', 'contact'];
 async function editBuiltin(key) {
   let p = pages.find(x => x.replaces === key);
   if (!p) {
@@ -217,9 +220,40 @@ function onNavClick(e) {
 }
 
 /* ---------- block interactions on the public page (zoom, carousels, broken-image fallback) ---------- */
+/* ---------- images stored in Firestore (cms_images/{id}): same idea as the profile photo, no GitHub token ---------- */
+const imgCache = new Map();
+const goodData = d => typeof d === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(d);
+function loadCmsImage(id) {
+  if (!imgCache.has(id)) {
+    imgCache.set(id, getDoc(doc(db, 'cms_images', id)).then(s => (s.exists() && goodData(s.data().data) ? s.data().data : ''))
+      .catch(() => '').then(d => { if (!d) imgCache.delete(id); return d; }));   // failures are not cached: retried after login
+  }
+  return imgCache.get(id);
+}
+let imgTimer = 0;
+function resolveImages() {
+  document.querySelectorAll('img[data-cms-img]:not([data-cms-ok])').forEach(im => {
+    const id = im.dataset.cmsImg; if (im.dataset.cmsBusy === id) return; im.dataset.cmsBusy = id;
+    loadCmsImage(id).then(d => { delete im.dataset.cmsBusy; if (d && im.dataset.cmsImg === id) { im.src = d; im.dataset.cmsOk = '1'; } });
+  });
+}
+const scheduleImages = () => { clearTimeout(imgTimer); imgTimer = setTimeout(resolveImages, 30); };
+new MutationObserver(scheduleImages).observe(document.documentElement, { childList: true, subtree: true });
+onAuthStateChanged(auth, () => setTimeout(scheduleImages, 600));
+scheduleImages();
+window.ANS_CMS_IMAGES = { load: loadCmsImage };
+
 document.addEventListener('click', e => {
   const z = e.target.closest('[data-cms-zoom]');
-  if (z) { try { const s = JSON.parse(z.dataset.cmsZoom); hooks.openZoom ? hooks.openZoom(s) : window.open(s.src, '_blank', 'noopener'); } catch (err) { /* ignore */ } return; }
+  if (z) {
+    try {
+      const s = JSON.parse(z.dataset.cmsZoom);
+      const open = x => hooks.openZoom ? hooks.openZoom(x) : window.open(x.src, '_blank', 'noopener');
+      if (/^cms-img:/.test(s.src)) loadCmsImage(s.src.slice(8)).then(d => { if (d) open({ ...s, src: d }); });   // same zoom as every other image
+      else open(s);
+    } catch (err) { /* ignore */ }
+    return;
+  }
   const wrap = e.target.closest('[data-cms-car]');
   if (wrap) {
     const imgs = JSON.parse(wrap.dataset.imgs || '[]'); let i = +wrap.dataset.i || 0;
@@ -315,7 +349,13 @@ function refresh() { renderNav(); if (document.getElementById('cms-manager')?.op
 function stop() { unsubs.forEach(u => u()); unsubs = []; }
 function listen() {
   stop();
-  if (!isMember && !isEditor) { cats = []; pages = []; return; }     // guests and unapproved people read nothing
+  if (!isMember && !isEditor) {                                       // visitors and people waiting for approval: only the public pages
+    cats = []; pages = [];
+    const acc = {};
+    PUBLIC_KEYS.forEach(k => unsubs.push(onSnapshot(query(collection(db, 'cms_pages'), where('replaces', '==', k), where('status', '==', 'published')),
+      s => { acc[k] = s.docs.map(d => ({ id: d.id, ...d.data() })); pages = Object.values(acc).flat(); refresh(); }, err => console.error('[ANS CMS]', err))));
+    return;
+  }
   const snap = (ref, set) => onSnapshot(ref, s => { set(s.docs.map(d => ({ id: d.id, ...d.data() }))); refresh(); }, err => console.error('[ANS CMS]', err));
   unsubs.push(snap(collection(db, 'cms_categories'), v => { cats = v; }));
   unsubs.push(snap(isEditor ? collection(db, 'cms_pages') : query(collection(db, 'cms_pages'), where('status', '==', 'published')), v => { pages = v; }));

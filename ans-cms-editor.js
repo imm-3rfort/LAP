@@ -1,8 +1,8 @@
 /* ANS CMS · visual block editor. Loaded only when an editor opens a page (public visitors never download it).
    Data: cms_drafts/{pageId} = { title, subtitle, blocks[] }.  "Publish" copies it to cms_pages/{pageId} (done by the core).
    Firestore does not allow arrays inside arrays, so columns are [{blocks:[]}] and tables are plain text lines "a | b | c". */
-import { doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-import { esc, pageHtml, ghInfo, rawUrl } from './ans-cms-render.js';
+import { doc, getDoc, setDoc, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+import { esc, pageHtml, imgAttr } from './ans-cms-render.js';
 
 const TYPES = [['heading', 'Heading'], ['subtitle', 'Subtitle'], ['paragraph', 'Paragraph'], ['author', 'Author'], ['tip', 'Tip / info box'], ['warning', 'Warning'], ['image', 'Image'], ['gallery', 'Gallery / carousel'], ['list', 'List'], ['table', 'Table'], ['quote', 'Quote'], ['divider', 'Divider'], ['button', 'Button / link'], ['accordion', 'Expandable section'], ['container', 'Content container'], ['columns', 'Columns'], ['html', 'Raw HTML']];
 const LABEL = Object.fromEntries(TYPES);
@@ -44,53 +44,29 @@ function dropMove(fromLoc, fromIdx, toLoc, toIdx) {
   listAt(toLoc).splice(toIdx, 0, b); touch(); draw();
 }
 
-/* ---------- GitHub image upload (free): the token lives only in this browser tab, never in the code ---------- */
-function ghSettings() {
-  let g = ghInfo();
-  if (!g) {
-    const v = prompt('GitHub repository that hosts this site (user/repo):');
-    if (!v || !v.includes('/')) return null;
-    const [owner, repo] = v.trim().split('/'); g = { owner, repo, branch: 'main' };
-    localStorage.setItem('ans-cms-gh', JSON.stringify(g));
-  }
-  return g;
-}
-function ghToken(force) {
-  let t = sessionStorage.getItem('ans-cms-token');
-  if (!t || force) {
-    t = prompt('Paste your GitHub token (fine-grained, Contents: read & write on this repo). It is kept only until you close this tab:');
-    if (!t) return null;
-    sessionStorage.setItem('ans-cms-token', t.trim());
-  }
-  return sessionStorage.getItem('ans-cms-token');
-}
-async function shrink(file) {                                      // max 1600px, JPEG: keeps the repo light
-  if (/gif|svg/.test(file.type)) return file;
+/* ---------- image upload: stored in Firestore (cms_images/{id}), like the profile photo. No GitHub, no token. ----------
+   The picture is resized in the browser (max 1600 px, JPEG) until it is small enough for one Firestore document (< 1 MB). */
+const MAX_CHARS = 820000;                                      // data-URL length that always fits a Firestore document
+async function compress(file) {
   const url = URL.createObjectURL(file);
   try {
-    const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
-    const k = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
-    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
-    const ctx = c.getContext('2d'); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, c.width, c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
-    return await new Promise(ok => c.toBlob(ok, 'image/jpeg', 0.86));
+    const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => no(new Error('That file is not a readable image.')); i.src = url; });
+    const big = Math.max(img.naturalWidth, img.naturalHeight);
+    for (const side of [1600, 1400, 1200, 1000, 800, 600]) {
+      const k = Math.min(1, side / big);
+      const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(img.naturalWidth * k)); c.height = Math.max(1, Math.round(img.naturalHeight * k));
+      const ctx = c.getContext('2d'); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, c.width, c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
+      for (const q of [0.86, 0.76, 0.66, 0.55]) { const d = c.toDataURL('image/jpeg', q); if (d.length <= MAX_CHARS) return { data: d, w: c.width, h: c.height }; }
+    }
+    throw new Error('That image is too large even after shrinking it. Try a smaller one.');
   } finally { URL.revokeObjectURL(url); }
 }
 async function uploadImage(file) {
-  const g = ghSettings(); if (!g) throw new Error('No repository configured.');
-  let token = ghToken(false); if (!token) throw new Error('No token.');
-  const blob = await shrink(file);
-  const ext = blob.type === 'image/jpeg' ? 'jpg' : (file.name.split('.').pop() || 'png').toLowerCase();
-  const name = `${Date.now().toString(36)}-${file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30)}.${ext}`;
-  const path = `images/cms/${name}`;
-  const b64 = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.readAsDataURL(blob); });
-  const put = tk => fetch(`https://api.github.com/repos/${g.owner}/${g.repo}/contents/${path}`, {
-    method: 'PUT', headers: { Authorization: `Bearer ${tk}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: `CMS: add ${name}`, content: b64, branch: g.branch || 'main' })
-  });
-  let res = await put(token);
-  if (res.status === 401 || res.status === 403 || res.status === 404) { token = ghToken(true); if (!token) throw new Error('No token.'); res = await put(token); }
-  if (!res.ok) throw new Error('GitHub refused the upload (' + res.status + '). Check the token and the repository name.');
-  return path;                                                       // relative path: works on your GitHub Pages site
+  if (!/^image\//.test(file.type)) throw new Error('Choose an image file.');
+  const { data, w, h } = await compress(file);
+  const ref = doc(collection(S.api.db, 'cms_images'));           // random, hard-to-guess id
+  await setDoc(ref, { data, w, h, by: S.api.uid || '', name: String(file.name || '').slice(0, 80), createdAt: serverTimestamp() });
+  return 'cms-img:' + ref.id;                                    // this is what the block stores; the site loads it on demand
 }
 async function pickAndUpload(multiple) {
   const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.multiple = !!multiple;
@@ -98,9 +74,9 @@ async function pickAndUpload(multiple) {
   const out = [];
   for (const f of files) {
     status(`Uploading ${f.name}…`);
-    try { out.push(await uploadImage(f)); } catch (e) { alert(e.message); break; }
+    try { out.push(await uploadImage(f)); } catch (e) { console.error('[ANS CMS image]', e); alert(e && e.message && !/permission/i.test(e.message) ? e.message : 'The image could not be saved. Check that you can edit the site and that the new Firestore rules are published.'); break; }
   }
-  status(out.length ? 'Uploaded. It can take about a minute to show on the live site.' : '');
+  status(out.length ? 'Uploaded. Remember to Save draft / Publish.' : '');
   return out;
 }
 
@@ -115,11 +91,11 @@ function fields(loc, i, b) {
     case 'heading': return inp(loc, i, 'text', b.text, 'Text') + sel(loc, i, 'level', b.level, 'Size', [[2, 'Heading'], [3, 'Subheading']]);
     case 'subtitle': return area(loc, i, 'text', b.text, 'Text', 2);
     case 'paragraph': return area(loc, i, 'text', b.text, 'Text (**bold**, *italic*, [link](https://…); blank line = new paragraph)', 6);
-    case 'author': return inp(loc, i, 'name', b.name, 'Name') + inp(loc, i, 'role', b.role, 'Role / subtitle') + inp(loc, i, 'photo', b.photo, 'Photo (optional)', 'images/cms/…') + upBtn(loc, i, 'photo');
+    case 'author': return inp(loc, i, 'name', b.name, 'Name') + inp(loc, i, 'role', b.role, 'Role / subtitle') + inp(loc, i, 'photo', b.photo, 'Photo (optional)', 'cms-img:… (use the button)') + upBtn(loc, i, 'photo');
     case 'tip': case 'warning': return inp(loc, i, 'title', b.title, 'Label') + area(loc, i, 'text', b.text, 'Text', 3);
-    case 'image': return inp(loc, i, 'src', b.src, 'Image address', 'images/cms/… or https://…') + upBtn(loc, i, 'src') + inp(loc, i, 'alt', b.alt, 'Alt text') + inp(loc, i, 'caption', b.caption, 'Caption');
+    case 'image': return inp(loc, i, 'src', b.src, 'Image address', 'Use the button, or paste https://…') + upBtn(loc, i, 'src') + inp(loc, i, 'alt', b.alt, 'Alt text') + inp(loc, i, 'caption', b.caption, 'Caption');
     case 'gallery': return sel(loc, i, 'layout', b.layout, 'Presentation', [['grid', 'Grid (wall)'], ['carousel', 'Carousel']]) +
-      `<div class="ed-gal">${(b.images || []).map((g, k) => `<div class="ed-gi"><img src="${esc(g.src)}" alt="" data-raw="${esc(rawUrl(g.src))}"><input data-gal="caption" data-loc="${loc}" data-i="${i}" data-k="${k}" value="${esc(g.caption || '')}" placeholder="Description">
+      `<div class="ed-gal">${(b.images || []).map((g, k) => `<div class="ed-gi"><img ${imgAttr(g.src)} alt=""><input data-gal="caption" data-loc="${loc}" data-i="${i}" data-k="${k}" value="${esc(g.caption || '')}" placeholder="Description">
         <button class="btn" type="button" data-gm="-1" data-loc="${loc}" data-i="${i}" data-k="${k}">↑</button><button class="btn" type="button" data-gm="1" data-loc="${loc}" data-i="${i}" data-k="${k}">↓</button><button class="btn" type="button" data-gm="x" data-loc="${loc}" data-i="${i}" data-k="${k}">✕</button></div>`).join('')}</div>` +
       upBtn(loc, i, 'gallery', true) + `<button class="btn" type="button" data-galurl data-loc="${loc}" data-i="${i}">+ Add by address</button>`;
     case 'list': return sel(loc, i, 'style', b.style, 'Type', [['ul', 'Bullets'], ['ol', 'Numbered']]) + area(loc, i, 'itemsText', (b.items || []).join('\n'), 'One item per line', 5);
