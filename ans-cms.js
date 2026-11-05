@@ -67,18 +67,19 @@ async function addPage(categoryId) {
   const title = prompt('Page title');
   if (!title || !title.trim()) return;
   const t = title.trim().slice(0, 120);
-  const ref = await addDoc(collection(db, 'cms_pages'), { title: t, subtitle: '', slug: slugify(t), categoryId, order: nextOrder(treePages(categoryId)), status: 'draft', replaces: null, blocks: [], authorId: uid, createdAt: stamp(), updatedAt: stamp() });
+  const ref = await addDoc(collection(db, 'cms_pages'), { title: t, subtitle: '', slug: slugify(t), categoryId, order: nextOrder(treePages(categoryId)), status: 'draft', replaces: null, blocks: [], authorId: uid, createdBy: uid, createdByName: window.ANS_PLATFORM?.myName?.() || '', lastModifiedBy: uid, createdAt: stamp(), updatedAt: stamp() });
   await setDoc(doc(db, 'cms_drafts', ref.id), { title: t, subtitle: '', blocks: [], updatedAt: stamp() });
   openCats.add(categoryId);
   openEditor(ref.id);
 }
 async function publishPage(id) {                       // draft -> public copy
   const d = await getDoc(doc(db, 'cms_drafts', id));
-  const upd = { status: 'published', publishedAt: stamp(), updatedAt: stamp() };
+  const upd = { status: 'published', publishedAt: stamp(), updatedAt: stamp(), lastModifiedBy: uid };   // the original author (createdBy) is never touched
   if (d.exists()) { const x = d.data(); upd.blocks = x.blocks || []; upd.title = x.title; upd.subtitle = x.subtitle || ''; upd.slug = slugify(x.title); }
   await updateDoc(doc(db, 'cms_pages', id), upd);
+  try { await addDoc(collection(db, 'cms_revisions'), { pageId: id, title: upd.title || '', subtitle: upd.subtitle || '', blocks: upd.blocks || [], by: uid, at: stamp() }); } catch (e) { console.warn('[ANS CMS] revision not saved', e); }   // restore point
 }
-const unpublishPage = id => updateDoc(doc(db, 'cms_pages', id), { status: 'draft', updatedAt: stamp() });
+const unpublishPage = id => updateDoc(doc(db, 'cms_pages', id), { status: 'draft', updatedAt: stamp(), lastModifiedBy: uid });
 const togglePublish = id => (pages.find(x => x.id === id)?.status === 'published' ? unpublishPage(id) : publishPage(id));
 async function duplicatePage(id) {
   const p = pages.find(x => x.id === id); if (!p) return;
@@ -117,7 +118,7 @@ const run = fn => async (...a) => { try { await fn(...a); } catch (e) { console.
 /* every page of the menu except the home hero, the live pages (gallery, birthdays, members) and the personal ones can be customized */
 const isBuiltin = p => !!p && !['home', 'requests', 'profile', 'settings', 'tips', 'gallery', 'birthdays', 'members'].includes(p);
 /* pages a visitor without an account may read: their published customized versions are public (keep in sync with firestore.rules) */
-const PUBLIC_KEYS = ['game', 'game-heroes', 'sanctuary', 'game-resources', 'game-cross', 'server', 'contact'];
+const PUBLIC_KEYS = ['game', 'game-heroes', 'sanctuary', 'game-resources', 'game-cross', 'gear', 'server', 'constitution'];   // = the Game Compendium (keep in step with firestore.rules)
 async function editBuiltin(key) {
   let p = pages.find(x => x.replaces === key);
   if (!p) {
@@ -140,6 +141,11 @@ async function openEditor(id) {
 
 /* ---------- public side: called by two tiny hooks in index.html ---------- */
 window.ANS_CMS = {
+  /* used by ans-platform.js: stable-id access to pages, independent of the menu */
+  show: id => showPage(id), has: id => pages.some(p => p.id === id), edit: id => openEditor(id),
+  info: id => { const p = pages.find(x => x.id === id); return p ? { title: p.title, desc: p.subtitle || '' } : null; },
+  visibility: id => pages.find(x => x.id === id)?.visibility || 'members', list: () => pages.slice(),
+  publish: id => publishPage(id), unpublish: id => unpublishPage(id),
   /* before a built-in page is drawn: if you published a customized version, use it */
   override(page) {
     const p = pages.find(x => x.replaces === page && x.status === 'published');
@@ -175,6 +181,7 @@ function showPage(id, soft) {
   document.querySelectorAll('.nav-item.active').forEach(n => n.classList.remove('active'));
   $(`#cms-nav [data-cms-page="${CSS.escape(id)}"]`)?.classList.add('active');
   history.replaceState(null, '', '#cms-' + id);          // a plain hash: shareable, and index.html does not react to replaceState
+  window.ANS_PLATFORM?.afterCms?.(id, p);                // author line, Save button and comments
   document.title = `ANS · ${p.title} · #233`;
   if (!soft) window.scrollTo({ top: 0 });
 }
@@ -352,6 +359,8 @@ function listen() {
   if (!isMember && !isEditor) {                                       // visitors and people waiting for approval: only the public pages
     cats = []; pages = [];
     const acc = {};
+    unsubs.push(onSnapshot(query(collection(db, 'cms_pages'), where('visibility', '==', 'public'), where('status', '==', 'published')),   // pages an editor marked Public
+      s => { acc.__pub = s.docs.map(d => ({ id: d.id, ...d.data() })); pages = Object.values(acc).flat(); refresh(); }, err => console.error('[ANS CMS]', err)));
     PUBLIC_KEYS.forEach(k => unsubs.push(onSnapshot(query(collection(db, 'cms_pages'), where('replaces', '==', k), where('status', '==', 'published')),
       s => { acc[k] = s.docs.map(d => ({ id: d.id, ...d.data() })); pages = Object.values(acc).flat(); refresh(); }, err => console.error('[ANS CMS]', err))));
     return;

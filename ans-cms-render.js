@@ -97,7 +97,7 @@ const R = {
 };
 
 export function renderBlocks(blocks) {
-  return (blocks || []).map(b => (b && R[b.type] ? R[b.type](b) : '')).join('');
+  return (blocks || []).map(b => (b && !b.sample && R[b.type] ? R[b.type](b) : '')).join('');   // blocks flagged sample (from a template) stay hidden until an editor edits them
 }
 /* a page body: .guide-body gives paragraphs/lists the same look as your guides */
 export const wrapBlocks = blocks => `<div class="guide-body cms-blocks">${renderBlocks(blocks)}</div>`;

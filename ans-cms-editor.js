@@ -1,7 +1,7 @@
 /* ANS CMS · visual block editor. Loaded only when an editor opens a page (public visitors never download it).
    Data: cms_drafts/{pageId} = { title, subtitle, blocks[] }.  "Publish" copies it to cms_pages/{pageId} (done by the core).
    Firestore does not allow arrays inside arrays, so columns are [{blocks:[]}] and tables are plain text lines "a | b | c". */
-import { doc, getDoc, setDoc, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+import { doc, getDoc, getDocs, query, where, setDoc, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 import { esc, pageHtml, imgAttr } from './ans-cms-render.js';
 
 const TYPES = [['heading', 'Heading'], ['subtitle', 'Subtitle'], ['paragraph', 'Paragraph'], ['author', 'Author'], ['tip', 'Tip / info box'], ['warning', 'Warning'], ['image', 'Image'], ['gallery', 'Gallery / carousel'], ['list', 'List'], ['table', 'Table'], ['quote', 'Quote'], ['divider', 'Divider'], ['button', 'Button / link'], ['accordion', 'Expandable section'], ['container', 'Content container'], ['columns', 'Columns'], ['html', 'Raw HTML']];
@@ -34,6 +34,10 @@ function listAt(loc) {
 const touch = () => { S.dirty = true; setState(); };
 function move(loc, i, dir) { const l = listAt(loc), j = i + dir; if (j < 0 || j >= l.length) return; [l[i], l[j]] = [l[j], l[i]]; touch(); draw(); }
 function remove(loc, i) { if (!confirm('Delete this block?')) return; listAt(loc).splice(i, 1); touch(); draw(); }
+function replaceBlock(loc, i, type) {                          // same position and id, new type; the text is carried over when both have one
+  const l = listAt(loc), old = l[i]; if (!confirm('Replace this block? Its settings will be reset' + (old.text ? ' (the text is kept)' : '') + '.')) { draw(); return; }
+  const nb = { id: old.id, type, ...NEW[type]() }; if (old.text && 'text' in nb) nb.text = old.text; if (old.text && type === 'heading') nb.text = old.text; l[i] = nb; touch(); draw();
+}
 function dupe(loc, i) { const l = listAt(loc); l.splice(i + 1, 0, clone(l[i])); touch(); draw(); }
 function insert(loc, i, block) { listAt(loc).splice(i, 0, block); touch(); draw(); }
 function dropMove(fromLoc, fromIdx, toLoc, toIdx) {
@@ -113,7 +117,7 @@ function fields(loc, i, b) {
 const dropzone = (loc, i) => `<div class="ed-drop" data-dz data-loc="${loc}" data-i="${i}"></div>`;
 function card(loc, i, b) {
   return `<div class="ed-card" data-type="${b.type}">
-    <div class="ed-head"><span class="ed-handle" draggable="true" data-drag data-loc="${loc}" data-i="${i}" title="Drag to move">⠿</span><b>${LABEL[b.type]}</b><span class="ed-actions">
+    <div class="ed-head"><span class="ed-handle" draggable="true" data-drag data-loc="${loc}" data-i="${i}" title="Drag to move">⠿</span><b>${LABEL[b.type]}</b>${b.sample ? '<span class="ed-status">sample · hidden from visitors until you edit it</span>' : ''}<span class="ed-actions"><select data-replace data-loc="${loc}" data-i="${i}" aria-label="Replace this block with another type"><option value="">Replace with…</option>${TYPES.filter(([k]) => k !== b.type).map(([k, t]) => `<option value="${k}">${t}</option>`).join('')}</select>
       <button class="btn" type="button" data-mv="-1" data-loc="${loc}" data-i="${i}" aria-label="Move up">↑</button><button class="btn" type="button" data-mv="1" data-loc="${loc}" data-i="${i}" aria-label="Move down">↓</button>
       <button class="btn" type="button" data-dup data-loc="${loc}" data-i="${i}">Duplicate</button><button class="btn" type="button" data-del data-loc="${loc}" data-i="${i}">Delete</button></span></div>
     <div class="ed-body">${fields(loc, i, b) || '<small>This block has no settings.</small>'}</div></div>`;
@@ -155,7 +159,7 @@ function leave() { return !S.dirty || confirm('You have unsaved changes. Close w
 
 function frame() {
   dlg().innerHTML = `<div class="ed-top"><button class="btn" data-x="close">← Close</button><input id="ed-title" data-meta="title" value="${esc(S.title)}" placeholder="Page title" aria-label="Page title">
-    <button class="btn" data-x="mode">${S.mode === 'edit' ? '👁 Preview' : '✎ Back to editing'}</button><button class="btn" data-x="save">Save draft</button><button class="btn btn-primary" data-x="publish">Publish</button>${S.status === 'published' ? '<button class="btn" data-x="unpublish">Unpublish</button>' : ''}
+    <button class="btn" data-x="mode">${S.mode === 'edit' ? '👁 Preview' : '✎ Back to editing'}</button><button class="btn" data-x="history">History</button><button class="btn" data-x="save">Save draft</button><button class="btn btn-primary" data-x="publish">Publish</button>${S.status === 'published' ? '<button class="btn" data-x="unpublish">Unpublish</button>' : ''}
     <span class="ed-status" id="ed-state"></span><span class="ed-status" id="ed-status"></span></div><div class="ed-main" id="ed-main"></div>`;
   draw(); setState();
 }
@@ -163,7 +167,7 @@ function draw() {
   const m = document.getElementById('ed-main'); if (!m) return;
   const keep = m.scrollTop;
   if (S.mode === 'preview') m.innerHTML = `<div class="ed-preview">${pageHtml({ title: S.title, subtitle: S.subtitle }, S.blocks)}</div>`;
-  else m.innerHTML = `<label class="ed-f"><span>Subtitle (shown under the title)</span><input data-meta="subtitle" value="${esc(S.subtitle)}"></label>
+  else m.innerHTML = `${HOWTO}<label class="ed-f"><span>Subtitle (shown under the title)</span><input data-meta="subtitle" value="${esc(S.subtitle)}"></label>
     <div class="ed-palette">${TYPES.map(([k, t]) => `<button class="btn" type="button" draggable="true" data-new="${k}">${t}</button>`).join('')}</div>
     <p class="ed-status">Drag a block (⠿ handle or a button above) between the lines, or use the ↑ ↓ buttons and the “+ Add block” menus. On a phone use the buttons.</p>${listHtml('', S.blocks)}`;
   m.scrollTop = keep;
@@ -176,12 +180,14 @@ function onInput(e) {
   if (t.dataset.gal) { const b = listAt(t.dataset.loc)[+t.dataset.i]; b.images[+t.dataset.k].caption = t.value; touch(); return; }
   if (!t.dataset.f) return;
   const b = listAt(t.dataset.loc)[+t.dataset.i], f = t.dataset.f;
+  if (b.sample) { delete b.sample; t.closest('.ed-card')?.querySelector('.ed-head > .ed-status')?.remove(); }   // the moment someone edits a sample block it becomes real content (no redraw: keeps the cursor)
   if (f === 'itemsText') b.items = t.value.split('\n');
   else if (f !== 'level' && f !== 'header' && f !== 'newTab' && f !== 'colCount') b[f] = t.value;
   touch();
 }
 function onChange(e) {
   const t = e.target;
+  if (t.dataset.replace !== undefined && t.value) { replaceBlock(t.dataset.loc, +t.dataset.i, t.value); return; }
   if (t.dataset.add !== undefined && t.value) { const l = listAt(t.dataset.add); insert(t.dataset.add, l.length, mk(t.value)); return; }
   if (!t.dataset.f) return;
   const b = listAt(t.dataset.loc)[+t.dataset.i], f = t.dataset.f;
@@ -245,12 +251,22 @@ async function action(x) {
   try {
     if (x === 'close') { if (leave()) dlg().close(); }
     else if (x === 'mode') { S.mode = S.mode === 'edit' ? 'preview' : 'edit'; frame(); }
+    else if (x === 'history') await history();
     else if (x === 'save') { status('Saving…'); await save(); status('Draft saved.'); }
     else if (x === 'publish') { status('Publishing…'); await save(); await S.api.publishPage(S.id); S.status = 'published'; frame(); status('Published. Members see it now.'); }
     else if (x === 'unpublish') { await S.api.unpublishPage(S.id); S.status = 'draft'; frame(); status('Unpublished. Only editors see it.'); }
   } catch (err) { console.error('[ANS CMS editor]', err); status('That could not be saved. You may not have permission.'); }
 }
 
+/* revisions: every publish stores a restore point in cms_revisions (see publishPage in ans-cms.js) */
+async function history() {
+  const s = await getDocs(query(collection(S.api.db, 'cms_revisions'), where('pageId', '==', S.id)));
+  const rows = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.at?.seconds || 0) - (a.at?.seconds || 0)).slice(0, 30);
+  const m = document.getElementById('ed-main'); if (!m) return;
+  m.innerHTML = `<p><button class="btn" data-x="mode2">← Back to editing</button></p><h3>Published versions</h3>${rows.length ? rows.map(r => `<div class="ed-card"><div class="ed-head"><b>${esc(r.title || 'Untitled')}</b><span class="ed-status">${esc(r.at?.seconds ? new Date(r.at.seconds * 1000).toLocaleString() : '')}</span><span class="ed-actions"><button class="btn" data-restore="${esc(r.id)}">Restore as draft</button></span></div></div>`).join('') : '<p class="ed-status">No earlier versions yet. One is saved every time you publish.</p>'}`;
+  m.onclick = ev => { if (ev.target.closest('[data-x=mode2]')) { m.onclick = null; draw(); return; } const b = ev.target.closest('[data-restore]'); if (!b) return; const r = rows.find(x => x.id === b.dataset.restore); if (!r || !confirm('Load this version into the editor? Your current draft will be replaced (you can still close without saving).')) return; S.title = r.title || S.title; S.subtitle = r.subtitle || ''; S.blocks = r.blocks || []; S.dirty = true; m.onclick = null; frame(); status('Version loaded. Save or publish to keep it.'); };
+}
+const HOWTO = `<details class="how-to"><summary>How to use this section (only editors see this)</summary><div class="guide-body"><p><b>What it is for:</b> one page of the website. Write it from top to bottom with blocks.</p><p><b>Blocks:</b> Heading, Subtitle, Paragraph, Author, Tip, Warning, Image, Gallery, List, Table, Quote, Divider, Button, Accordion, Container, Columns and HTML. Use “+ Add block” or drag a button into the page. “Replace with…” changes a block's type.</p><p><b>Images:</b> use ⬆ Upload inside an Image, Gallery or Author block. Large photos are shrunk automatically.</p><p><b>Organise:</b> ↑ ↓ or drag the ⠿ handle (on a phone use the arrows). Duplicate and Delete are on every block. Sample blocks from a template stay hidden until you edit them.</p><p><b>Publish:</b> “Save draft” keeps it private; “Publish” makes it live and stores a restore point (History). Where the page appears in the menu and who can open it is set in <b>Admin console → Menu</b>.</p></div></details>`;
 export async function openEditor(id, api) {
   const [d, p] = await Promise.all([getDoc(doc(api.db, 'cms_drafts', id)), getDoc(doc(api.db, 'cms_pages', id))]);
   if (!p.exists()) { alert('That page no longer exists.'); return; }

@@ -312,7 +312,7 @@ body{text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
 .btn{font-size:14px;letter-spacing:.03em}
 input,textarea,select{font-size:17px}
 @media(max-width:760px){body{font-size:19px}.content{padding:28px 5%}.content p,.content li{font-size:19px}.nav-item{font-size:16px;min-height:48px}.btn{font-size:15px}}
-</style></head><body data-role="pending">
+</style><link rel="stylesheet" href="ans-platform.css"></head><body data-role="pending">
 
 
 <div class="veil" id="veil"></div><aside class="sidebar" aria-label="Navegación principal"><a href="#home" class="brand" aria-label="ANS Home"><div class="crest"><img class="theme-logo monochrome-logo" src="logo-monochrome.svg" width="40" height="40" alt="Emblema ANS plata"><img class="theme-logo gold-logo" src="logo-gold.svg" width="40" height="40" alt="Emblema ANS dorado"></div><div class="brand-name">ANS</div><div class="brand-sub">LAST ASYLUM PLAGUE · #233</div></a><nav class="nav"><div class="become-side" id="become-side" hidden><button class="btn btn-primary" type="button" data-login="signup">Become a member</button></div><div id="site-menu"></div><div class="side-divider" id="side-divider"></div><button class="nav-item " data-page="tips"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Share a tip</span></button><button class="nav-item " data-page="ideas"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 14a6 6 0 1 1 8 0l-1 4H9z"/></svg><span>Any ideas?</span></button></nav><div class="side-bottom"><div class="theme-label">CHOOSE YOUR ATMOSPHERE</div><div class="theme-controls"><button class="theme-button selected" data-theme-choice="monochrome"><span class="theme-dot"></span>Monochrome</button><button class="theme-button" data-theme-choice="gold"><span class="theme-dot gold-dot"></span>Gold</button></div><p class="server-status"><span class="status-dot"></span>Server #233 · United we survive</p></div></aside>
@@ -711,6 +711,7 @@ let membership='none',isAdmin=false,isStaff=false,memberData=null,memberKnown=fa
 let tips=[],unsubscribeTips=null,editingTip=null;
 let news=[],unsubscribeNews=null;
 function canView(r,page){
+  {const v=window.ANS_PLATFORM?.canView?.(r,page);if(v!==undefined)return v}   /* ANS platform: menu tree + visibility */
   if(PUBLIC_PAGES.has(page))return true;
   if(r==='signed-out'||r==='pending')return false;
   if(page==='requests')return r==='member'&&isStaff;
@@ -774,13 +775,14 @@ $('#site-menu').addEventListener('click',e=>{
 function navigate(page){
   if(page==='ideas'){if(role==='signed-out')return login();window.open(CONFIG.ideasUrl,'_blank','noopener');menuClose();return}
   if(!canView(role,page)){if(role==='signed-out')return login();toast('To view this content, you must log in as a member.');return}
+  if(window.ANS_PLATFORM?.route?.(page))return;   /* ANS platform: CMS pages and bulletin posts */
   currentPage=page;history.replaceState(null,'','#'+page);render(page);menuClose();
   window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
 }
 function header(title,desc){return `<div class="page-head reveal"><span class="eyebrow">ANS · SERVER #233</span><h1>${esc(title)}</h1><p>${esc(desc)}</p></div>`}
 
 /* ---------- home ---------- */
-function home(){return `<section class="hero"><img class="hero-image" src="ans-plague.jpg" width="1536" height="1024" alt="Plague doctor with a lantern among the arches of a gothic sanctuary"><div class="fog"></div><div class="particles">${Array.from({length:14},(_,i)=>`<i style="--i:${i}"></i>`).join('')}</div><div class="raven" aria-hidden="true"><svg viewBox="0 0 80 40"><path class="wing" d="M40 21C26 2 12 0 1 3L20 19 2 15l25 12zM40 21C54 2 68 0 79 3L60 19l18-4-25 12z"/><path d="m30 24 11-6 13 7-11 2-3 9-5-9-8 4z"/></svg></div><div class="hero-content reveal"><span class="eyebrow">LAST ASYLUM PLAGUE · SERVER #233</span><h1>ANS</h1><p class="subtitle">In the shadows, we stand together.</p><div class="ornament" aria-hidden="true">⚜</div><p class="hero-description">The world may fall to the plague.<br>Our alliance will not.<br><em>One sanctuary. One family. One purpose.</em></p><div class="actions">${role==='signed-out'?`<button class="btn btn-primary" data-login="signup">${icon('shield')}Become a member</button><button class="btn" data-login="member">${icon('user')}Log in</button><button class="btn" data-go="game">About the game ${icon('arrow')}</button>`:role==='member'?`<button class="btn btn-primary" data-go="about">${icon('shield')}Enter the alliance</button><button class="btn" data-go="constitution">${icon('book')}Read the constitution</button>`:`<button class="btn btn-primary" data-go="game">${icon('book')}About the game</button><button class="btn" data-go="server">${icon('shield')}About the server</button>`}</div><p class="hero-foot">${icon('lock')}${role==='signed-out'?'The gates are open. Your story starts here.':role==='member'?'Welcome home. ANS stands with you.':'Welcome, traveler. The sanctuary awaits.'}</p></div><a class="hero-scroll" href="#sanctuary-preview"><span>BEYOND THE GATES</span>${icon('chevron')}</a></section><section class="section" id="sanctuary-preview"><div class="section-heading"><h2><span class="symbol">⚜</span> Within our sanctuary</h2><span class="kicker">Knowledge is our strongest weapon.</span></div><div class="portal-grid">${(role==='member'?[['about','shield','The Alliance','Our people, our values, our unbreakable bond.'],['constitution','book','The Constitution','The laws that keep our server standing.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]:[['game','book','About the game','Heroes, buildings, resources and more.'],['server','shield','About the server','Server #233 and the alliance behind it.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]).map(([p,i,t,d])=>`<button class="portal" data-go="${p}">${icon(i)}<h3>${t}</h3><p>${d}</p><span class="arrow">${icon('arrow')}</span></button>`).join('')}</div></section><section class="section" id="news-section"></section><section class="section"><div class="lower-grid"><div class="notice"><div class="notice-icon">${icon('bell')}</div><div><h3>When the ravens bring news</h3><p>Stay close to the alliance.<br>Never miss a call to arms.</p><button class="btn" id="notify">${icon('bell')}<span id="notify-label">Enable notifications</span></button><p class="notify-state" id="notify-state" aria-live="polite"></p></div></div><button class="film" id="video" aria-label="Watch the ANS video"><img src="ans-plague.jpg" loading="lazy" width="1536" height="1024" alt="The ANS sanctuary"><span class="play">${icon('play')}</span><span class="film-caption">LIFE IN THE ASYLUM</span></button></div></section>`}
+function home(){return `<section class="hero"><img class="hero-image" src="ans-plague.jpg" width="1536" height="1024" alt="Plague doctor with a lantern among the arches of a gothic sanctuary"><div class="fog"></div><div class="particles">${Array.from({length:14},(_,i)=>`<i style="--i:${i}"></i>`).join('')}</div><div class="raven" aria-hidden="true"><svg viewBox="0 0 80 40"><path class="wing" d="M40 21C26 2 12 0 1 3L20 19 2 15l25 12zM40 21C54 2 68 0 79 3L60 19l18-4-25 12z"/><path d="m30 24 11-6 13 7-11 2-3 9-5-9-8 4z"/></svg></div><div class="hero-content reveal"><span class="eyebrow">LAST ASYLUM PLAGUE · SERVER #233</span><h1>ANS</h1><p class="subtitle">In the shadows, we stand together.</p><div class="ornament" aria-hidden="true">⚜</div><p class="hero-description">The world may fall to the plague.<br>Our alliance will not.<br><em>One sanctuary. One family. One purpose.</em></p><div class="actions">${role==='signed-out'?`<button class="btn btn-primary" data-login="signup">${icon('shield')}Become a member</button><button class="btn" data-login="member">${icon('user')}Log in</button><button class="btn" data-go="game">About the game ${icon('arrow')}</button>`:role==='member'?`<button class="btn btn-primary" data-go="about">${icon('shield')}Enter the alliance</button><button class="btn" data-go="constitution">${icon('book')}Read the constitution</button>`:`<button class="btn btn-primary" data-go="game">${icon('book')}About the game</button><button class="btn" data-go="server">${icon('shield')}About the server</button>`}</div><p class="hero-foot">${icon('lock')}${role==='signed-out'?'The gates are open. Your story starts here.':role==='member'?'Welcome home. ANS stands with you.':'Welcome, traveler. The sanctuary awaits.'}</p></div><a class="hero-scroll" href="#sanctuary-preview"><span>BEYOND THE GATES</span>${icon('chevron')}</a></section><section class="section" id="sanctuary-preview"><div class="section-heading"><h2><span class="symbol">⚜</span> Within our sanctuary</h2><span class="kicker">Knowledge is our strongest weapon.</span></div><div class="portal-grid">${(role==='member'?[['about','shield','The Alliance','Our people, our values, our unbreakable bond.'],['constitution','book','The Constitution','The laws that keep our server standing.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]:[['game','book','About the game','Heroes, buildings, resources and more.'],['server','shield','About the server','Server #233 and the alliance behind it.'],['sanctuary','castle','The Sanctuary','Build your refuge. Rise from the ashes.']]).map(([p,i,t,d])=>`<button class="portal" data-go="${p}">${icon(i)}<h3>${t}</h3><p>${d}</p><span class="arrow">${icon('arrow')}</span></button>`).join('')}</div></section><section class="section" id="ans-dash"></section><section class="section" id="news-section"></section><section class="section"><div class="lower-grid"><div class="notice"><div class="notice-icon">${icon('bell')}</div><div><h3>When the ravens bring news</h3><p>Stay close to the alliance.<br>Never miss a call to arms.</p><button class="btn" id="notify">${icon('bell')}<span id="notify-label">Enable notifications</span></button><p class="notify-state" id="notify-state" aria-live="polite"></p></div></div><button class="film" id="video" aria-label="Watch the ANS video"><img src="ans-plague.jpg" loading="lazy" width="1536" height="1024" alt="The ANS sanctuary"><span class="play">${icon('play')}</span><span class="film-caption">LIFE IN THE ASYLUM</span></button></div></section>`}
 
 /* ---------- new pages: section landings, shells, server, contact, settings ---------- */
 const INTRO={
@@ -1074,7 +1076,7 @@ function renderBdCalendar(){
     cells+=`<div class="bd-day${list.length?' has':''}${own?' mine':''}${now.getMonth()===m&&now.getDate()===d?' today':''}"${list.length?` title="${esc(names)}" aria-label="${MONTHS[m]} ${d}: ${esc(names)}"`:''}><span class="d">${d}</span>${list.length?`<span class="bd-star" aria-hidden="true">★</span><span class="bd-names">${list.slice(0,2).map(b=>`<span>${esc(b.name)}</span>`).join('')}${list.length>2?`<span>+${list.length-2} more</span>`:''}</span>`:''}</div>`;
   }
   const chips=MONTHS.map((n,i)=>`<button class="btn${i===m?' active':''}" data-bdm="${i}" aria-label="${n}">${n.slice(0,3)}${valid.some(b=>b.month===i+1)?' ★':''}</button>`).join('');
-  const rows=inMonth.map(b=>{const own=b.id===user?.uid;return `<div class="bd-row"><span class="dt">★ ${MONTHS[m].slice(0,3)} ${b.day}</span><span class="nm">${esc(b.name)}${own?' <span class="you">· you</span>':''}</span>${own?`<button class="btn" data-bd-edit>Edit</button><button class="btn" data-bd-del>Delete</button>`:''}</div>`}).join('');
+  const rows=inMonth.map(b=>{const own=b.id===user?.uid;return `<div class="bd-row"><span class="dt">★ ${MONTHS[m].slice(0,3)} ${b.day}</span>${avatarHtml(profiles.find(p=>p.id===b.id)?.photo,b.name,'sm')}<span class="nm">${esc(b.name)}${own?' <span class="you">· you</span>':''}</span>${own?`<button class="btn" data-bd-edit>Edit</button><button class="btn" data-bd-del>Delete</button>`:''}</div>`}).join('');
   mount.innerHTML=`<div class="bd-nav"><button class="btn" data-bdp="-1" aria-label="Previous month">←</button><h2>${MONTHS[m]} ${year}</h2><button class="btn" data-bdp="1" aria-label="Next month">→</button></div><div class="bd-months">${chips}</div><div class="bd-grid">${DOW.map(d=>`<div class="bd-dow">${d}</div>`).join('')}${cells}</div><div class="bd-list"><h3>Birthdays in ${MONTHS[m]}</h3>${rows||'<p class="empty">No birthdays this month.</p>'}</div>`;
   mount.querySelectorAll('[data-bdp]').forEach(b=>b.onclick=()=>{bdMonth=(bdMonth+ +b.dataset.bdp+12)%12;renderBdCalendar()});
   mount.querySelectorAll('[data-bdm]').forEach(b=>b.onclick=()=>{bdMonth=+b.dataset.bdm;renderBdCalendar()});
@@ -1347,7 +1349,7 @@ function syncDirectory(){
   if(role!=='member'||!firebase||!user){roster=[];profiles=[];return}
   const db=firebase.db;
   unsubscribeRoster=db.onSnapshot(db.collection(firebase.d,'roster'),snap=>{roster=snap.docs.map(d=>({id:d.id,...d.data()}));reconcileRoster();if(currentPage==='members')renderMembers()},err=>{console.error('[ANS roster]',err);if(currentPage==='members'&&$('#mb-list'))$('#mb-list').innerHTML='<p class="empty">The member list could not be loaded right now.</p>'});
-  unsubscribeProfiles=db.onSnapshot(db.query(db.collection(firebase.d,'profiles'),db.limit(300)),snap=>{profiles=snap.docs.map(d=>({id:d.id,...d.data()}));if(currentPage==='members')renderMembers();if(currentPage==='home')renderNews()},err=>console.error('[ANS profiles]',err));
+  unsubscribeProfiles=db.onSnapshot(db.query(db.collection(firebase.d,'profiles'),db.limit(300)),snap=>{profiles=snap.docs.map(d=>({id:d.id,...d.data()}));if(currentPage==='members')renderMembers();if(currentPage==='birthdays')renderBdCalendar();if(currentPage==='home')renderNews()},err=>console.error('[ANS profiles]',err));
 }
 /* Admins keep roster/{uid} in step with members/{uid} (status + name) so every member can see who is verified, without emails. */
 async function reconcileRoster(){
@@ -1394,12 +1396,13 @@ function render(page){
   if(page==='home')html=home();
   else{
     title=HEADS[page][0];
-    html=newPage(page)||(page==='about'?aboutPage():page==='constitution'?constitutionPage():page==='sanctuary'?sanctuaryPage():page==='duel'?duelPage():page==='gear'?gearPage():page==='tips'?tipsPage():page==='gallery'?galleryPage():page==='birthdays'?birthdaysPage():page==='requests'?requestsPage():page==='profile'?profilePage():page==='members'?membersPage():guidePage(page));
+    html=window.ANS_PLATFORM?.page?.(page)||newPage(page)||(page==='about'?aboutPage():page==='constitution'?constitutionPage():page==='sanctuary'?sanctuaryPage():page==='duel'?duelPage():page==='gear'?gearPage():page==='tips'?tipsPage():page==='gallery'?galleryPage():page==='birthdays'?birthdaysPage():page==='requests'?requestsPage():page==='profile'?profilePage():page==='members'?membersPage():guidePage(page));
   }
   if(window.ANS_CMS?.override){const ov=window.ANS_CMS.override(page);if(ov)html=ov}   /* CMS: customized built-in page */
   $('#view').innerHTML=html;
   bindView();
   window.ANS_CMS?.after?.(page,{openZoom,render});   /* CMS hook */
+  window.ANS_PLATFORM?.after?.(page);   /* ANS platform hook */
   if(page==='home'){initNotify();renderNews()}
   if(page.startsWith('guide-')||page==='gear')mountShots();
   if(page==='tips'){renderTips();bindTips()}
@@ -1688,6 +1691,10 @@ await loadGearImages();
 loadGalleryImages();   /* not awaited: the gallery never delays login */
 connectFirebase();
 
+/* ANS platform bridge: lets ans-platform.js rebuild the menu and render pages without touching anything else */
+window.ANS_APP={MENU,NODE,HEADS,INTRO,$,header,sectionPage,buildMenu,menuClose,navigate,render,toast,icon,avatarHtml,openZoom,
+  get role(){return role},get user(){return user},isStaff:()=>isStaff,currentPage:()=>currentPage,birthdays:()=>birthdays,profiles:()=>profiles,galleryItems:()=>galleryItems,ideasUrl:CONFIG.ideasUrl};
+
 </script>
 <script>
 /* Always-fresh site: on every load the page checks it is the newest version (and clears Cache Storage),
@@ -1743,4 +1750,5 @@ connectFirebase();
 
 </script>
 <script type="module" src="ans-cms.js"></script>
+<script type="module" src="ans-platform.js"></script>
 </body></html>
