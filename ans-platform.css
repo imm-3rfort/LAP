@@ -89,6 +89,8 @@ body[data-plat] .nav>[data-page=tips],body[data-plat] .nav>[data-page=ideas]{dis
 .cal-week{display:grid;gap:8px}.cal-wday{border:1px solid var(--border);padding:10px;background:var(--surface)}.cal-wday h4{font-size:13px;margin-bottom:6px}
 .ev-card{border-left:4px solid var(--cc,var(--primary))}
 @media(max-width:700px){.cal-day{min-height:58px}.cal-ev{font-size:0;height:6px;padding:0;margin-top:2px}.cal-ev.pinned{height:6px}}
+.cal-day.editable,.cal-wday.editable{cursor:pointer}.cal-day.editable:hover,.cal-wday.editable:hover{border-color:var(--primary)}
+.cal-add{float:right;min-height:0;width:24px;height:24px;line-height:1;font-size:16px;border:1px solid var(--border);color:var(--primary);background:var(--background);padding:0}
 /* menu manager */
 .mm-node{margin:4px 0}.mm-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:7px 8px;border:1px solid var(--border);background:var(--surface)}
 .mm-row .nm{flex:1 1 150px;min-width:0;overflow-wrap:anywhere}.mm-kids{margin-left:20px;border-left:1px dashed var(--border);padding-left:8px}
